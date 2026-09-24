@@ -1,5 +1,5 @@
 //@version=6
-// ICT Killzones — DST-correct session windows, liquidity lines and sweep marking.
+// ICT Killzones — DST-correct session windows, liquidity, and Judas swings.
 //
 // Why this exists: killzones hardcoded as UTC constants are only correct while
 // New York is on EST. From the second Sunday in March to the first Sunday in
@@ -39,6 +39,17 @@ showLiq  = input.bool(true, "Extend session high/low until swept", group = gLq)
 markSwp  = input.bool(true, "Label the sweep",                     group = gLq)
 maxKeep  = input.int(12, "Keep last N levels", minval = 1, maxval = 60, group = gLq)
 
+gJd        = "Judas swing"
+judasOn    = input.bool(true, "Detect Judas swings", group = gJd)
+orMin      = input.int(30, "Opening range (minutes)", minval = 1, group = gJd,
+     tooltip = "The killzone's first N minutes. Its high and low are the levels a Judas swing sweeps.")
+sweepTicks = input.int(5, "Sweep = ticks beyond the level", minval = 0, group = gJd,
+     tooltip = "How far past the opening-range extreme price must trade to count as a sweep, in ticks (syminfo.mintick). 0 = any touch beyond.")
+revBars    = input.int(6, "Reversal window (bars)", minval = 1, group = gJd,
+     tooltip = "After the sweep, price must CLOSE back inside the opening range within this many bars. If it does not, the move is treated as a genuine breakout and no Judas is flagged for that session.")
+showOR     = input.bool(true, "Show opening range", group = gJd)
+judasCol   = input.color(#c23c50, "Judas marker", group = gJd)
+
 // ─── session test ────────────────────────────────────────────────────────────
 // time() returns na outside the window. The timezone argument is what makes
 // this DST-correct; a UTC offset baked into the session string is not.
@@ -52,16 +63,26 @@ type Zone
     string name
     color  col
     bool   show
-    box    bx     = na
-    float  hi     = na
-    float  lo     = na
+    box    bx      = na
+    float  hi      = na
+    float  lo      = na
     int    started = na
-    bool   active = false
+    bool   active  = false
+    // opening range
+    float  orHi    = na
+    float  orLo    = na
+    bool   orSet   = false
+    // judas state
+    bool   resolved = false   // this session's judas question is settled
+    int    dir      = 0       // 0 none armed, +1 swept the OR high, -1 swept the OR low
+    int    swpBar   = na      // bar the sweep was first confirmed on (starts the clock)
+    int    extBar   = na      // bar holding the furthest extreme of the false move
+    float  extPx    = na
 
 type Level
     line  ln
     float price
-    bool  buyside      // true = session high (buy-side liquidity resting above)
+    bool  buyside             // true = session high (buy-side liquidity resting above)
     bool  swept = false
 
 var array<Level> levels = array.new<Level>()
@@ -70,14 +91,25 @@ var array<Level> levels = array.new<Level>()
 
 method step(Zone z) =>
     if z.show and timeframe.isintraday
-        bool now = inSession(z.name == "NY" ? nyS : z.name == "LN" ? lnS : asS)
+        string ss  = z.name == "NY" ? nyS : z.name == "LN" ? lnS : asS
+        bool   now = inSession(ss)
+        int    orBars = math.max(1, math.round(orMin * 60.0 / timeframe.in_seconds()))
+        float  tol    = sweepTicks * syminfo.mintick
 
         if now and not z.active
-            // session opened on this bar
-            z.active  := true
-            z.hi      := high
-            z.lo      := low
-            z.started := bar_index
+            // session opened on this bar — reset everything
+            z.active   := true
+            z.hi       := high
+            z.lo       := low
+            z.started  := bar_index
+            z.orHi     := high
+            z.orLo     := low
+            z.orSet    := false
+            z.resolved := false
+            z.dir      := 0
+            z.swpBar   := na
+            z.extBar   := na
+            z.extPx    := na
             z.bx := box.new(bar_index, high, bar_index, low,
                  bgcolor      = z.col,
                  border_color = color.new(z.col, 55),
@@ -94,6 +126,68 @@ method step(Zone z) =>
             box.set_right(z.bx,  bar_index)
             box.set_top(z.bx,    z.hi)
             box.set_bottom(z.bx, z.lo)
+
+            int elapsed = bar_index - z.started
+
+            if elapsed < orBars
+                // still inside the opening range — it is still forming
+                z.orHi := math.max(z.orHi, high)
+                z.orLo := math.min(z.orLo, low)
+
+            else
+                if not z.orSet
+                    z.orSet := true
+                    if showOR
+                        line.new(z.started, z.orHi, bar_index, z.orHi,
+                             color = color.new(z.col, 20), style = line.style_dotted)
+                        line.new(z.started, z.orLo, bar_index, z.orLo,
+                             color = color.new(z.col, 20), style = line.style_dotted)
+
+                if judasOn and not z.resolved
+                    if z.dir == 0
+                        // arm on the first sweep of either opening-range extreme
+                        if high >= z.orHi + tol
+                            z.dir    := 1
+                            z.swpBar := bar_index
+                            z.extBar := bar_index
+                            z.extPx  := high
+                        else if low <= z.orLo - tol
+                            z.dir    := -1
+                            z.swpBar := bar_index
+                            z.extBar := bar_index
+                            z.extPx  := low
+                    else
+                        // track the furthest point of the false move
+                        if z.dir == 1 and high > z.extPx
+                            z.extPx  := high
+                            z.extBar := bar_index
+                        if z.dir == -1 and low < z.extPx
+                            z.extPx  := low
+                            z.extBar := bar_index
+
+                        bool back    = z.dir == 1 ? close < z.orHi : close > z.orLo
+                        bool expired = bar_index - z.swpBar > revBars
+
+                        if back
+                            // swept, then closed back inside → Judas confirmed
+                            z.resolved := true
+                            label.new(z.extBar, z.extPx,
+                                 z.dir == 1 ? "Bearish Judas" : "Bullish Judas",
+                                 style     = z.dir == 1 ? label.style_label_down : label.style_label_up,
+                                 color     = color.new(judasCol, 82),
+                                 textcolor = judasCol,
+                                 size      = size.tiny,
+                                 tooltip   = (z.dir == 1 ? "Swept OR high " : "Swept OR low ") +
+                                             str.tostring(z.dir == 1 ? z.orHi : z.orLo, format.mintick) +
+                                             " by " + str.tostring(math.round(math.abs(z.extPx - (z.dir == 1 ? z.orHi : z.orLo)) / syminfo.mintick)) +
+                                             " ticks, closed back inside within " +
+                                             str.tostring(bar_index - z.swpBar) + " bars.")
+                            line.new(z.swpBar, z.extPx, bar_index, z.extPx,
+                                 color = judasCol, style = line.style_dotted)
+                        else if expired
+                            // held beyond the level past the window → real breakout,
+                            // not a Judas. Stop looking for this session.
+                            z.resolved := true
 
         else if not now and z.active
             // session just closed — its extremes are now resting liquidity
@@ -137,7 +231,6 @@ if showLiq and barstate.isconfirmed
             else
                 line.set_x2(lv.ln, bar_index)
 
-    // trim
     while levels.size() > maxKeep * 2
         Level old = levels.shift()
         line.delete(old.ln)
