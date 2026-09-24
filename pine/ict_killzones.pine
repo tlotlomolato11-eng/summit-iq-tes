@@ -1,0 +1,151 @@
+//@version=6
+// ICT Killzones — DST-correct session windows, liquidity lines and sweep marking.
+//
+// Why this exists: killzones hardcoded as UTC constants are only correct while
+// New York is on EST. From the second Sunday in March to the first Sunday in
+// November the window sits an hour late — it drops the NY open hour and picks up
+// an hour of post-open drift instead. Defining the session in its own local zone
+// and letting the exchange calendar resolve it removes the whole class of bug.
+
+indicator("ICT Killzones — DST-correct", "Killzones", overlay = true,
+     max_boxes_count = 500, max_lines_count = 500, max_labels_count = 500)
+
+// ─── inputs ──────────────────────────────────────────────────────────────────
+
+gTz  = "Timezone"
+tz   = input.string("America/New_York", "Killzone timezone", group = gTz,
+     options = ["America/New_York", "Europe/London", "Asia/Tokyo", "UTC"],
+     tooltip = "Windows below are LOCAL times in this zone. DST is applied per bar, so 07:00 NY stays 07:00 NY all year.")
+days = input.string("23456", "Active days", group = gTz,
+     tooltip = "TradingView day mask: 1=Sun … 7=Sat. 23456 = Mon-Fri.")
+
+gNY  = "New York"
+nyOn = input.bool(true,  "", group = gNY, inline = "ny")
+nyS  = input.session("0700-1000", "New York", group = gNY, inline = "ny")
+nyC  = input.color(color.new(#9c6d17, 88), "", group = gNY, inline = "ny")
+
+gLN  = "London"
+lnOn = input.bool(true,  "", group = gLN, inline = "ln")
+lnS  = input.session("0200-0500", "London", group = gLN, inline = "ln")
+lnC  = input.color(color.new(#1c8a53, 88), "", group = gLN, inline = "ln")
+
+gAS  = "Asian"
+asOn = input.bool(false, "", group = gAS, inline = "as")
+asS  = input.session("2000-0000", "Asian", group = gAS, inline = "as")
+asC  = input.color(color.new(#5c6b63, 88), "", group = gAS, inline = "as")
+
+gLq      = "Liquidity"
+showLiq  = input.bool(true, "Extend session high/low until swept", group = gLq)
+markSwp  = input.bool(true, "Label the sweep",                     group = gLq)
+maxKeep  = input.int(12, "Keep last N levels", minval = 1, maxval = 60, group = gLq)
+
+// ─── session test ────────────────────────────────────────────────────────────
+// time() returns na outside the window. The timezone argument is what makes
+// this DST-correct; a UTC offset baked into the session string is not.
+
+inSession(string sess) =>
+    not na(time(timeframe.period, sess + ":" + days, tz))
+
+// ─── types ───────────────────────────────────────────────────────────────────
+
+type Zone
+    string name
+    color  col
+    bool   show
+    box    bx     = na
+    float  hi     = na
+    float  lo     = na
+    int    started = na
+    bool   active = false
+
+type Level
+    line  ln
+    float price
+    bool  buyside      // true = session high (buy-side liquidity resting above)
+    bool  swept = false
+
+var array<Level> levels = array.new<Level>()
+
+// ─── zone tracking ───────────────────────────────────────────────────────────
+
+method step(Zone z) =>
+    if z.show and timeframe.isintraday
+        bool now = inSession(z.name == "NY" ? nyS : z.name == "LN" ? lnS : asS)
+
+        if now and not z.active
+            // session opened on this bar
+            z.active  := true
+            z.hi      := high
+            z.lo      := low
+            z.started := bar_index
+            z.bx := box.new(bar_index, high, bar_index, low,
+                 bgcolor      = z.col,
+                 border_color = color.new(z.col, 55),
+                 border_width = 1,
+                 text         = z.name,
+                 text_size    = size.tiny,
+                 text_color   = color.new(z.col, 20),
+                 text_halign  = text.align_left,
+                 text_valign  = text.align_top)
+
+        else if now and z.active
+            z.hi := math.max(z.hi, high)
+            z.lo := math.min(z.lo, low)
+            box.set_right(z.bx,  bar_index)
+            box.set_top(z.bx,    z.hi)
+            box.set_bottom(z.bx, z.lo)
+
+        else if not now and z.active
+            // session just closed — its extremes are now resting liquidity
+            z.active := false
+            if showLiq
+                levels.push(Level.new(
+                     line.new(z.started, z.hi, bar_index, z.hi,
+                          color = color.new(z.col, 25), style = line.style_dashed),
+                     z.hi, true))
+                levels.push(Level.new(
+                     line.new(z.started, z.lo, bar_index, z.lo,
+                          color = color.new(z.col, 25), style = line.style_dashed),
+                     z.lo, false))
+
+var Zone ny = Zone.new("NY", nyC, nyOn)
+var Zone ln = Zone.new("LN", lnC, lnOn)
+var Zone as = Zone.new("AS", asC, asOn)
+
+ny.step()
+ln.step()
+as.step()
+
+// ─── extend unswept levels, mark the sweep ───────────────────────────────────
+
+if showLiq and barstate.isconfirmed
+    for i = levels.size() - 1 to 0
+        Level lv = levels.get(i)
+        if not lv.swept
+            bool taken = lv.buyside ? high > lv.price : low < lv.price
+            if taken
+                lv.swept := true
+                line.set_x2(lv.ln, bar_index)
+                line.set_style(lv.ln, line.style_solid)
+                if markSwp
+                    label.new(bar_index, lv.price,
+                         lv.buyside ? "buy-side swept" : "sell-side swept",
+                         style     = lv.buyside ? label.style_label_down : label.style_label_up,
+                         color     = color.new(chart.bg_color, 100),
+                         textcolor = color.new(chart.fg_color, 25),
+                         size      = size.tiny)
+            else
+                line.set_x2(lv.ln, bar_index)
+
+    // trim
+    while levels.size() > maxKeep * 2
+        Level old = levels.shift()
+        line.delete(old.ln)
+
+// ─── guard ───────────────────────────────────────────────────────────────────
+
+var label warn = na
+if not timeframe.isintraday and barstate.islast and na(warn)
+    warn := label.new(bar_index, high,
+         "Killzones need an intraday timeframe.",
+         style = label.style_label_down, size = size.small)
