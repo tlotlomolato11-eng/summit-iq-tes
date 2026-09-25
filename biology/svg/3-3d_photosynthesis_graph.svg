@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="440" viewBox="0 0 640 440">
+<rect width="640" height="440" fill="#fff"/>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111"/></marker></defs>
+<g font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" fill="#111">
+<line x1="100" y1="360" x2="580" y2="360" stroke="#111" stroke-width="2"/>
+<line x1="100" y1="360" x2="100" y2="40" stroke="#111" stroke-width="2"/>
+<path d="M100,360 C170,170 250,108 350,100 L560,100" fill="none" stroke="#111" stroke-width="2.6"/>
+<text x="340.0" y="396" text-anchor="middle">Light intensity</text>
+<line x1="260.0" y1="416" x2="420.0" y2="416" stroke="#111" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="78" y="200.0" text-anchor="middle" transform="rotate(-90 78 200.0)">Rate of photosynthesis</text>
+</g>
+</svg>

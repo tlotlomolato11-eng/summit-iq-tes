@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="770" viewBox="0 0 720 770">
+<rect width="720" height="770" fill="#fff"/>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111"/></marker></defs>
+<g font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" fill="#111">
+<path d="M208,700 L208,230 A122,122 0 0 1 452,230 L452,700 Z" fill="#f7d9cf" stroke="#111" stroke-width="2.2"/>
+<path d="M232,700 L232,230 A98,98 0 0 1 428,230 L428,700 Z" fill="#fdf1ec" stroke="#111" stroke-width="1.6"/>
+<line x1="208" y1="250" x2="232" y2="250" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="250" x2="452" y2="250" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="276" x2="232" y2="276" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="276" x2="452" y2="276" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="302" x2="232" y2="302" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="302" x2="452" y2="302" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="328" x2="232" y2="328" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="328" x2="452" y2="328" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="354" x2="232" y2="354" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="354" x2="452" y2="354" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="380" x2="232" y2="380" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="380" x2="452" y2="380" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="406" x2="232" y2="406" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="406" x2="452" y2="406" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="432" x2="232" y2="432" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="432" x2="452" y2="432" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="458" x2="232" y2="458" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="458" x2="452" y2="458" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="484" x2="232" y2="484" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="484" x2="452" y2="484" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="510" x2="232" y2="510" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="510" x2="452" y2="510" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="536" x2="232" y2="536" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="536" x2="452" y2="536" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="562" x2="232" y2="562" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="562" x2="452" y2="562" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="588" x2="232" y2="588" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="588" x2="452" y2="588" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="614" x2="232" y2="614" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="614" x2="452" y2="614" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="640" x2="232" y2="640" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="640" x2="452" y2="640" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="666" x2="232" y2="666" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="666" x2="452" y2="666" stroke="#111" stroke-width="1"/>
+<line x1="208" y1="692" x2="232" y2="692" stroke="#111" stroke-width="1"/>
+<line x1="428" y1="692" x2="452" y2="692" stroke="#111" stroke-width="1"/>
+<line x1="208.0" y1="230.0" x2="232.0" y2="230.0" stroke="#111" stroke-width="1"/>
+<line x1="211.62392139432842" y1="200.48552873684054" x2="234.91101882495235" y2="206.29165423123257" stroke="#111" stroke-width="1"/>
+<line x1="222.2803936712109" y1="172.72446934012132" x2="243.47113589982516" y2="183.9917868469827" stroke="#111" stroke-width="1"/>
+<line x1="239.33633129175792" y1="148.3660660242193" x2="257.1718071032154" y2="164.4252005768319" stroke="#111" stroke-width="1"/>
+<line x1="261.7784657765689" y1="128.85741614828493" x2="275.19909545986684" y2="148.75431788960591" stroke="#111" stroke-width="1"/>
+<line x1="288.2735425142684" y1="115.35750026411918" x2="296.48202595408446" y2="137.910123162981" stroke="#111" stroke-width="1"/>
+<line x1="317.24752748134625" y1="108.66832876507065" x2="319.75621059977" y2="132.5368542539092" stroke="#111" stroke-width="1"/>
+<line x1="346.979118317128" y1="109.18729561352842" x2="343.63896389408643" y2="132.95372926332612" stroke="#111" stroke-width="1"/>
+<line x1="375.70200439674124" y1="116.88356974285193" x2="366.7114461547594" y2="139.13598225245482" stroke="#111" stroke-width="1"/>
+<line x1="401.7098007796817" y1="131.2999266862564" x2="387.60295472466237" y2="150.71633455125516" stroke="#111" stroke-width="1"/>
+<line x1="423.4574220605153" y1="151.5799116182422" x2="405.07235542565985" y2="167.00681425071912" stroke="#111" stroke-width="1"/>
+<line x1="439.65287364849837" y1="176.51872009173258" x2="418.0818165373184" y2="187.03962761467042" stroke="#111" stroke-width="1"/>
+<line x1="449.33400728952427" y1="204.63477372023337" x2="425.85846487191293" y2="209.62465429985957" stroke="#111" stroke-width="1"/>
+<path d="M268,730 L268,240 A62,62 0 0 1 330,178" fill="none" stroke="#111" stroke-width="9.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M268,730 L268,240 A62,62 0 0 1 330,178" fill="none" stroke="#d9493f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M330,178 A62,62 0 0 1 392,240 L392,730" fill="none" stroke="#111" stroke-width="9.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M330,178 A62,62 0 0 1 392,240 L392,730" fill="none" stroke="#3f6fbf" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M268,280 C300,306 360,270 392,298" fill="none" stroke="#a24a6f" stroke-width="3"/>
+<path d="M268,350 C300,376 360,340 392,368" fill="none" stroke="#a24a6f" stroke-width="3"/>
+<path d="M268,420 C300,446 360,410 392,438" fill="none" stroke="#a24a6f" stroke-width="3"/>
+<path d="M268,490 C300,516 360,480 392,508" fill="none" stroke="#a24a6f" stroke-width="3"/>
+<path d="M268,560 C300,586 360,550 392,578" fill="none" stroke="#a24a6f" stroke-width="3"/>
+<path d="M268,630 C300,656 360,620 392,648" fill="none" stroke="#a24a6f" stroke-width="3"/>
+<path d="M312,730 L312,320 A18,18 0 0 1 348,320 L348,730" fill="#fbf4cf" stroke="#111" stroke-width="1.8"/>
+<line x1="120" y1="430" x2="260" y2="430" stroke="#111" stroke-width="1.8" marker-end="url(#ah)"/>
+<text x="40" y="402">glucose and</text>
+<text x="40" y="422">amino acids</text>
+<line x1="560" y1="560" x2="354" y2="560" stroke="#111" stroke-width="1.8" marker-end="url(#ah)"/>
+<text x="572" y="552">fatty acids</text>
+<text x="572" y="572">and glycerol</text>
+<line x1="442" y1="160" x2="516" y2="124.56" stroke="#111" stroke-width="1.2"/><circle cx="442" cy="160" r="2.2" fill="#111"/><text x="520" y="130">epithelium</text>
+<line x1="374" y1="196" x2="516" y2="324.56" stroke="#111" stroke-width="1.2"/><circle cx="374" cy="196" r="2.2" fill="#111"/><text x="520" y="330">capillary network</text>
+<line x1="330" y1="650" x2="516" y2="654.56" stroke="#111" stroke-width="1.2"/><circle cx="330" cy="650" r="2.2" fill="#111"/><text x="520" y="660">lacteal</text>
+<line x1="392" y1="722" x2="516" y2="734.56" stroke="#111" stroke-width="1.2"/><circle cx="392" cy="722" r="2.2" fill="#111"/><text x="520" y="740">vein</text>
+<line x1="268" y1="722" x2="150" y2="734" stroke="#111" stroke-width="1.2"/><circle cx="268" cy="722" r="2.2" fill="#111"/><text x="144" y="740" text-anchor="end">artery</text>
+</g>
+</svg>
