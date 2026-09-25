@@ -1,0 +1,327 @@
+<title>Chew, Swallow, Digest</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+:root {
+  --bg: #f3f5f9;
+  --panel: #ffffff;
+  --panel-2: #f7f9fc;
+  --ink: #15203a;
+  --muted: #5b6680;
+  --faint: #8f99ae;
+  --line: #d8dee9;
+  --grid: #e8ecf3;
+  --accent: #1f5fbf;
+  --accent-ink: #ffffff;
+  --accent-soft: #e4ecfa;
+  --good: #1b7f55;
+  --good-soft: #e1f3ea;
+  --warn: #a8660f;
+  --warn-soft: #fbefdc;
+  --bad: #c0392b;
+  --bad-soft: #fbe5e2;
+  --p: #d0453a;
+  --n: #8a93a6;
+  --field: #7b5cc4;
+  --metal: #6a7385;
+  --copper: #b8672e;
+  --shadow: 0 1px 2px rgba(21, 32, 58, .06), 0 4px 16px rgba(21, 32, 58, .05);
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1320; --panel: #161d2d; --panel-2: #1b2336; --ink: #e6eaf3; --muted: #9ba6bd; --faint: #6f7a92;
+    --line: #2a3450; --grid: #20293d; --accent: #7fa9f2; --accent-ink: #0e1320; --accent-soft: #1c2a47;
+    --good: #52c793; --good-soft: #15342a; --warn: #e6b155; --warn-soft: #3a2e17; --bad: #f2786b; --bad-soft: #3d1f1d;
+    --p: #f07a6e; --n: #9aa3b8; --field: #a88ef0; --metal: #aab3c6; --copper: #e0935a;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1320; --panel: #161d2d; --panel-2: #1b2336; --ink: #e6eaf3; --muted: #9ba6bd; --faint: #6f7a92;
+  --line: #2a3450; --grid: #20293d; --accent: #7fa9f2; --accent-ink: #0e1320; --accent-soft: #1c2a47;
+  --good: #52c793; --good-soft: #15342a; --warn: #e6b155; --warn-soft: #3a2e17; --bad: #f2786b; --bad-soft: #3d1f1d;
+  --p: #f07a6e; --n: #9aa3b8; --field: #a88ef0; --metal: #aab3c6; --copper: #e0935a;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 var(--sans); }
+.page { max-width: 1100px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 22px; }
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.eyebrow { font: 500 11.5px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 { font: 600 clamp(1.7rem, 4.2vw, 2.45rem)/1.12 var(--serif); letter-spacing: -.01em; margin: 6px 0 0; text-wrap: balance; }
+h2 { font: 600 1.25rem/1.25 var(--serif); margin: 0; text-wrap: balance; }
+h3 { font: 600 11.5px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.lede { color: var(--muted); max-width: 66ch; margin: 8px 0 0; }
+.theme-btn { font: 500 12px var(--mono); color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; white-space: nowrap; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); min-width: 0; }
+.question { display: grid; gap: 10px; }
+.question p { margin: 0; max-width: 72ch; }
+.qhead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.part { display: grid; grid-template-columns: 5.2em minmax(0, 1fr) auto; gap: 4px 10px; align-items: baseline; padding-top: 8px; border-top: 1px dashed var(--line); }
+.part .pn { font: 600 13px var(--mono); color: var(--accent); white-space: nowrap; }
+.part .mk { font: 500 12.5px var(--mono); color: var(--muted); white-space: nowrap; }
+.part.focus .pn::after { content: " ●"; color: var(--warn); font-size: 9px; vertical-align: middle; }
+.data { font-family: var(--mono); font-size: .93em; }
+.board { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 760px) { .board { grid-template-columns: minmax(0, 1fr); } }
+.stack { display: grid; gap: 14px; }
+.page > *, .stack > *, .board > *, .slips > * { min-width: 0; }
+.figure svg { display: block; width: 100%; height: auto; touch-action: none; user-select: none; -webkit-user-select: none; }
+.cap { font-size: 12.5px; color: var(--muted); margin: 0; }
+.chip { display: inline-flex; align-items: center; gap: 8px; font: 600 12.5px/1.35 var(--sans); padding: 7px 12px; border-radius: 999px; border: 1px solid currentColor; }
+.chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+.chip[data-state="ok"] { color: var(--good); background: var(--good-soft); }
+.chip[data-state="warn"] { color: var(--warn); background: var(--warn-soft); }
+.chip[data-state="bad"] { color: var(--bad); background: var(--bad-soft); }
+.chip[data-state="info"] { color: var(--accent); background: var(--accent-soft); }
+.rows { display: grid; gap: 0; margin: 0; }
+.rows > div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--grid); align-items: baseline; }
+.rows > div:last-child { border-bottom: 0; }
+.rows dt { color: var(--muted); font-size: 13.5px; }
+.rows dd { white-space: nowrap; margin: 0; font: 600 14.5px var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.rows dd.big { font-size: 20px; color: var(--accent); }
+.rows dd.wrong { color: var(--bad); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.formula { font: 13.5px/1.75 var(--mono); background: var(--accent-soft); border-radius: 10px; padding: 12px 14px; overflow-x: auto; font-variant-numeric: tabular-nums; }
+.formula b { color: var(--accent); }
+.formula .hl { background: var(--warn-soft); color: var(--warn); border-radius: 4px; padding: 0 3px; font-weight: 600; }
+.formula .ms { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+.ctrl { display: grid; gap: 4px; }
+.ctrl label { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; font-weight: 600; }
+.ctrl label output { font: 600 13.5px var(--mono); color: var(--accent); white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: var(--accent); margin: 4px 0; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { font: 600 13.5px var(--sans); padding: 8px 14px; border-radius: 9px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.btn:disabled { opacity: .45; cursor: default; }
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.slips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 760px) { .slips { grid-template-columns: minmax(0, 1fr); } }
+.slip { display: grid; gap: 10px; align-content: start; }
+.slip .tag { display: flex; justify-content: space-between; gap: 10px; font: 600 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--bad); }
+.slip .tag span:last-child { color: var(--muted); }
+.slip .was, .slip .fix { border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+.slip .was { background: var(--bad-soft); }
+.slip .fix { background: var(--good-soft); }
+.slip .was > b:first-child, .slip .fix > b:first-child { display: block; font: 600 11px var(--mono); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 2px; }
+.slip .was > b:first-child { color: var(--bad); } .slip .fix > b:first-child { color: var(--good); }
+.slip .m { font-family: var(--mono); font-size: 13px; }
+.also { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; display: grid; gap: 4px; max-width: 80ch; }
+.also b { color: var(--ink); }
+footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; display: grid; gap: 6px; }
+footer table { border-collapse: collapse; font: 12px/1.5 var(--mono); }
+footer td { padding: 2px 12px 2px 0; vertical-align: top; }
+.tbl-wrap { overflow-x: auto; }
+svg text { font-family: var(--sans); }
+svg .t { font: 12px var(--sans); fill: var(--ink); }
+svg .tm { font: 500 12px var(--mono); fill: var(--ink); }
+svg .ts { font: 11px var(--mono); fill: var(--muted); }
+svg .handle { cursor: grab; }
+svg .handle:active { cursor: grabbing; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media (max-width: 520px) {
+  .part { grid-template-columns: minmax(0, 1fr) auto; }
+  .part > span:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+  .top { flex-direction: column-reverse; }
+  .theme-btn { align-self: flex-end; }
+  svg .ts { font-size: 13px; }
+  svg .tm { font-size: 14px; }
+}
+svg .pill { fill: var(--panel); opacity: .9; }
+/* biology additions */
+:root { --leaf: #4f9d45; --leaf-dark: #2f7a33; --chlorotic: #e3cf5a; --water: #dcecf7; --food: #e2b271; --blood: #d24a3f; --vein: #3f6fbf; --lymph: #f4e9b5; --epi: #f7d9cf; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --leaf: #6cbf5f; --leaf-dark: #4f9d45; --chlorotic: #d9c451; --water: #1f3346; --food: #d9a760; --blood: #ef6b5f; --vein: #6f9ae6; --lymph: #5a5230; --epi: #4a302c; } }
+:root[data-theme="dark"] { --leaf: #6cbf5f; --leaf-dark: #4f9d45; --chlorotic: #d9c451; --water: #1f3346; --food: #d9a760; --blood: #ef6b5f; --vein: #6f9ae6; --lymph: #5a5230; --epi: #4a302c; }
+.check .tag span:first-child { color: var(--accent); }
+.check .q { margin: 0; font-size: 15px; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.seg button { font: 600 13px var(--sans); padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.ctrl-row { display: grid; gap: 6px; }
+.ctrl-row > span { font-size: 13.5px; font-weight: 600; }
+svg .lab { font: 12.5px var(--sans); fill: var(--ink); }
+svg .edge { stroke: var(--ink); stroke-width: 1.8; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.tbl th, .tbl td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--grid); }
+.tbl th { font: 600 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.swatch { display: inline-block; width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--line); vertical-align: -2px; margin-right: 6px; }
+.rows dd { white-space: normal; max-width: 62%; }
+
+.piece { fill: var(--food); stroke: var(--ink); stroke-width: 1.2; }
+.glc { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.4; }
+.aa { stroke: var(--ink); stroke-width: 1.2; }
+.bac { fill: var(--good); stroke: var(--ink); stroke-width: 1; transition: opacity .4s; }
+</style>
+
+<main class="page">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Summit IQ · BGCSE Biology 0573 · Extension Set 2 · Q3.9</p>
+      <h1>Smaller pieces, faster enzymes</h1>
+      <p class="lede">Chewing changes the size of food, not what it is made of. That is mechanical digestion. Enzymes break big molecules into small ones, which is chemical digestion. Chew, and watch amylase work faster on the bigger surface. Then swallow and let protease and acid take over in the stomach.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <section class="card question" aria-label="Question 3.9 text">
+    <div class="qhead"><h2>Q3.9 · Digestion</h2><span class="data">[Total: 10]</span></div>
+    <div class="part focus"><span class="pn">(a)</span><span>Explain the role of protease in digestion, naming one place in the body where it acts.</span><span class="mk">[3]</span></div>
+    <div class="part focus"><span class="pn">(b)</span><span>Explain how chewing (mechanical digestion) helps chemical digestion happen faster.</span><span class="mk">[3]</span></div>
+    <div class="part"><span class="pn">(c)</span><span>The stomach produces hydrochloric acid. State one function of this acid, other than helping pepsin to work.</span><span class="mk">[1]</span></div>
+    <div class="part focus"><span class="pn">(d)</span><span>Using the terms “mechanical digestion” and “chemical digestion”, explain what happens to a piece of food as it is chewed and then swallowed.</span><span class="mk">[3]</span></div>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <div class="seg" id="stage"><button type="button" data-v="mouth" aria-pressed="true">1 · Mouth</button><button type="button" data-v="stomach" aria-pressed="false">2 · Stomach</button></div>
+      <svg id="fig" viewBox="0 0 440 320" role="img" aria-label="Food pieces and molecules being broken down"></svg>
+      <div class="btns">
+        <button class="btn" id="chew" type="button">Chew (mechanical)</button>
+        <button class="btn ghost" id="go" type="button">Let enzymes work for 1 minute</button>
+        <button class="btn ghost" id="reset" type="button">New mouthful</button>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <span class="chip" id="chip" data-state="info">…</span>
+      <dl class="rows" id="rows"></dl>
+      <div class="formula" id="formula"></div>
+    </div>
+  </section>
+
+  <section class="slips" aria-label="Check yourself">
+    <article class="card slip check">
+      <div class="tag"><span>Check #1</span><span>Q3.9(b), (d) · [3] [3]</span></div>
+      <p class="q">Run the enzymes for 1 minute without chewing, then try again after chewing twice. Why is the second run faster? Then describe the whole mouthful using both terms.</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>(b) Chewing breaks food into many smaller pieces, increasing its surface area. A larger surface area means enzymes can contact and act on more of the food at once, speeding up chemical digestion.<br>(d) Chewing is mechanical digestion: it physically breaks food into smaller pieces without changing it chemically, increasing surface area. Saliva (containing amylase) begins chemical digestion in the mouth, breaking down starch. After swallowing, mechanical churning and chemical digestion both continue further along the alimentary canal.</div>
+    </article>
+    <article class="card slip check">
+      <div class="tag"><span>Check #2</span><span>Q3.9(a), (c) · [3] [1]</span></div>
+      <p class="q">Switch to the stomach. What does protease do, and where does it act? What else does the acid do?</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>(a) Protease breaks down proteins into amino acids. It acts in the stomach (as pepsin) and in the small intestine (from the pancreas).<br>(c) The acid kills bacteria or pathogens that may be present in the food.</div>
+    </article>
+  </section>
+
+  <footer><span>Questions and mark points: Summit IQ BGCSE Biology Topic 3 Nutrition, Extension Practice Set 2. Pieces are modelled as cubes of food (8 cm³ in total). Digestion rates are illustrative.</span></footer>
+</main>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  const label = () => { if (btn) btn.textContent = isDark() ? '☀ Light' : '☾ Dark'; };
+  if (btn) btn.addEventListener('click', () => { root.dataset.theme = isDark() ? 'light' : 'dark'; label(); });
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', label); } catch (e) {}
+  label();
+})();
+// Convert a pointer event into the SVG's own coordinate system.
+function svgPoint(svg, e) {
+  const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+  return p.matrixTransform(svg.getScreenCTM().inverse());
+}
+// Make an SVG element draggable; onMove receives {x, y} in SVG units.
+function draggable(svg, el, onMove) {
+  let on = false;
+  el.addEventListener('pointerdown', e => { on = true; el.setPointerCapture(e.pointerId); onMove(svgPoint(svg, e)); e.preventDefault(); });
+  el.addEventListener('pointermove', e => { if (on) onMove(svgPoint(svg, e)); });
+  el.addEventListener('pointerup', () => { on = false; });
+  el.addEventListener('pointercancel', () => { on = false; });
+}
+const $ = id => document.getElementById(id);
+function setChip(el, state, text) { el.dataset.state = state; el.textContent = text; }
+function sig(x, n) { return Number(x.toPrecision(n)); }
+// "Check yourself" cards: the button reveals the answer below it.
+document.querySelectorAll('.reveal').forEach(b => b.addEventListener('click', () => {
+  const a = b.nextElementSibling; a.hidden = !a.hidden; b.textContent = a.hidden ? 'Show answer' : 'Hide answer';
+}));
+// Segmented buttons: data-group on the container; calls onSeg(group, value).
+function seg(el, onChange) {
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    onChange(b.dataset.v);
+  });
+}
+const svgEl = (tag, attrs) => { const e = document.createElementNS('http://www.w3.org/2000/svg', tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+
+(() => {
+  let stage = 'mouth', chews = 0, starch = 100, protein = 100, bact = 100, busy = false;
+  const side = () => 2 / Math.pow(2, chews), pieces = () => Math.pow(8, chews), sa = () => pieces() * 6 * side() ** 2;
+  function drawMouth() {
+    let s = `<text class="lab" x="110" y="18" text-anchor="middle" font-weight="600">Food pieces</text>`;
+    const n = pieces(), per = Math.round(Math.cbrt(n)), box = 150, cell = box / (per * 1.25);
+    // draw the pieces face-on: per × per squares, stacked in 'per' layers offset slightly
+    for (let z = per - 1; z >= 0; z--) for (let i = 0; i < per; i++) for (let j = 0; j < per; j++) {
+      const x = 32 + i * cell * 1.25 + z * cell * .35, y = 60 + j * cell * 1.25 - z * cell * .35;
+      s += `<rect class="piece" x="${x}" y="${y}" width="${cell}" height="${cell}" rx="1.5"/>`;
+    }
+    s += `<text class="lab" x="110" y="250" text-anchor="middle">${n} piece${n > 1 ? 's' : ''}, ${side()} cm across</text>`;
+    s += `<text class="tm" x="110" y="270" text-anchor="middle">surface area ${sa()} cm²</text>`;
+    s += molecules('Starch → maltose (amylase)', starch, 'glc');
+    return s;
+  }
+  function molecules(title, left, cls) {
+    let s = `<text class="lab" x="330" y="18" text-anchor="middle" font-weight="600">${title}</text>`;
+    const units = 12, broken = Math.round((1 - left / 100) * 6); // bonds cut, freeing pairs from the chain end
+    for (let r = 0; r < 3; r++) {
+      let x = 240, y = 70 + r * 70;
+      for (let i = 0; i < units; i++) {
+        const gap = (cls === 'glc' ? (i % 2 === 0 && i / 2 < broken * (r + 1) / 3 * 1.5) : (i < broken * 2 * (r + 1) / 3)) ? 8 : 0;
+        x += gap;
+        if (cls === 'glc') s += `<polygon class="glc" points="${[0, 60, 120, 180, 240, 300].map(a => `${(x + 6 * Math.cos(a * Math.PI / 180)).toFixed(1)},${(y + 6 * Math.sin(a * Math.PI / 180)).toFixed(1)}`).join(' ')}"/>`;
+        else s += `<circle class="aa" cx="${x}" cy="${y}" r="5.5" fill="${['#e0907a', '#8fb6e8', '#a8d08d', '#e7c46c'][i % 4]}"/>`;
+        x += 14;
+      }
+    }
+    return s;
+  }
+  function drawStomach() {
+    let s = `<path d="M40,60 C120,20 210,60 200,140 C194,210 120,240 60,220 C30,210 30,180 50,176 C100,178 130,160 130,130 C130,100 90,86 50,94 Z" fill="#ec9f9f" stroke="var(--ink)" stroke-width="2" opacity=".9"/>`;
+    s += `<text class="lab" x="110" y="262" text-anchor="middle">stomach: churning + gastric juice</text>`;
+    for (let i = 0; i < 10; i++) { const x = 70 + (i * 37) % 120, y = 70 + (i * 53) % 130; s += `<ellipse class="bac" cx="${x}" cy="${y}" rx="6" ry="3.5" opacity="${i < bact / 10 ? 1 : 0.1}"/>`; }
+    s += `<text class="lab" x="110" y="282" text-anchor="middle" style="fill: var(--good)">green rods = bacteria in the food</text>`;
+    s += molecules('Protein → amino acids (protease)', protein, 'aa');
+    return s;
+  }
+  function update() {
+    $('fig').innerHTML = stage === 'mouth' ? drawMouth() : drawStomach();
+    $('chew').textContent = stage === 'mouth' ? 'Chew (mechanical)' : 'Churn (mechanical)';
+    $('chew').disabled = stage === 'mouth' && chews >= 2;
+    const r = stage === 'mouth'
+      ? [['Pieces', pieces()], ['Surface area', sa() + ' cm²'], ['Total volume', '8 cm³ (unchanged)'], ['Starch digested by amylase', Math.round(100 - starch) + '%']]
+      : [['Protein digested by protease', Math.round(100 - protein) + '%'], ['Bacteria surviving the acid', Math.round(bact) + '%'], ['Starch digested so far', Math.round(100 - starch) + '%']];
+    $('rows').innerHTML = r.map(([a, b]) => `<div><dt>${a}</dt><dd>${b}</dd></div>`).join('');
+    $('formula').innerHTML = stage === 'mouth'
+      ? `Surface area = pieces × 6 × side²<br>= ${pieces()} × 6 × ${side()}² = <b>${sa()} cm²</b><br><span class="hl">Mechanical</span>: same food, more surface. <span class="hl">Chemical</span>: amylase turns starch into maltose.`
+      : `Protease (pepsin) breaks <b>proteins → amino acids</b><br>Hydrochloric acid <b>kills bacteria</b> and gives pepsin the acid it needs<br>Churning keeps the mechanical digestion going.`;
+    if (stage === 'mouth') setChip($('chip'), chews ? 'ok' : 'info', chews ? `Chewed: ${pieces()} pieces, ${sa()} cm² for amylase to work on` : 'One big piece: only 24 cm² of surface for amylase');
+    else setChip($('chip'), protein < 100 ? 'ok' : 'info', protein < 100 ? 'Protease is breaking the protein chains into amino acids' : 'Swallowed. Let the stomach enzymes work');
+  }
+  seg($('stage'), v => { stage = v; update(); });
+  $('chew').addEventListener('click', () => { if (stage === 'mouth') chews = Math.min(2, chews + 1); update(); });
+  $('go').addEventListener('click', () => {
+    if (busy) return; busy = true;
+    const t0 = performance.now(), s0 = starch, p0 = protein, b0 = bact;
+    const step = now => {
+      const f = Math.min(1, (now - t0) / 1200);
+      if (stage === 'mouth') starch = Math.max(0, s0 - f * sa() * 0.45); // % per simulated minute scales with surface area
+      else { protein = Math.max(0, p0 - f * 30); bact = Math.max(0, b0 - f * 40); starch = starch; }
+      update(); if (f < 1) requestAnimationFrame(step); else busy = false;
+    };
+    requestAnimationFrame(step);
+  });
+  $('reset').addEventListener('click', () => { chews = 0; starch = protein = bact = 100; update(); });
+  update();
+})();
+</script>

@@ -1,0 +1,335 @@
+<title>Nitrate and Magnesium</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+:root {
+  --bg: #f3f5f9;
+  --panel: #ffffff;
+  --panel-2: #f7f9fc;
+  --ink: #15203a;
+  --muted: #5b6680;
+  --faint: #8f99ae;
+  --line: #d8dee9;
+  --grid: #e8ecf3;
+  --accent: #1f5fbf;
+  --accent-ink: #ffffff;
+  --accent-soft: #e4ecfa;
+  --good: #1b7f55;
+  --good-soft: #e1f3ea;
+  --warn: #a8660f;
+  --warn-soft: #fbefdc;
+  --bad: #c0392b;
+  --bad-soft: #fbe5e2;
+  --p: #d0453a;
+  --n: #8a93a6;
+  --field: #7b5cc4;
+  --metal: #6a7385;
+  --copper: #b8672e;
+  --shadow: 0 1px 2px rgba(21, 32, 58, .06), 0 4px 16px rgba(21, 32, 58, .05);
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1320; --panel: #161d2d; --panel-2: #1b2336; --ink: #e6eaf3; --muted: #9ba6bd; --faint: #6f7a92;
+    --line: #2a3450; --grid: #20293d; --accent: #7fa9f2; --accent-ink: #0e1320; --accent-soft: #1c2a47;
+    --good: #52c793; --good-soft: #15342a; --warn: #e6b155; --warn-soft: #3a2e17; --bad: #f2786b; --bad-soft: #3d1f1d;
+    --p: #f07a6e; --n: #9aa3b8; --field: #a88ef0; --metal: #aab3c6; --copper: #e0935a;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1320; --panel: #161d2d; --panel-2: #1b2336; --ink: #e6eaf3; --muted: #9ba6bd; --faint: #6f7a92;
+  --line: #2a3450; --grid: #20293d; --accent: #7fa9f2; --accent-ink: #0e1320; --accent-soft: #1c2a47;
+  --good: #52c793; --good-soft: #15342a; --warn: #e6b155; --warn-soft: #3a2e17; --bad: #f2786b; --bad-soft: #3d1f1d;
+  --p: #f07a6e; --n: #9aa3b8; --field: #a88ef0; --metal: #aab3c6; --copper: #e0935a;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 var(--sans); }
+.page { max-width: 1100px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 22px; }
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.eyebrow { font: 500 11.5px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 { font: 600 clamp(1.7rem, 4.2vw, 2.45rem)/1.12 var(--serif); letter-spacing: -.01em; margin: 6px 0 0; text-wrap: balance; }
+h2 { font: 600 1.25rem/1.25 var(--serif); margin: 0; text-wrap: balance; }
+h3 { font: 600 11.5px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.lede { color: var(--muted); max-width: 66ch; margin: 8px 0 0; }
+.theme-btn { font: 500 12px var(--mono); color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; white-space: nowrap; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); min-width: 0; }
+.question { display: grid; gap: 10px; }
+.question p { margin: 0; max-width: 72ch; }
+.qhead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.part { display: grid; grid-template-columns: 5.2em minmax(0, 1fr) auto; gap: 4px 10px; align-items: baseline; padding-top: 8px; border-top: 1px dashed var(--line); }
+.part .pn { font: 600 13px var(--mono); color: var(--accent); white-space: nowrap; }
+.part .mk { font: 500 12.5px var(--mono); color: var(--muted); white-space: nowrap; }
+.part.focus .pn::after { content: " ●"; color: var(--warn); font-size: 9px; vertical-align: middle; }
+.data { font-family: var(--mono); font-size: .93em; }
+.board { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 760px) { .board { grid-template-columns: minmax(0, 1fr); } }
+.stack { display: grid; gap: 14px; }
+.page > *, .stack > *, .board > *, .slips > * { min-width: 0; }
+.figure svg { display: block; width: 100%; height: auto; touch-action: none; user-select: none; -webkit-user-select: none; }
+.cap { font-size: 12.5px; color: var(--muted); margin: 0; }
+.chip { display: inline-flex; align-items: center; gap: 8px; font: 600 12.5px/1.35 var(--sans); padding: 7px 12px; border-radius: 999px; border: 1px solid currentColor; }
+.chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+.chip[data-state="ok"] { color: var(--good); background: var(--good-soft); }
+.chip[data-state="warn"] { color: var(--warn); background: var(--warn-soft); }
+.chip[data-state="bad"] { color: var(--bad); background: var(--bad-soft); }
+.chip[data-state="info"] { color: var(--accent); background: var(--accent-soft); }
+.rows { display: grid; gap: 0; margin: 0; }
+.rows > div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--grid); align-items: baseline; }
+.rows > div:last-child { border-bottom: 0; }
+.rows dt { color: var(--muted); font-size: 13.5px; }
+.rows dd { white-space: nowrap; margin: 0; font: 600 14.5px var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.rows dd.big { font-size: 20px; color: var(--accent); }
+.rows dd.wrong { color: var(--bad); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.formula { font: 13.5px/1.75 var(--mono); background: var(--accent-soft); border-radius: 10px; padding: 12px 14px; overflow-x: auto; font-variant-numeric: tabular-nums; }
+.formula b { color: var(--accent); }
+.formula .hl { background: var(--warn-soft); color: var(--warn); border-radius: 4px; padding: 0 3px; font-weight: 600; }
+.formula .ms { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+.ctrl { display: grid; gap: 4px; }
+.ctrl label { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; font-weight: 600; }
+.ctrl label output { font: 600 13.5px var(--mono); color: var(--accent); white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: var(--accent); margin: 4px 0; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { font: 600 13.5px var(--sans); padding: 8px 14px; border-radius: 9px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.btn:disabled { opacity: .45; cursor: default; }
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.slips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 760px) { .slips { grid-template-columns: minmax(0, 1fr); } }
+.slip { display: grid; gap: 10px; align-content: start; }
+.slip .tag { display: flex; justify-content: space-between; gap: 10px; font: 600 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--bad); }
+.slip .tag span:last-child { color: var(--muted); }
+.slip .was, .slip .fix { border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+.slip .was { background: var(--bad-soft); }
+.slip .fix { background: var(--good-soft); }
+.slip .was > b:first-child, .slip .fix > b:first-child { display: block; font: 600 11px var(--mono); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 2px; }
+.slip .was > b:first-child { color: var(--bad); } .slip .fix > b:first-child { color: var(--good); }
+.slip .m { font-family: var(--mono); font-size: 13px; }
+.also { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; display: grid; gap: 4px; max-width: 80ch; }
+.also b { color: var(--ink); }
+footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; display: grid; gap: 6px; }
+footer table { border-collapse: collapse; font: 12px/1.5 var(--mono); }
+footer td { padding: 2px 12px 2px 0; vertical-align: top; }
+.tbl-wrap { overflow-x: auto; }
+svg text { font-family: var(--sans); }
+svg .t { font: 12px var(--sans); fill: var(--ink); }
+svg .tm { font: 500 12px var(--mono); fill: var(--ink); }
+svg .ts { font: 11px var(--mono); fill: var(--muted); }
+svg .handle { cursor: grab; }
+svg .handle:active { cursor: grabbing; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media (max-width: 520px) {
+  .part { grid-template-columns: minmax(0, 1fr) auto; }
+  .part > span:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+  .top { flex-direction: column-reverse; }
+  .theme-btn { align-self: flex-end; }
+  svg .ts { font-size: 13px; }
+  svg .tm { font-size: 14px; }
+}
+svg .pill { fill: var(--panel); opacity: .9; }
+/* biology additions */
+:root { --leaf: #4f9d45; --leaf-dark: #2f7a33; --chlorotic: #e3cf5a; --water: #dcecf7; --food: #e2b271; --blood: #d24a3f; --vein: #3f6fbf; --lymph: #f4e9b5; --epi: #f7d9cf; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --leaf: #6cbf5f; --leaf-dark: #4f9d45; --chlorotic: #d9c451; --water: #1f3346; --food: #d9a760; --blood: #ef6b5f; --vein: #6f9ae6; --lymph: #5a5230; --epi: #4a302c; } }
+:root[data-theme="dark"] { --leaf: #6cbf5f; --leaf-dark: #4f9d45; --chlorotic: #d9c451; --water: #1f3346; --food: #d9a760; --blood: #ef6b5f; --vein: #6f9ae6; --lymph: #5a5230; --epi: #4a302c; }
+.check .tag span:first-child { color: var(--accent); }
+.check .q { margin: 0; font-size: 15px; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.seg button { font: 600 13px var(--sans); padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.ctrl-row { display: grid; gap: 6px; }
+.ctrl-row > span { font-size: 13.5px; font-weight: 600; }
+svg .lab { font: 12.5px var(--sans); fill: var(--ink); }
+svg .edge { stroke: var(--ink); stroke-width: 1.8; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.tbl th, .tbl td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--grid); }
+.tbl th { font: 600 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.swatch { display: inline-block; width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--line); vertical-align: -2px; margin-right: 6px; }
+.rows dd { white-space: normal; max-width: 62%; }
+
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font: 600 13px var(--mono); }
+.chain span { padding: 5px 9px; border-radius: 8px; background: var(--panel); border: 1px solid var(--line); }
+.chain span.broken { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); text-decoration: line-through; }
+.chain i { font-style: normal; color: var(--muted); }
+.fixed { display: flex; flex-wrap: wrap; gap: 6px; }
+.fixed span { font-size: 12.5px; padding: 4px 10px; border-radius: 999px; background: var(--good-soft); color: var(--good); border: 1px solid currentColor; }
+</style>
+
+<main class="page">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Summit IQ · BGCSE Biology 0573 · Extension Set 2 · Q3.4</p>
+      <h1>Two missing minerals, two kinds of yellow</h1>
+      <p class="lede">Grow one seedling in a complete solution and an identical one with a mineral left out, then move the weeks forward. Without nitrate, the plant is stunted and its oldest leaves yellow first. Without magnesium, the leaves yellow between the veins.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <section class="card question" aria-label="Question 3.4 text">
+    <div class="qhead"><h2>Q3.4 · Mineral Nutrition</h2><span class="data">[Total: 13]</span></div>
+    <div class="part focus"><span class="pn">(a)</span><span>A plant deficient in magnesium shows yellowing between the leaf veins, while a plant deficient in nitrate shows yellowing of its older leaves first. Explain why these two deficiencies produce different patterns of yellowing.</span><span class="mk">[4]</span></div>
+    <div class="part focus"><span class="pn">(b)</span><span>In the nitrogen-deprivation investigation, one plant is grown in a complete nutrient solution and a second, identical plant in a solution with nitrate left out. Explain why it is important to include the “complete solution” plant.</span><span class="mk">[2]</span></div>
+    <div class="part focus"><span class="pn">(c)</span><span>State two variables, other than the presence of nitrate, that should be kept the same between the two plants, and explain why each matters.</span><span class="mk">[4]</span></div>
+    <div class="part focus"><span class="pn">(d)</span><span>After several weeks, the nitrate-deprived plant is shorter and has fewer leaves. Explain, in terms of what nitrate is used for in a plant, why a shortage of it results in less growth.</span><span class="mk">[3]</span></div>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <h3>The investigation · move the weeks forward</h3>
+      <svg id="fig" viewBox="0 0 440 400" role="img" aria-label="Seedlings in jars of nutrient solution, with a close-up of the oldest leaf">
+        <g id="jars"></g>
+        <text class="lab" x="330" y="24" text-anchor="middle">oldest leaf, close up</text>
+        <g id="close"></g>
+        <text id="closeTxt" class="lab" x="330" y="236" text-anchor="middle"></text>
+      </svg>
+      <div class="ctrl-row"><span>Solution in the test jar</span><div class="seg" id="sol"><button type="button" data-v="n" aria-pressed="true">Nitrate left out</button><button type="button" data-v="mg" aria-pressed="false">Magnesium left out</button></div></div>
+      <div class="ctrl">
+        <label for="wk">Time growing <output id="wOut"></output></label>
+        <input id="wk" type="range" min="0" max="6" step="1" value="4">
+      </div>
+      <div class="ctrl-row"><span>Kept the same for both jars (Q3.4c)</span>
+        <div class="fixed"><span>light intensity and duration</span><span>temperature</span><span>volume of solution (water)</span><span>starting size and age</span><span>all other minerals</span></div>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <span class="chip" id="chip" data-state="info">…</span>
+      <dl class="rows">
+        <div><dt>Height: control / test</dt><dd id="rH"></dd></div>
+        <div><dt>Leaves: control / test</dt><dd id="rN"></dd></div>
+        <div><dt>Yellowing pattern</dt><dd id="rP"></dd></div>
+        <div><dt>Where it starts</dt><dd id="rW"></dd></div>
+      </dl>
+      <h3>What the mineral is used for</h3>
+      <div class="chain" id="chain"></div>
+      <div class="formula" id="formula"></div>
+    </div>
+  </section>
+
+  <section class="slips" aria-label="Check yourself">
+    <article class="card slip check">
+      <div class="tag"><span>Check #1</span><span>Q3.4(a) · [4]</span></div>
+      <p class="q">Switch between the two solutions at 6 weeks. Why is one pattern about the veins and the other about the age of the leaf?</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>Magnesium deficiency reduces chlorophyll production throughout the leaf, but the veins keep some chlorophyll a little longer, giving yellowing <b style="display:inline;font:inherit;color:inherit;text-transform:none;letter-spacing:0">between</b> the veins. Nitrate deficiency causes protein and chlorophyll breakdown first in <b style="display:inline;font:inherit;color:inherit;text-transform:none;letter-spacing:0">older</b> leaves, because the plant moves (translocates) scarce nitrogen out of old leaves toward new growth. That is an age-based pattern, not a veins-versus-between-veins one.</div>
+    </article>
+    <article class="card slip check">
+      <div class="tag"><span>Check #2</span><span>Q3.4(b), (d) · [2] [3]</span></div>
+      <p class="q">Why keep the complete-solution jar? And why does missing nitrate mean less growth?</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>(b) It acts as a control, showing what normal growth looks like. Without it you can't be sure any difference is caused by the missing nitrate rather than some other factor.<br>(d) Nitrate is needed to make amino acids, which are built into proteins. Proteins are essential for making new cells (structural proteins, enzymes). Without enough nitrate the plant cannot build new tissue as fast, so growth (height, leaf number) is reduced.</div>
+    </article>
+  </section>
+
+  <footer><span>Questions and mark points: Summit IQ BGCSE Biology Topic 3 Nutrition, Extension Practice Set 2. Growth figures are illustrative. In real plants magnesium is also moved to new growth, so its interveinal yellowing usually shows on older leaves first as well.</span></footer>
+</main>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  const label = () => { if (btn) btn.textContent = isDark() ? '☀ Light' : '☾ Dark'; };
+  if (btn) btn.addEventListener('click', () => { root.dataset.theme = isDark() ? 'light' : 'dark'; label(); });
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', label); } catch (e) {}
+  label();
+})();
+// Convert a pointer event into the SVG's own coordinate system.
+function svgPoint(svg, e) {
+  const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+  return p.matrixTransform(svg.getScreenCTM().inverse());
+}
+// Make an SVG element draggable; onMove receives {x, y} in SVG units.
+function draggable(svg, el, onMove) {
+  let on = false;
+  el.addEventListener('pointerdown', e => { on = true; el.setPointerCapture(e.pointerId); onMove(svgPoint(svg, e)); e.preventDefault(); });
+  el.addEventListener('pointermove', e => { if (on) onMove(svgPoint(svg, e)); });
+  el.addEventListener('pointerup', () => { on = false; });
+  el.addEventListener('pointercancel', () => { on = false; });
+}
+const $ = id => document.getElementById(id);
+function setChip(el, state, text) { el.dataset.state = state; el.textContent = text; }
+function sig(x, n) { return Number(x.toPrecision(n)); }
+// "Check yourself" cards: the button reveals the answer below it.
+document.querySelectorAll('.reveal').forEach(b => b.addEventListener('click', () => {
+  const a = b.nextElementSibling; a.hidden = !a.hidden; b.textContent = a.hidden ? 'Show answer' : 'Hide answer';
+}));
+// Segmented buttons: data-group on the container; calls onSeg(group, value).
+function seg(el, onChange) {
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    onChange(b.dataset.v);
+  });
+}
+const svgEl = (tag, attrs) => { const e = document.createElementNS('http://www.w3.org/2000/svg', tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+
+(() => {
+  let sol = 'n', w = 4;
+  const LEAF = 'M0,-50 C24,-34 28,12 0,50 C-28,12 -24,-34 0,-50 Z';
+  const leafSvg = (x, y, ang, sc, kind) => {
+    // kind: g = green, y = uniformly yellow, v = yellow between green veins
+    const fill = kind === 'g' ? 'var(--leaf)' : 'var(--chlorotic)';
+    let veins = '';
+    if (kind === 'v') veins = `<path d="M0,-44 L0,48 M0,-20 L14,-34 M0,-20 L-14,-34 M0,4 L17,-12 M0,4 L-17,-12 M0,26 L14,10 M0,26 L-14,10" stroke="var(--leaf-dark)" stroke-width="${4 / sc}" fill="none" stroke-linecap="round"/>`;
+    return `<g transform="translate(${x},${y}) rotate(${ang}) translate(0,-${50 * sc}) scale(${sc})"><path d="${LEAF}" fill="${fill}" stroke="var(--ink)" stroke-width="${1.4 / sc}"/>${veins}</g>`;
+  };
+  const growth = (kind, wk) => ({ h: 30 + wk * (kind === 'c' ? 24 : kind === 'mg' ? 17 : 8), n: 1 + (kind === 'c' ? wk : kind === 'mg' ? Math.ceil(wk * .8) : Math.floor(wk / 2)) });
+  function plant(cx, lidY, kind, wk) {
+    const { h, n } = growth(kind, wk);
+    let s = `<path d="M${cx},${lidY} L${cx},${lidY - h}" stroke="var(--leaf-dark)" stroke-width="4" stroke-linecap="round"/>`;
+    // leaf pairs from the bottom (oldest) to the top (youngest)
+    const bad = kind === 'c' ? 0 : Math.min(n - 1, Math.floor(wk * (kind === 'n' ? .5 : .6)));
+    for (let i = 0; i < n; i++) {
+      const y = lidY - 14 - i * (h - 18) / Math.max(1, n);
+      const sc = 0.34 + 0.1 * (n - i) / n;
+      const k = i < bad ? (kind === 'n' ? 'y' : 'v') : 'g';
+      s += leafSvg(cx - 3, y, -58, sc, k) + leafSvg(cx + 3, y, 58, sc, k);
+    }
+    return s;
+  }
+  function jar(cx, title, kind) {
+    const top = 250, lid = top - 10;
+    let s = `<rect x="${cx - 52}" y="${top + 28}" width="104" height="92" fill="var(--water)"/>`;
+    s += `<path d="M${cx - 52},${top} L${cx - 52},${top + 120} L${cx + 52},${top + 120} L${cx + 52},${top}" fill="none" class="edge"/>`;
+    s += `<line x1="${cx - 52}" y1="${top + 28}" x2="${cx + 52}" y2="${top + 28}" stroke="var(--ink)" stroke-width="1"/>`;
+    for (const [a, b] of [[-58, -26], [-18, -6], [6, 18], [26, 58]]) s += `<rect x="${cx + a}" y="${lid}" width="${b - a}" height="10" fill="var(--faint)" stroke="var(--ink)" stroke-width="1.2"/>`;
+    s += ['M0,0 L0,90', 'M0,20 Q-14,40 -24,76', 'M0,26 Q16,46 26,84', 'M0,56 Q-8,70 -12,96'].map(d => `<path d="${d}" transform="translate(${cx},${top})" fill="none" stroke="var(--copper)" stroke-width="1.6"/>`).join('');
+    s += plant(cx, lid, kind, w);
+    s += `<text class="lab" x="${cx}" y="${top + 140}" text-anchor="middle" font-weight="600">${title}</text>`;
+    return s;
+  }
+  function update() {
+    const c = growth('c', w), t = growth(sol, w);
+    $('jars').innerHTML = jar(70, 'Complete (control)', 'c') + jar(196, sol === 'n' ? 'Nitrate left out' : 'Magnesium left out', sol);
+    const showBad = w >= 2;
+    const k = !showBad ? 'g' : sol === 'n' ? 'y' : 'v';
+    $('close').innerHTML = leafSvg(330, 214, 0, 1.75, k);
+    $('closeTxt').textContent = k === 'g' ? 'still green' : k === 'y' ? 'whole leaf pale yellow' : 'yellow between the veins';
+    $('wOut').textContent = w + (w === 1 ? ' week' : ' weeks');
+    $('rH').textContent = `${c.h} / ${t.h} mm`; $('rN').textContent = `${c.n * 2} / ${t.n * 2}`;
+    $('rP').textContent = !showBad ? 'none yet' : sol === 'n' ? 'whole leaf yellow' : 'between the veins';
+    $('rW').textContent = !showBad ? '–' : 'oldest, lowest leaves';
+    const chainN = ['nitrate', 'amino acids', 'proteins', 'new cells', 'growth'], chainMg = ['magnesium', 'chlorophyll', 'photosynthesis', 'sugars'];
+    const ch = sol === 'n' ? chainN : chainMg;
+    $('chain').innerHTML = ch.map((x, i) => `<span class="${i === 0 ? 'broken' : ''}">${x}</span>`).join('<i>→</i>');
+    $('formula').innerHTML = sol === 'n'
+      ? `No nitrate → no amino acids → <span class="hl">no new proteins</span><br>→ fewer new cells → shorter, fewer leaves<br>Scarce nitrogen moves to new growth, so <b>old leaves yellow first</b>.`
+      : `No magnesium → <span class="hl">less chlorophyll</span> across the leaf<br>Veins keep some chlorophyll a little longer<br>→ <b>yellow between the veins</b>.`;
+    if (w === 0) setChip($('chip'), 'info', 'Week 0: both seedlings are identical');
+    else if (sol === 'n') setChip($('chip'), w >= 2 ? 'warn' : 'info', `Nitrate left out: ${c.h - t.h} mm shorter than the control, older leaves yellowing`);
+    else setChip($('chip'), w >= 2 ? 'warn' : 'info', 'Magnesium left out: chlorophyll lost between the veins');
+  }
+  seg($('sol'), v => { sol = v; update(); });
+  $('wk').addEventListener('input', e => { w = +e.target.value; update(); });
+  update();
+})();
+</script>

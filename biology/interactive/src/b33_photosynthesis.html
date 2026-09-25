@@ -1,0 +1,156 @@
+<title>Light and Photosynthesis</title>
+<!--HEAD-->
+<style>
+/*SHARED_CSS*/
+.bubble { fill: var(--panel); stroke: var(--accent); stroke-width: 1.4; }
+.ray { stroke: var(--warn); stroke-width: 2.5; stroke-linecap: round; }
+</style>
+
+<main class="page">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Summit IQ · BGCSE Biology 0573 · Extension Set 2 · Q3.3</p>
+      <h1>Why the curve levels off</h1>
+      <p class="lede">More light speeds photosynthesis up, but only until something else runs short. Drag the light intensity and watch the pondweed's bubbles. Then change the CO₂ or the temperature to see which factor is holding the rate back.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <section class="card question" aria-label="Question 3.3 text">
+    <div class="qhead"><h2>Q3.3 · Plant Nutrition — Photosynthesis</h2><span class="data">[Total: 10]</span></div>
+    <div class="part"><span class="pn">(a)</span><span>Write the symbol equation for photosynthesis.</span><span class="mk">[2]</span></div>
+    <div class="part"><span class="pn">(b)</span><span>Explain the role of chlorophyll in photosynthesis.</span><span class="mk">[2]</span></div>
+    <div class="part focus"><span class="pn">(c)</span><span>A gardener increases the carbon dioxide concentration around a crop grown in a greenhouse. Explain why this can increase the rate of photosynthesis, and why it will not go on increasing the rate indefinitely.</span><span class="mk">[3]</span></div>
+    <div class="part focus"><span class="pn">(d)</span><span>Describe how the rate of photosynthesis changes as light intensity increases from zero (assume CO2 and temperature stay constant), and state what becomes the limiting factor once the rate levels off.</span><span class="mk">[3]</span></div>
+    <p class="formula" style="margin:0">6CO₂ + 6H₂O <span class="data">—(light energy, chlorophyll)→</span> C₆H₁₂O₆ + 6O₂<span class="ms">(a) 1 mark for correct formulae, 1 mark for showing the conditions. (b) Chlorophyll absorbs light energy and converts it into chemical energy.</span></p>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <h3>Pondweed under a lamp · bubbles of oxygen</h3>
+      <svg id="scene" viewBox="0 0 440 200" role="img" aria-label="Lamp shining on pondweed in a beaker, releasing bubbles">
+        <rect x="14" y="70" width="44" height="58" rx="6" fill="var(--panel-2)" stroke="var(--ink)" stroke-width="1.8"/>
+        <circle id="bulb" cx="62" cy="99" r="16" fill="var(--warn)" stroke="var(--ink)" stroke-width="1.8"/>
+        <g id="rays"></g>
+        <text class="lab" x="36" y="150" text-anchor="middle">lamp</text>
+        <path d="M230,30 L230,186 L356,186 L356,30" fill="none" class="edge"/>
+        <rect x="232" y="50" width="122" height="134" fill="var(--water)"/>
+        <line x1="230" y1="50" x2="356" y2="50" stroke="var(--ink)" stroke-width="1"/>
+        <g id="weed"></g>
+        <g id="bubbles"></g>
+        <text class="lab" x="364" y="120">pondweed</text>
+        <text class="lab" x="364" y="136">in water</text>
+      </svg>
+      <h3>Rate of photosynthesis against light intensity · drag the dot</h3>
+      <svg id="graph" viewBox="0 0 440 300" role="img" aria-label="Graph of rate of photosynthesis against light intensity"></svg>
+      <div class="ctrl">
+        <label for="light">Light intensity <output id="lOut"></output></label>
+        <input id="light" type="range" min="0" max="100" step="1" value="25">
+      </div>
+      <div class="ctrl-row"><span>Carbon dioxide</span><div class="seg" id="co2"><button type="button" data-v="low" aria-pressed="true">Low (air)</button><button type="button" data-v="high" aria-pressed="false">High (extra CO₂)</button></div></div>
+      <div class="ctrl-row"><span>Temperature</span><div class="seg" id="temp"><button type="button" data-v="15" aria-pressed="true">15 °C</button><button type="button" data-v="25" aria-pressed="false">25 °C</button></div></div>
+    </div>
+
+    <div class="card stack">
+      <span class="chip" id="chip" data-state="info">…</span>
+      <dl class="rows">
+        <div><dt>Light intensity</dt><dd id="rL"></dd></div>
+        <div><dt>Carbon dioxide</dt><dd id="rC"></dd></div>
+        <div><dt>Temperature</dt><dd id="rT"></dd></div>
+        <div><dt>Rate (bubbles per minute)</dt><dd class="big" id="rR"></dd></div>
+        <div><dt>Limiting factor</dt><dd id="rF"></dd></div>
+      </dl>
+      <div class="formula" id="formula"></div>
+      <p class="cap">A limiting factor is whichever condition is in shortest supply. Raising it speeds the reaction up. Raising anything else does nothing.</p>
+    </div>
+  </section>
+
+  <section class="slips" aria-label="Check yourself">
+    <article class="card slip check">
+      <div class="tag"><span>Check #1</span><span>Q3.3(c) · [3]</span></div>
+      <p class="q">Why does extra CO₂ speed photosynthesis up, and why not forever? Try the CO₂ button at high light, then at low light.</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>More CO₂ provides more raw material, so more glucose can be made per unit time and the rate increases. Eventually another factor (light intensity or temperature) becomes limiting instead, so adding further CO₂ beyond that point makes no more difference.</div>
+    </article>
+    <article class="card slip check">
+      <div class="tag"><span>Check #2</span><span>Q3.3(d) · [3]</span></div>
+      <p class="q">Drag the light from zero to full. Describe the curve and name the limiting factor on the flat part.</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>Rate increases roughly in proportion to light intensity at first, then levels off (plateaus) at high light intensity. At that point light is no longer limiting. The rate is now limited by CO₂ concentration or temperature instead.</div>
+    </article>
+  </section>
+
+  <footer><span>Questions and mark points: Summit IQ BGCSE Biology Topic 3 Nutrition, Extension Practice Set 2. The graph shows the shape only. Its numbers are illustrative, not measured data.</span></footer>
+</main>
+
+<script>
+/*SHARED_JS*/
+(() => {
+  const PMAX = { 'low-15': 40, 'low-25': 55, 'high-15': 62, 'high-25': 88 }, K = 22;
+  let co2 = 'low', temp = '15', I = 25;
+  const rate = (i, c = co2, t = temp) => PMAX[c + '-' + t] * (1 - Math.exp(-i / K));
+  const L = 52, R = 420, T = 20, B = 246, YMAX = 100;
+  const X = i => L + i / 100 * (R - L), Y = r => B - r / YMAX * (B - T);
+  const g = $('graph');
+
+  // pondweed stems
+  $('weed').innerHTML = [['M290,184 C282,150 300,120 288,70'], ['M300,184 C310,150 296,118 312,84'], ['M280,184 C270,160 276,130 266,104']]
+    .map(([d]) => `<path d="${d}" fill="none" stroke="var(--leaf-dark)" stroke-width="4" stroke-linecap="round"/>`).join('') +
+    [[288, 80], [284, 100], [306, 96], [300, 120], [270, 116], [276, 140], [296, 150]].map(([x, y], i) =>
+      `<ellipse cx="${x + (i % 2 ? 8 : -8)}" cy="${y}" rx="9" ry="4" fill="var(--leaf)" stroke="var(--ink)" stroke-width="1" transform="rotate(${i % 2 ? 25 : -25} ${x} ${y})"/>`).join('');
+
+  function drawGraph() {
+    let s = `<rect x="${L}" y="${T}" width="${X(K * Math.log(10)) - L}" height="${B - T}" fill="var(--warn-soft)"/>`;
+    s += `<text class="lab" x="${L + 8}" y="${T + 16}" style="fill: var(--warn)">light limiting</text>`;
+    s += `<text class="lab" x="${R - 6}" y="${T + 16}" text-anchor="end" style="fill: var(--muted)">another factor limiting</text>`;
+    s += `<line x1="${L}" y1="${B}" x2="${R}" y2="${B}" class="edge"/><line x1="${L}" y1="${T}" x2="${L}" y2="${B}" class="edge"/>`;
+    s += `<text class="lab" x="${(L + R) / 2}" y="${B + 22}" text-anchor="middle">Light intensity →</text>`;
+    s += `<text class="lab" x="18" y="${(T + B) / 2}" text-anchor="middle" transform="rotate(-90 18 ${(T + B) / 2})">Rate of photosynthesis</text>`;
+    const path = (c, t) => { let d = ''; for (let i = 0; i <= 100; i += 2) d += (d ? 'L' : 'M') + X(i).toFixed(1) + ',' + Y(rate(i, c, t)).toFixed(1); return d; };
+    for (const key in PMAX) { const [c, t] = key.split('-'); if (c !== co2 || t !== temp) s += `<path d="${path(c, t)}" fill="none" stroke="var(--faint)" stroke-width="1.4" stroke-dasharray="4 4"/>`; }
+    s += `<path d="${path(co2, temp)}" fill="none" stroke="var(--accent)" stroke-width="3"/>`;
+    const r = rate(I);
+    s += `<line x1="${X(I)}" x2="${X(I)}" y1="${Y(r)}" y2="${B}" stroke="var(--accent)" stroke-dasharray="4 3"/>`;
+    s += `<circle id="knob" class="handle" cx="${X(I)}" cy="${Y(r)}" r="9" fill="var(--accent)" fill-opacity=".25" stroke="var(--accent)" stroke-width="2.5" tabindex="0" aria-label="Light intensity; use arrow keys"/>`;
+    g.innerHTML = s;
+    const knob = $('knob');
+    draggable(g, knob, p => setI(Math.round((p.x - L) / (R - L) * 100)));
+    knob.addEventListener('keydown', e => { if (e.key === 'ArrowRight') { setI(I + 2); e.preventDefault(); } if (e.key === 'ArrowLeft') { setI(I - 2); e.preventDefault(); } });
+  }
+  function update() {
+    const r = rate(I), slope = PMAX[co2 + '-' + temp] / K * Math.exp(-I / K), lightLimiting = I < K * Math.log(10);
+    $('light').value = I; $('lOut').textContent = I + '%';
+    $('rL').textContent = I + '%'; $('rC').textContent = co2 === 'low' ? 'low (air)' : 'high'; $('rT').textContent = temp + ' °C';
+    $('rR').textContent = Math.round(r);
+    const other = co2 === 'low' ? 'carbon dioxide' : (temp === '15' ? 'temperature' : 'carbon dioxide or temperature');
+    $('rF').textContent = I === 0 ? 'light (none)' : lightLimiting ? 'light' : other;
+    if (I === 0) setChip($('chip'), 'bad', 'No light: no photosynthesis, no bubbles');
+    else if (lightLimiting) setChip($('chip'), 'warn', 'Light is limiting: more light gives a faster rate');
+    else setChip($('chip'), 'ok', `Curve has levelled off: ${other} is now limiting`);
+    $('formula').innerHTML = lightLimiting
+      ? `Light ${I}% → rate ${Math.round(r)} bubbles/min<br>Add 10% more light → <b>+${Math.round(rate(Math.min(100, I + 10)) - r)}</b> bubbles/min<br>Light is the factor in shortest supply.`
+      : `Light ${I}% → rate ${Math.round(r)} bubbles/min<br>Add 10% more light → <b>+${Math.round(rate(Math.min(100, I + 10)) - r)}</b> bubbles/min<br><span class="hl">Try the ${co2 === 'low' ? 'CO₂' : 'temperature'} buttons instead</span>`;
+    // lamp rays
+    let rays = ''; const n = Math.round(I / 14);
+    for (let k = 0; k < n; k++) { const a = (-30 + k * 60 / Math.max(1, n - 1)) * Math.PI / 180; rays += `<line class="ray" x1="${84 + 10 * Math.cos(a)}" y1="${99 + 10 * Math.sin(a)}" x2="${84 + 40 * Math.cos(a)}" y2="${99 + 40 * Math.sin(a)}" opacity="${0.3 + I / 150}"/>`; }
+    $('rays').innerHTML = rays; $('bulb').setAttribute('fill-opacity', 0.25 + I / 130);
+    drawGraph();
+  }
+  const setI = v => { I = Math.max(0, Math.min(100, v)); update(); };
+  $('light').addEventListener('input', e => setI(+e.target.value));
+  seg($('co2'), v => { co2 = v; update(); });
+  seg($('temp'), v => { temp = v; update(); });
+
+  // bubbles: one simulated minute = 6 s, so spawn every 6000 / rate ms
+  const bub = $('bubbles'), live = [], still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let last = performance.now(), acc = 0;
+  function tick(now) {
+    const dt = now - last; last = now; const r = rate(I);
+    if (r > 0.5 && !still) { acc += dt; const every = 6000 / r; while (acc > every) { acc -= every; const src = [[288, 72], [312, 86], [266, 106]][live.length % 3]; const c = svgEl('circle', { cx: src[0], cy: src[1], r: 3.2, class: 'bubble' }); bub.appendChild(c); live.push({ c, y: src[1], x: src[0] }); } }
+    for (let k = live.length - 1; k >= 0; k--) { const b = live[k]; b.y -= dt * 0.05; b.c.setAttribute('cy', b.y); b.c.setAttribute('cx', b.x + Math.sin(b.y / 6) * 1.5); if (b.y < 54) { b.c.remove(); live.splice(k, 1); } }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  update();
+})();
+</script>

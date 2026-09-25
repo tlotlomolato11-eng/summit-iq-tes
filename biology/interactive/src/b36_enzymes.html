@@ -1,0 +1,172 @@
+<title>Amylase at 5 and 80 °C</title>
+<!--HEAD-->
+<style>
+/*SHARED_CSS*/
+.enz { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.6; }
+.sub { fill: var(--food); stroke: var(--ink); stroke-width: 1.2; }
+.prod { fill: var(--good); }
+.tubecard { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tubecard > div { display: grid; gap: 6px; }
+</style>
+
+<main class="page">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Summit IQ · BGCSE Biology 0573 · Extension Set 2 · Q3.6</p>
+      <h1>Too cold is slow. Too hot is broken.</h1>
+      <p class="lede">Both tubes break down very little starch, but for different reasons. Run them for 10 minutes, then bring both to 35 °C. The cold enzyme speeds back up. The heated one never recovers.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <section class="card question" aria-label="Question 3.6 text">
+    <div class="qhead"><h2>Q3.6 · Enzymes</h2><span class="data">[Total: 11]</span></div>
+    <div class="part"><span class="pn">(a)</span><span>Distinguish between an anabolic reaction and a catabolic reaction, giving one example of each involving an enzyme.</span><span class="mk">[4]</span></div>
+    <div class="part focus"><span class="pn">(b)</span><span>A student places the same amount of starch and amylase in two test tubes: one kept at 5°C, one kept at 80°C. Explain the difference in the amount of starch broken down after 10 minutes in each tube.</span><span class="mk">[4]</span></div>
+    <div class="part focus"><span class="pn">(c)</span><span>The student then warms the 5°C tube up to 35°C, and separately cools the 80°C tube down to 35°C. Predict and explain whether the rate of reaction recovers in each case.</span><span class="mk">[3]</span></div>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <h3>Inside each tube · amylase and starch</h3>
+      <svg id="fig" viewBox="0 0 440 330" role="img" aria-label="Two tubes of starch and amylase with a close-up of the enzyme molecules in each">
+        <g id="viewA"></g><g id="viewB"></g>
+        <g id="tubes"></g>
+      </svg>
+      <div class="tubecard">
+        <div><span class="cap"><b>Tube A</b> temperature</span><div class="seg" id="segA"><button type="button" data-v="5" aria-pressed="true">5 °C</button><button type="button" data-v="35" aria-pressed="false">35 °C</button><button type="button" data-v="80" aria-pressed="false">80 °C</button></div></div>
+        <div><span class="cap"><b>Tube B</b> temperature</span><div class="seg" id="segB"><button type="button" data-v="5" aria-pressed="false">5 °C</button><button type="button" data-v="35" aria-pressed="false">35 °C</button><button type="button" data-v="80" aria-pressed="true">80 °C</button></div></div>
+      </div>
+      <div class="btns">
+        <button class="btn" id="run" type="button">Run for 10 minutes</button>
+        <button class="btn ghost" id="reset" type="button">Start again with fresh tubes</button>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <span class="chip" id="chip" data-state="info">…</span>
+      <dl class="rows">
+        <div><dt>Tube A: enzyme</dt><dd id="aE"></dd></div>
+        <div><dt>Tube A: starch broken down</dt><dd class="big" id="aS"></dd></div>
+        <div><dt>Tube B: enzyme</dt><dd id="bE"></dd></div>
+        <div><dt>Tube B: starch broken down</dt><dd class="big" id="bS"></dd></div>
+        <div><dt>Minutes run so far</dt><dd id="mins"></dd></div>
+      </dl>
+      <div class="formula" id="formula"></div>
+      <p class="cap">(a) This reaction is <b>catabolic</b>: amylase breaks a large molecule (starch) into smaller ones (maltose). An <b>anabolic</b> reaction builds large molecules from small ones, e.g. joining amino acids to form a protein.</p>
+    </div>
+  </section>
+
+  <section class="slips" aria-label="Check yourself">
+    <article class="card slip check">
+      <div class="tag"><span>Check #1</span><span>Q3.6(b) · [4]</span></div>
+      <p class="q">Run A at 5 °C and B at 80 °C. Both break down little starch. Give the different reason for each.</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>At 5 °C the enzyme has very little kinetic energy, so few successful enzyme–substrate collisions occur and little starch is broken down. At 80 °C the enzyme is denatured: its active site's shape is permanently destroyed by the heat, so it can no longer bind starch at all. Little or no starch is broken down, but for a different reason.</div>
+    </article>
+    <article class="card slip check">
+      <div class="tag"><span>Check #2</span><span>Q3.6(c) · [3]</span></div>
+      <p class="q">After the run, set both tubes to 35 °C and run again. Which one recovers, and why?</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>Warming the 5 °C tube to 35 °C (near the optimum) increases the rate, because the enzyme was undamaged and simply moving slowly. Cooling the 80 °C tube to 35 °C does NOT restore activity, because that enzyme was already denatured at 80 °C. The change to its shape is permanent, so the rate stays low.</div>
+    </article>
+  </section>
+
+  <footer><span>Questions and mark points: Summit IQ BGCSE Biology Topic 3 Nutrition, Extension Practice Set 2. Rates are illustrative. The model treats 60 °C and above as denaturing, and that damage is permanent.</span></footer>
+</main>
+
+<script>
+/*SHARED_JS*/
+(() => {
+  const tubes = { A: { T: 5, dead: false, starch: 100, cx: 110 }, B: { T: 80, dead: false, starch: 100, cx: 330 } };
+  let mins = 0, running = false;
+  const rateOf = t => t.dead || t.T >= 60 ? 0 : 20 * Math.pow(2, (Math.min(t.T, 40) - 35) / 10); // % starch per minute
+  const FIT = 'M-15,-30 L-7,-13 L7,-13 L15,-30', BENT = 'M-17,-30 L-10,-26 L-2,-17 L3,-24 L11,-20 L18,-29';
+  const enzymePath = dead => { const n = dead ? BENT : FIT; const start = n.split(' ')[0].slice(1); return `M${start} ${n.split(' ').slice(1).join(' ')} C45,-36 56,-5 48,15 C40,38 -40,38 -48,15 C-56,-5 -45,-36 ${start} Z`; };
+  const mix = (f) => { // iodine colour: blue-black with starch, orange-brown without
+    const a = [31, 35, 70], b = [200, 135, 58]; return `rgb(${a.map((v, i) => Math.round(b[i] + (v - b[i]) * f)).join(',')})`; };
+
+  // particle close-ups
+  const views = {};
+  for (const k of ['A', 'B']) {
+    const t = tubes[k], g = $('view' + k), cy = 88;
+    g.innerHTML = `<circle cx="${t.cx}" cy="${cy}" r="72" fill="var(--panel-2)" stroke="var(--line)" stroke-width="1.5"/>` +
+      `<path id="enz${k}" class="enz" transform="translate(${t.cx},${cy + 20})"/>` +
+      `<text class="lab" x="${t.cx}" y="18" text-anchor="middle" font-weight="600">Tube ${k} close up</text><g id="parts${k}"></g>`;
+    const parts = [];
+    for (let i = 0; i < 5; i++) { const el = svgEl('path', { d: 'M-7,0 L-3.5,7 L3.5,7 L7,0 C6,-5 -6,-5 -7,0 Z', class: 'sub' }); $('parts' + k).appendChild(el); const a = Math.random() * 6.28; parts.push({ el, x: t.cx + Math.cos(a) * 50, y: cy + Math.sin(a) * 40, vx: Math.cos(a * 3), vy: Math.sin(a * 3), bound: 0 }); }
+    views[k] = { parts, cy };
+  }
+  function drawTubes() {
+    let s = '';
+    for (const k of ['A', 'B']) {
+      const t = tubes[k], x = t.cx, top = 182, bot = 292;
+      s += `<path d="M${x - 16},${top + 30} L${x - 16},${bot} A16,16 0 0 0 ${x + 16},${bot} L${x + 16},${top + 30} Z" fill="var(--panel)" />`;
+      s += `<path d="M${x - 16},${top + 30} L${x - 16},${bot} A16,16 0 0 0 ${x + 16},${bot} L${x + 16},${top + 30} Z" fill="${mix(t.starch / 100)}" opacity=".85"/>`;
+      s += `<path d="M${x - 16},${top} L${x - 16},${bot} A16,16 0 0 0 ${x + 16},${bot} L${x + 16},${top}" fill="none" class="edge"/>`;
+      s += `<text class="tm" x="${x + 30}" y="${top + 50}">${t.T} °C</text>`;
+      s += `<text class="lab" x="${x + 30}" y="${top + 70}" style="fill: var(--muted)">iodine test:</text>`;
+      s += `<text class="lab" x="${x + 30}" y="${top + 86}">${t.starch > 60 ? 'blue-black' : t.starch > 15 ? 'dark brown' : 'orange-brown'}</text>`;
+      s += `<text class="lab" x="${x}" y="${bot + 34}" text-anchor="middle" font-weight="600">Tube ${k}</text>`;
+      $('enz' + k).setAttribute('d', enzymePath(t.dead || t.T >= 60));
+    }
+    $('tubes').innerHTML = s;
+  }
+  function update() {
+    drawTubes();
+    const st = t => t.dead || t.T >= 60 ? 'denatured (active site changed)' : t.T < 20 ? 'intact, moving slowly' : 'intact, working fast';
+    $('aE').textContent = st(tubes.A); $('bE').textContent = st(tubes.B);
+    $('aS').textContent = Math.round(100 - tubes.A.starch) + '%'; $('bS').textContent = Math.round(100 - tubes.B.starch) + '%';
+    $('mins').textContent = mins.toFixed(0) + ' min';
+    const A = tubes.A, B = tubes.B;
+    $('formula').innerHTML = ['A', 'B'].map(k => { const t = tubes[k], r = rateOf(t); return `Tube ${k} at ${t.T} °C: <b>${r.toFixed(1)}%</b> of starch per minute${t.dead && t.T < 60 ? ' <span class="hl">denatured earlier</span>' : ''}`; }).join('<br>') +
+      '<span class="ms">starch —(amylase)→ maltose</span>';
+    if (B.dead && B.T < 60) setChip($('chip'), 'bad', 'Tube B is back at ' + B.T + ' °C but still denatured: the shape change is permanent');
+    else if (A.T === 5 && B.T === 80) setChip($('chip'), 'info', 'The exam setup: 5 °C is slow, 80 °C denatures the enzyme');
+    else if (A.T === 35 && !A.dead) setChip($('chip'), 'ok', 'Tube A warmed to 35 °C: the undamaged enzyme speeds back up');
+    else setChip($('chip'), 'info', 'Run the tubes and compare');
+  }
+  const segs = { A: $('segA'), B: $('segB') };
+  for (const k of ['A', 'B']) seg(segs[k], v => { tubes[k].T = +v; if (+v >= 60) tubes[k].dead = true; update(); });
+  $('run').addEventListener('click', () => {
+    if (running) return; running = true; $('run').disabled = true;
+    for (const k of ['A', 'B']) if (tubes[k].T >= 60) tubes[k].dead = true;
+    const t0 = performance.now(), m0 = mins, s0 = { A: tubes.A.starch, B: tubes.B.starch };
+    const step = now => {
+      const f = Math.min(1, (now - t0) / 2500);
+      for (const k of ['A', 'B']) tubes[k].starch = Math.max(0, s0[k] - rateOf(tubes[k]) * 10 * f);
+      mins = m0 + 10 * f; update();
+      if (f < 1) requestAnimationFrame(step); else { running = false; $('run').disabled = false; }
+    };
+    requestAnimationFrame(step);
+  });
+  $('reset').addEventListener('click', () => {
+    Object.assign(tubes.A, { T: 5, dead: false, starch: 100 }); Object.assign(tubes.B, { T: 80, dead: false, starch: 100 }); mins = 0;
+    for (const [k, v] of [['A', '5'], ['B', '80']]) segs[k].querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v));
+    tubes.B.dead = true; update();
+  });
+  tubes.B.dead = true;
+
+  // particle motion: speed grows with temperature; an intact active site catches substrates
+  let last = performance.now();
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function tick(now) {
+    const dt = Math.min(50, now - last); last = now;
+    for (const k of ['A', 'B']) {
+      const t = tubes[k], v = views[k], sp = (0.25 + t.T / 30) * dt * 0.06, site = { x: t.cx, y: v.cy + 20 - 22 };
+      const dead = t.dead || t.T >= 60;
+      for (const p of v.parts) {
+        if (p.bound > 0) { p.bound -= dt; if (p.bound <= 0) { p.x = t.cx + 60; p.y = v.cy - 40; p.el.setAttribute('class', 'sub'); } continue; }
+        if (!still) { p.x += p.vx * sp; p.y += p.vy * sp; }
+        const dx = p.x - t.cx, dy = p.y - v.cy; if (dx * dx + dy * dy > 62 * 62) { p.vx = -p.vx + (Math.random() - .5) * .4; p.vy = -p.vy + (Math.random() - .5) * .4; p.x -= dx * .04; p.y -= dy * .04; }
+        if (p.y > v.cy + 2 && Math.abs(dx) < 50) { p.vy = -Math.abs(p.vy); }
+        if (!dead && Math.hypot(p.x - site.x, p.y - site.y) < 14) { p.bound = 400; p.x = site.x; p.y = site.y + 6; p.el.setAttribute('class', 'sub prod'); }
+        p.el.setAttribute('transform', `translate(${p.x.toFixed(1)},${p.y.toFixed(1)})`);
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  update();
+})();
+</script>

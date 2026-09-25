@@ -1,0 +1,363 @@
+<title>Amylase at 5 and 80 °C</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+:root {
+  --bg: #f3f5f9;
+  --panel: #ffffff;
+  --panel-2: #f7f9fc;
+  --ink: #15203a;
+  --muted: #5b6680;
+  --faint: #8f99ae;
+  --line: #d8dee9;
+  --grid: #e8ecf3;
+  --accent: #1f5fbf;
+  --accent-ink: #ffffff;
+  --accent-soft: #e4ecfa;
+  --good: #1b7f55;
+  --good-soft: #e1f3ea;
+  --warn: #a8660f;
+  --warn-soft: #fbefdc;
+  --bad: #c0392b;
+  --bad-soft: #fbe5e2;
+  --p: #d0453a;
+  --n: #8a93a6;
+  --field: #7b5cc4;
+  --metal: #6a7385;
+  --copper: #b8672e;
+  --shadow: 0 1px 2px rgba(21, 32, 58, .06), 0 4px 16px rgba(21, 32, 58, .05);
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1320; --panel: #161d2d; --panel-2: #1b2336; --ink: #e6eaf3; --muted: #9ba6bd; --faint: #6f7a92;
+    --line: #2a3450; --grid: #20293d; --accent: #7fa9f2; --accent-ink: #0e1320; --accent-soft: #1c2a47;
+    --good: #52c793; --good-soft: #15342a; --warn: #e6b155; --warn-soft: #3a2e17; --bad: #f2786b; --bad-soft: #3d1f1d;
+    --p: #f07a6e; --n: #9aa3b8; --field: #a88ef0; --metal: #aab3c6; --copper: #e0935a;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1320; --panel: #161d2d; --panel-2: #1b2336; --ink: #e6eaf3; --muted: #9ba6bd; --faint: #6f7a92;
+  --line: #2a3450; --grid: #20293d; --accent: #7fa9f2; --accent-ink: #0e1320; --accent-soft: #1c2a47;
+  --good: #52c793; --good-soft: #15342a; --warn: #e6b155; --warn-soft: #3a2e17; --bad: #f2786b; --bad-soft: #3d1f1d;
+  --p: #f07a6e; --n: #9aa3b8; --field: #a88ef0; --metal: #aab3c6; --copper: #e0935a;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 var(--sans); }
+.page { max-width: 1100px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 22px; }
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.eyebrow { font: 500 11.5px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 { font: 600 clamp(1.7rem, 4.2vw, 2.45rem)/1.12 var(--serif); letter-spacing: -.01em; margin: 6px 0 0; text-wrap: balance; }
+h2 { font: 600 1.25rem/1.25 var(--serif); margin: 0; text-wrap: balance; }
+h3 { font: 600 11.5px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.lede { color: var(--muted); max-width: 66ch; margin: 8px 0 0; }
+.theme-btn { font: 500 12px var(--mono); color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; white-space: nowrap; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); min-width: 0; }
+.question { display: grid; gap: 10px; }
+.question p { margin: 0; max-width: 72ch; }
+.qhead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.part { display: grid; grid-template-columns: 5.2em minmax(0, 1fr) auto; gap: 4px 10px; align-items: baseline; padding-top: 8px; border-top: 1px dashed var(--line); }
+.part .pn { font: 600 13px var(--mono); color: var(--accent); white-space: nowrap; }
+.part .mk { font: 500 12.5px var(--mono); color: var(--muted); white-space: nowrap; }
+.part.focus .pn::after { content: " ●"; color: var(--warn); font-size: 9px; vertical-align: middle; }
+.data { font-family: var(--mono); font-size: .93em; }
+.board { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 760px) { .board { grid-template-columns: minmax(0, 1fr); } }
+.stack { display: grid; gap: 14px; }
+.page > *, .stack > *, .board > *, .slips > * { min-width: 0; }
+.figure svg { display: block; width: 100%; height: auto; touch-action: none; user-select: none; -webkit-user-select: none; }
+.cap { font-size: 12.5px; color: var(--muted); margin: 0; }
+.chip { display: inline-flex; align-items: center; gap: 8px; font: 600 12.5px/1.35 var(--sans); padding: 7px 12px; border-radius: 999px; border: 1px solid currentColor; }
+.chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+.chip[data-state="ok"] { color: var(--good); background: var(--good-soft); }
+.chip[data-state="warn"] { color: var(--warn); background: var(--warn-soft); }
+.chip[data-state="bad"] { color: var(--bad); background: var(--bad-soft); }
+.chip[data-state="info"] { color: var(--accent); background: var(--accent-soft); }
+.rows { display: grid; gap: 0; margin: 0; }
+.rows > div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--grid); align-items: baseline; }
+.rows > div:last-child { border-bottom: 0; }
+.rows dt { color: var(--muted); font-size: 13.5px; }
+.rows dd { white-space: nowrap; margin: 0; font: 600 14.5px var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.rows dd.big { font-size: 20px; color: var(--accent); }
+.rows dd.wrong { color: var(--bad); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.formula { font: 13.5px/1.75 var(--mono); background: var(--accent-soft); border-radius: 10px; padding: 12px 14px; overflow-x: auto; font-variant-numeric: tabular-nums; }
+.formula b { color: var(--accent); }
+.formula .hl { background: var(--warn-soft); color: var(--warn); border-radius: 4px; padding: 0 3px; font-weight: 600; }
+.formula .ms { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+.ctrl { display: grid; gap: 4px; }
+.ctrl label { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; font-weight: 600; }
+.ctrl label output { font: 600 13.5px var(--mono); color: var(--accent); white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: var(--accent); margin: 4px 0; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { font: 600 13.5px var(--sans); padding: 8px 14px; border-radius: 9px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.btn:disabled { opacity: .45; cursor: default; }
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.slips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 760px) { .slips { grid-template-columns: minmax(0, 1fr); } }
+.slip { display: grid; gap: 10px; align-content: start; }
+.slip .tag { display: flex; justify-content: space-between; gap: 10px; font: 600 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--bad); }
+.slip .tag span:last-child { color: var(--muted); }
+.slip .was, .slip .fix { border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+.slip .was { background: var(--bad-soft); }
+.slip .fix { background: var(--good-soft); }
+.slip .was > b:first-child, .slip .fix > b:first-child { display: block; font: 600 11px var(--mono); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 2px; }
+.slip .was > b:first-child { color: var(--bad); } .slip .fix > b:first-child { color: var(--good); }
+.slip .m { font-family: var(--mono); font-size: 13px; }
+.also { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; display: grid; gap: 4px; max-width: 80ch; }
+.also b { color: var(--ink); }
+footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; display: grid; gap: 6px; }
+footer table { border-collapse: collapse; font: 12px/1.5 var(--mono); }
+footer td { padding: 2px 12px 2px 0; vertical-align: top; }
+.tbl-wrap { overflow-x: auto; }
+svg text { font-family: var(--sans); }
+svg .t { font: 12px var(--sans); fill: var(--ink); }
+svg .tm { font: 500 12px var(--mono); fill: var(--ink); }
+svg .ts { font: 11px var(--mono); fill: var(--muted); }
+svg .handle { cursor: grab; }
+svg .handle:active { cursor: grabbing; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media (max-width: 520px) {
+  .part { grid-template-columns: minmax(0, 1fr) auto; }
+  .part > span:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+  .top { flex-direction: column-reverse; }
+  .theme-btn { align-self: flex-end; }
+  svg .ts { font-size: 13px; }
+  svg .tm { font-size: 14px; }
+}
+svg .pill { fill: var(--panel); opacity: .9; }
+/* biology additions */
+:root { --leaf: #4f9d45; --leaf-dark: #2f7a33; --chlorotic: #e3cf5a; --water: #dcecf7; --food: #e2b271; --blood: #d24a3f; --vein: #3f6fbf; --lymph: #f4e9b5; --epi: #f7d9cf; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --leaf: #6cbf5f; --leaf-dark: #4f9d45; --chlorotic: #d9c451; --water: #1f3346; --food: #d9a760; --blood: #ef6b5f; --vein: #6f9ae6; --lymph: #5a5230; --epi: #4a302c; } }
+:root[data-theme="dark"] { --leaf: #6cbf5f; --leaf-dark: #4f9d45; --chlorotic: #d9c451; --water: #1f3346; --food: #d9a760; --blood: #ef6b5f; --vein: #6f9ae6; --lymph: #5a5230; --epi: #4a302c; }
+.check .tag span:first-child { color: var(--accent); }
+.check .q { margin: 0; font-size: 15px; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.seg button { font: 600 13px var(--sans); padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.ctrl-row { display: grid; gap: 6px; }
+.ctrl-row > span { font-size: 13.5px; font-weight: 600; }
+svg .lab { font: 12.5px var(--sans); fill: var(--ink); }
+svg .edge { stroke: var(--ink); stroke-width: 1.8; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.tbl th, .tbl td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--grid); }
+.tbl th { font: 600 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.swatch { display: inline-block; width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--line); vertical-align: -2px; margin-right: 6px; }
+.rows dd { white-space: normal; max-width: 62%; }
+
+.enz { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.6; }
+.sub { fill: var(--food); stroke: var(--ink); stroke-width: 1.2; }
+.prod { fill: var(--good); }
+.tubecard { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tubecard > div { display: grid; gap: 6px; }
+</style>
+
+<main class="page">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Summit IQ · BGCSE Biology 0573 · Extension Set 2 · Q3.6</p>
+      <h1>Too cold is slow. Too hot is broken.</h1>
+      <p class="lede">Both tubes break down very little starch, but for different reasons. Run them for 10 minutes, then bring both to 35 °C. The cold enzyme speeds back up. The heated one never recovers.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <section class="card question" aria-label="Question 3.6 text">
+    <div class="qhead"><h2>Q3.6 · Enzymes</h2><span class="data">[Total: 11]</span></div>
+    <div class="part"><span class="pn">(a)</span><span>Distinguish between an anabolic reaction and a catabolic reaction, giving one example of each involving an enzyme.</span><span class="mk">[4]</span></div>
+    <div class="part focus"><span class="pn">(b)</span><span>A student places the same amount of starch and amylase in two test tubes: one kept at 5°C, one kept at 80°C. Explain the difference in the amount of starch broken down after 10 minutes in each tube.</span><span class="mk">[4]</span></div>
+    <div class="part focus"><span class="pn">(c)</span><span>The student then warms the 5°C tube up to 35°C, and separately cools the 80°C tube down to 35°C. Predict and explain whether the rate of reaction recovers in each case.</span><span class="mk">[3]</span></div>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <h3>Inside each tube · amylase and starch</h3>
+      <svg id="fig" viewBox="0 0 440 330" role="img" aria-label="Two tubes of starch and amylase with a close-up of the enzyme molecules in each">
+        <g id="viewA"></g><g id="viewB"></g>
+        <g id="tubes"></g>
+      </svg>
+      <div class="tubecard">
+        <div><span class="cap"><b>Tube A</b> temperature</span><div class="seg" id="segA"><button type="button" data-v="5" aria-pressed="true">5 °C</button><button type="button" data-v="35" aria-pressed="false">35 °C</button><button type="button" data-v="80" aria-pressed="false">80 °C</button></div></div>
+        <div><span class="cap"><b>Tube B</b> temperature</span><div class="seg" id="segB"><button type="button" data-v="5" aria-pressed="false">5 °C</button><button type="button" data-v="35" aria-pressed="false">35 °C</button><button type="button" data-v="80" aria-pressed="true">80 °C</button></div></div>
+      </div>
+      <div class="btns">
+        <button class="btn" id="run" type="button">Run for 10 minutes</button>
+        <button class="btn ghost" id="reset" type="button">Start again with fresh tubes</button>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <span class="chip" id="chip" data-state="info">…</span>
+      <dl class="rows">
+        <div><dt>Tube A: enzyme</dt><dd id="aE"></dd></div>
+        <div><dt>Tube A: starch broken down</dt><dd class="big" id="aS"></dd></div>
+        <div><dt>Tube B: enzyme</dt><dd id="bE"></dd></div>
+        <div><dt>Tube B: starch broken down</dt><dd class="big" id="bS"></dd></div>
+        <div><dt>Minutes run so far</dt><dd id="mins"></dd></div>
+      </dl>
+      <div class="formula" id="formula"></div>
+      <p class="cap">(a) This reaction is <b>catabolic</b>: amylase breaks a large molecule (starch) into smaller ones (maltose). An <b>anabolic</b> reaction builds large molecules from small ones, e.g. joining amino acids to form a protein.</p>
+    </div>
+  </section>
+
+  <section class="slips" aria-label="Check yourself">
+    <article class="card slip check">
+      <div class="tag"><span>Check #1</span><span>Q3.6(b) · [4]</span></div>
+      <p class="q">Run A at 5 °C and B at 80 °C. Both break down little starch. Give the different reason for each.</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>At 5 °C the enzyme has very little kinetic energy, so few successful enzyme–substrate collisions occur and little starch is broken down. At 80 °C the enzyme is denatured: its active site's shape is permanently destroyed by the heat, so it can no longer bind starch at all. Little or no starch is broken down, but for a different reason.</div>
+    </article>
+    <article class="card slip check">
+      <div class="tag"><span>Check #2</span><span>Q3.6(c) · [3]</span></div>
+      <p class="q">After the run, set both tubes to 35 °C and run again. Which one recovers, and why?</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>Warming the 5 °C tube to 35 °C (near the optimum) increases the rate, because the enzyme was undamaged and simply moving slowly. Cooling the 80 °C tube to 35 °C does NOT restore activity, because that enzyme was already denatured at 80 °C. The change to its shape is permanent, so the rate stays low.</div>
+    </article>
+  </section>
+
+  <footer><span>Questions and mark points: Summit IQ BGCSE Biology Topic 3 Nutrition, Extension Practice Set 2. Rates are illustrative. The model treats 60 °C and above as denaturing, and that damage is permanent.</span></footer>
+</main>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  const label = () => { if (btn) btn.textContent = isDark() ? '☀ Light' : '☾ Dark'; };
+  if (btn) btn.addEventListener('click', () => { root.dataset.theme = isDark() ? 'light' : 'dark'; label(); });
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', label); } catch (e) {}
+  label();
+})();
+// Convert a pointer event into the SVG's own coordinate system.
+function svgPoint(svg, e) {
+  const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+  return p.matrixTransform(svg.getScreenCTM().inverse());
+}
+// Make an SVG element draggable; onMove receives {x, y} in SVG units.
+function draggable(svg, el, onMove) {
+  let on = false;
+  el.addEventListener('pointerdown', e => { on = true; el.setPointerCapture(e.pointerId); onMove(svgPoint(svg, e)); e.preventDefault(); });
+  el.addEventListener('pointermove', e => { if (on) onMove(svgPoint(svg, e)); });
+  el.addEventListener('pointerup', () => { on = false; });
+  el.addEventListener('pointercancel', () => { on = false; });
+}
+const $ = id => document.getElementById(id);
+function setChip(el, state, text) { el.dataset.state = state; el.textContent = text; }
+function sig(x, n) { return Number(x.toPrecision(n)); }
+// "Check yourself" cards: the button reveals the answer below it.
+document.querySelectorAll('.reveal').forEach(b => b.addEventListener('click', () => {
+  const a = b.nextElementSibling; a.hidden = !a.hidden; b.textContent = a.hidden ? 'Show answer' : 'Hide answer';
+}));
+// Segmented buttons: data-group on the container; calls onSeg(group, value).
+function seg(el, onChange) {
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    onChange(b.dataset.v);
+  });
+}
+const svgEl = (tag, attrs) => { const e = document.createElementNS('http://www.w3.org/2000/svg', tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+
+(() => {
+  const tubes = { A: { T: 5, dead: false, starch: 100, cx: 110 }, B: { T: 80, dead: false, starch: 100, cx: 330 } };
+  let mins = 0, running = false;
+  const rateOf = t => t.dead || t.T >= 60 ? 0 : 20 * Math.pow(2, (Math.min(t.T, 40) - 35) / 10); // % starch per minute
+  const FIT = 'M-15,-30 L-7,-13 L7,-13 L15,-30', BENT = 'M-17,-30 L-10,-26 L-2,-17 L3,-24 L11,-20 L18,-29';
+  const enzymePath = dead => { const n = dead ? BENT : FIT; const start = n.split(' ')[0].slice(1); return `M${start} ${n.split(' ').slice(1).join(' ')} C45,-36 56,-5 48,15 C40,38 -40,38 -48,15 C-56,-5 -45,-36 ${start} Z`; };
+  const mix = (f) => { // iodine colour: blue-black with starch, orange-brown without
+    const a = [31, 35, 70], b = [200, 135, 58]; return `rgb(${a.map((v, i) => Math.round(b[i] + (v - b[i]) * f)).join(',')})`; };
+
+  // particle close-ups
+  const views = {};
+  for (const k of ['A', 'B']) {
+    const t = tubes[k], g = $('view' + k), cy = 88;
+    g.innerHTML = `<circle cx="${t.cx}" cy="${cy}" r="72" fill="var(--panel-2)" stroke="var(--line)" stroke-width="1.5"/>` +
+      `<path id="enz${k}" class="enz" transform="translate(${t.cx},${cy + 20})"/>` +
+      `<text class="lab" x="${t.cx}" y="18" text-anchor="middle" font-weight="600">Tube ${k} close up</text><g id="parts${k}"></g>`;
+    const parts = [];
+    for (let i = 0; i < 5; i++) { const el = svgEl('path', { d: 'M-7,0 L-3.5,7 L3.5,7 L7,0 C6,-5 -6,-5 -7,0 Z', class: 'sub' }); $('parts' + k).appendChild(el); const a = Math.random() * 6.28; parts.push({ el, x: t.cx + Math.cos(a) * 50, y: cy + Math.sin(a) * 40, vx: Math.cos(a * 3), vy: Math.sin(a * 3), bound: 0 }); }
+    views[k] = { parts, cy };
+  }
+  function drawTubes() {
+    let s = '';
+    for (const k of ['A', 'B']) {
+      const t = tubes[k], x = t.cx, top = 182, bot = 292;
+      s += `<path d="M${x - 16},${top + 30} L${x - 16},${bot} A16,16 0 0 0 ${x + 16},${bot} L${x + 16},${top + 30} Z" fill="var(--panel)" />`;
+      s += `<path d="M${x - 16},${top + 30} L${x - 16},${bot} A16,16 0 0 0 ${x + 16},${bot} L${x + 16},${top + 30} Z" fill="${mix(t.starch / 100)}" opacity=".85"/>`;
+      s += `<path d="M${x - 16},${top} L${x - 16},${bot} A16,16 0 0 0 ${x + 16},${bot} L${x + 16},${top}" fill="none" class="edge"/>`;
+      s += `<text class="tm" x="${x + 30}" y="${top + 50}">${t.T} °C</text>`;
+      s += `<text class="lab" x="${x + 30}" y="${top + 70}" style="fill: var(--muted)">iodine test:</text>`;
+      s += `<text class="lab" x="${x + 30}" y="${top + 86}">${t.starch > 60 ? 'blue-black' : t.starch > 15 ? 'dark brown' : 'orange-brown'}</text>`;
+      s += `<text class="lab" x="${x}" y="${bot + 34}" text-anchor="middle" font-weight="600">Tube ${k}</text>`;
+      $('enz' + k).setAttribute('d', enzymePath(t.dead || t.T >= 60));
+    }
+    $('tubes').innerHTML = s;
+  }
+  function update() {
+    drawTubes();
+    const st = t => t.dead || t.T >= 60 ? 'denatured (active site changed)' : t.T < 20 ? 'intact, moving slowly' : 'intact, working fast';
+    $('aE').textContent = st(tubes.A); $('bE').textContent = st(tubes.B);
+    $('aS').textContent = Math.round(100 - tubes.A.starch) + '%'; $('bS').textContent = Math.round(100 - tubes.B.starch) + '%';
+    $('mins').textContent = mins.toFixed(0) + ' min';
+    const A = tubes.A, B = tubes.B;
+    $('formula').innerHTML = ['A', 'B'].map(k => { const t = tubes[k], r = rateOf(t); return `Tube ${k} at ${t.T} °C: <b>${r.toFixed(1)}%</b> of starch per minute${t.dead && t.T < 60 ? ' <span class="hl">denatured earlier</span>' : ''}`; }).join('<br>') +
+      '<span class="ms">starch —(amylase)→ maltose</span>';
+    if (B.dead && B.T < 60) setChip($('chip'), 'bad', 'Tube B is back at ' + B.T + ' °C but still denatured: the shape change is permanent');
+    else if (A.T === 5 && B.T === 80) setChip($('chip'), 'info', 'The exam setup: 5 °C is slow, 80 °C denatures the enzyme');
+    else if (A.T === 35 && !A.dead) setChip($('chip'), 'ok', 'Tube A warmed to 35 °C: the undamaged enzyme speeds back up');
+    else setChip($('chip'), 'info', 'Run the tubes and compare');
+  }
+  const segs = { A: $('segA'), B: $('segB') };
+  for (const k of ['A', 'B']) seg(segs[k], v => { tubes[k].T = +v; if (+v >= 60) tubes[k].dead = true; update(); });
+  $('run').addEventListener('click', () => {
+    if (running) return; running = true; $('run').disabled = true;
+    for (const k of ['A', 'B']) if (tubes[k].T >= 60) tubes[k].dead = true;
+    const t0 = performance.now(), m0 = mins, s0 = { A: tubes.A.starch, B: tubes.B.starch };
+    const step = now => {
+      const f = Math.min(1, (now - t0) / 2500);
+      for (const k of ['A', 'B']) tubes[k].starch = Math.max(0, s0[k] - rateOf(tubes[k]) * 10 * f);
+      mins = m0 + 10 * f; update();
+      if (f < 1) requestAnimationFrame(step); else { running = false; $('run').disabled = false; }
+    };
+    requestAnimationFrame(step);
+  });
+  $('reset').addEventListener('click', () => {
+    Object.assign(tubes.A, { T: 5, dead: false, starch: 100 }); Object.assign(tubes.B, { T: 80, dead: false, starch: 100 }); mins = 0;
+    for (const [k, v] of [['A', '5'], ['B', '80']]) segs[k].querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v));
+    tubes.B.dead = true; update();
+  });
+  tubes.B.dead = true;
+
+  // particle motion: speed grows with temperature; an intact active site catches substrates
+  let last = performance.now();
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function tick(now) {
+    const dt = Math.min(50, now - last); last = now;
+    for (const k of ['A', 'B']) {
+      const t = tubes[k], v = views[k], sp = (0.25 + t.T / 30) * dt * 0.06, site = { x: t.cx, y: v.cy + 20 - 22 };
+      const dead = t.dead || t.T >= 60;
+      for (const p of v.parts) {
+        if (p.bound > 0) { p.bound -= dt; if (p.bound <= 0) { p.x = t.cx + 60; p.y = v.cy - 40; p.el.setAttribute('class', 'sub'); } continue; }
+        if (!still) { p.x += p.vx * sp; p.y += p.vy * sp; }
+        const dx = p.x - t.cx, dy = p.y - v.cy; if (dx * dx + dy * dy > 62 * 62) { p.vx = -p.vx + (Math.random() - .5) * .4; p.vy = -p.vy + (Math.random() - .5) * .4; p.x -= dx * .04; p.y -= dy * .04; }
+        if (p.y > v.cy + 2 && Math.abs(dx) < 50) { p.vy = -Math.abs(p.vy); }
+        if (!dead && Math.hypot(p.x - site.x, p.y - site.y) < 14) { p.bound = 400; p.x = site.x; p.y = site.y + 6; p.el.setAttribute('class', 'sub prod'); }
+        p.el.setAttribute('transform', `translate(${p.x.toFixed(1)},${p.y.toFixed(1)})`);
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  update();
+})();
+</script>
