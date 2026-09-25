@@ -1,0 +1,207 @@
+<title>Climber's Rope Tension</title>
+<!--HEAD-->
+<style>
+/*SHARED_CSS*/
+.cliff { fill: var(--panel-2); stroke: var(--line); }
+.rock { stroke: var(--faint); stroke-width: 1.4; }
+.body-bar { fill: var(--metal); }
+.rope { stroke: var(--copper); stroke-width: 3.5; stroke-linecap: round; }
+.perp { stroke: var(--accent); stroke-width: 2.5; stroke-dasharray: 7 5; }
+.ghost { stroke: var(--bad); stroke-width: 2; opacity: .8; }
+.wt { stroke: var(--ink); stroke-width: 2.5; }
+</style>
+
+<main class="page">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Summit IQ · Physics 0625/41 · Oct/Nov 2022 · Question 3</p>
+      <h1>The rope isn't pulling straight down</h1>
+      <p class="lede">The rope pulls at 60° to her body, so its moment arm is not the 1.2 m you can see. Drag the rope and watch the real moment arm, 1.2 × sin θ, change.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <section class="card question" aria-label="Question 3 text">
+    <div class="qhead"><h2>Question 3</h2><span class="data">[Total: 8]</span></div>
+    <p>A rock climber, of total mass 62 kg, holds herself in horizontal equilibrium against a vertical cliff. She pulls on a rope that is fixed at the top of the cliff and presses her feet against the cliff.</p>
+    <div class="part focus"><span class="pn">(a)</span><span>Calculate the total weight of the climber.</span><span class="mk">[1]</span></div>
+    <div class="part"><span class="pn">(b)</span><span>State the two conditions needed for equilibrium.</span><span class="mk">[2]</span></div>
+    <div class="part focus"><span class="pn">(c)(i)</span><span>The climber's centre of mass is 0.90 m from the cliff. Calculate the moment about her feet due to her weight.</span><span class="mk">[2]</span></div>
+    <div class="part focus"><span class="pn">(c)(ii)</span><span>The line of the rope meets the horizontal line through her centre of mass at a distance of 1.2 m from the cliff, as shown in Fig. 3.1. The rope is at an angle of 60° to the horizontal. Determine the tension in the rope.</span><span class="mk">[3]</span></div>
+    <p class="cap">Front page: “Take the weight of 1.0 kg to be 10 N (acceleration of free fall = 10 m / s²).”</p>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <h3>Fig. 3.1, redrawn · drag the orange handle</h3>
+      <svg id="fig" viewBox="0 0 420 430" role="img" aria-label="Climber held horizontal against a cliff by a rope at angle theta">
+        <rect class="cliff" x="0" y="0" width="70" height="430"/>
+        <g id="rocks"></g>
+        <line x1="70" y1="0" x2="70" y2="430" stroke="var(--ink)" stroke-width="2.5"/>
+        <text class="ts" x="8" y="420">cliff</text>
+        <!-- horizontal reference line through centre of mass -->
+        <line x1="70" y1="330" x2="415" y2="330" stroke="var(--line)" stroke-dasharray="3 4"/>
+        <!-- climber -->
+        <rect class="body-bar" x="72" y="318" width="238" height="24" rx="12"/>
+        <circle cx="324" cy="330" r="15" fill="var(--metal)"/>
+        <text class="ts" x="300" y="372" text-anchor="middle">climber</text>
+        <!-- rope -->
+        <line id="rope" class="rope"/>
+        <line id="ropeArrow" class="rope" marker-end="url(#arrT)"/>
+        <text id="tLabel" class="tm" fill="var(--copper)" style="fill: var(--copper)">T</text>
+        <!-- angle arc -->
+        <path id="arc" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+        <text id="thLabel" class="tm"></text>
+        <!-- centre of mass + weight -->
+        <circle cx="205" cy="330" r="6" fill="var(--panel)" stroke="var(--ink)" stroke-width="2"/>
+        <path d="M205,330 L205,324 A6,6 0 0 1 211,330 Z M205,330 L205,336 A6,6 0 0 1 199,330 Z" fill="var(--ink)"/>
+        <line class="wt" x1="205" y1="338" x2="205" y2="398" marker-end="url(#arrW)"/>
+        <text class="tm" x="213" y="396">W = 620 N</text>
+        <!-- feet pivot -->
+        <path d="M70,330 l-0,0" />
+        <circle cx="72" cy="330" r="5" fill="var(--accent)"/>
+        <text class="ts" x="80" y="392">feet = pivot</text>
+        <!-- distances -->
+        <g>
+          <line x1="72" y1="410" x2="205" y2="410" stroke="var(--ink)" stroke-width="1.2" marker-start="url(#tk)" marker-end="url(#tk)"/>
+          <text class="ts" x="138" y="424" text-anchor="middle" style="fill: var(--ink)">0.90 m</text>
+        </g>
+        <g id="ghost12">
+          <line class="ghost" x1="72" y1="352" x2="250" y2="352" marker-start="url(#tkr)" marker-end="url(#tkr)"/>
+          <text class="ts" x="236" y="366" text-anchor="end" style="fill: var(--bad)">1.2 m (not ⟂ to rope)</text>
+        </g>
+        <!-- perpendicular distance -->
+        <line id="perp" class="perp"/>
+        <rect id="perpPill" class="pill" rx="4" height="18"/>
+        <path id="rt" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+        <text id="perpLabel" class="tm" style="fill: var(--accent)"></text>
+        <circle id="hand" cx="250" cy="330" r="5" fill="var(--copper)"/>
+        <circle id="handle" class="handle" r="13" fill="var(--copper)" fill-opacity=".25" stroke="var(--copper)" stroke-width="2.5" tabindex="0" aria-label="Rope angle handle"/>
+        <defs>
+          <marker id="arrW" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink)"/></marker>
+          <marker id="arrT" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--copper)"/></marker>
+          <marker id="tk" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M5,0 L5,10" stroke="var(--ink)" stroke-width="1.5"/></marker>
+          <marker id="tkr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M5,0 L5,10" stroke="var(--bad)" stroke-width="1.5"/></marker>
+        </defs>
+      </svg>
+      <div class="ctrl">
+        <label for="theta">Rope angle to the horizontal, θ <output id="thOut"></output></label>
+        <input id="theta" type="range" min="15" max="90" step="1" value="60">
+      </div>
+      <div class="btns">
+        <button class="btn" id="exam" type="button">Exam angle: 60°</button>
+        <button class="btn ghost" id="perpBtn" type="button">Try 90° (rope ⟂ body)</button>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <span class="chip" id="chip" data-state="ok">…</span>
+      <dl class="rows">
+        <div><dt>(a) Weight, W = mg</dt><dd>62 × 10 = 620 N</dd></div>
+        <div><dt>(c)(i) Moment of W about feet</dt><dd>620 × 0.90 = 558 N m</dd></div>
+        <div><dt id="dLab">d⊥ = 1.2 × sin θ</dt><dd id="dOut"></dd></div>
+        <div><dt>Tension needed, T</dt><dd class="big" id="tOut"></dd></div>
+        <div><dt>If you divide by 1.2 m</dt><dd class="wrong" id="wrongOut">558 ÷ 1.2 = 465 N</dd></div>
+      </dl>
+      <div class="formula" id="formula"></div>
+      <p class="cap">The rope's pull only turns her about her feet through the perpendicular distance from the feet to the rope's line. Only at θ = 90° does that equal the full 1.2 m. At any other angle it is shorter, so the tension has to be bigger to balance the same 558 N m.</p>
+    </div>
+  </section>
+
+  <section class="slips" aria-label="Maatla's slips on this question">
+    <article class="card slip">
+      <div class="tag"><span>Slip #1</span><span>3(a) · [1]</span></div>
+      <div class="was"><b>What you did</b>Used g = 9.8 and wrote the weight in kg.</div>
+      <div class="fix"><b>What earns the mark</b>This paper says to take 1.0 kg as weighing 10 N. <span class="m">W = mg = 62 × 10 = 620 N</span>. Weight is a force, so its unit is N. Mass is in kg.</div>
+    </article>
+    <article class="card slip">
+      <div class="tag"><span>Slip #2</span><span>3(c)(ii) · [3]</span></div>
+      <div class="was"><b>The gap</b>Treating 1.2 m as the rope's moment arm. The rope is at 60°, not 90°, so the 1.2 m is not perpendicular to it. Dividing by 1.2 gives 465 N, which is too small.</div>
+      <div class="fix"><b>What earns the marks</b><span class="m">T × 1.2 sin 60° = 560</span>, so <span class="m">T = 560 ÷ (1.2 × sin 60°) = 540 N</span>. C1 for using any moment, C1 for T × 1.2 sin 60°, A1 for 540 N.</div>
+    </article>
+  </section>
+  <ul class="also">
+    <li><b>Also, 3(c)(i):</b> your method (weight × perpendicular distance) was right and earns credit even with your weight from (a) carried forward. The multiplication slipped: <span class="data">620 × 0.90 = 558 ≈ 560 N m</span>.</li>
+  </ul>
+
+  <footer>
+    <div class="tbl-wrap"><table>
+      <tr><td>3(a)</td><td>620 N</td><td>B1</td></tr>
+      <tr><td>3(c)(i)</td><td>560 N m · (=) F x⊥ or 620 × 0.90</td><td>A2 · C1</td></tr>
+      <tr><td>3(c)(ii)</td><td>540 N · use of any moment · T × 1.2 sin 60° (= 560) or (T =) 560 / (1.2 × sin 60°)</td><td>A3 · C1 · C1</td></tr>
+    </table></div>
+    <span>Question and marks: Cambridge IGCSE Physics 0625/41, Oct/Nov 2022 question paper and published mark scheme (© UCLES 2022). Fig. 3.1 is redrawn here and not to scale.</span>
+  </footer>
+</main>
+
+<script>
+/*SHARED_JS*/
+(() => {
+  const svg = $('fig'), S = 150, FX = 72, Y0 = 330, PX = FX + 1.2 * S; // 150 px per metre
+  const inp = $('theta');
+  // rock texture on the cliff face
+  let r = ''; for (let y = 14; y < 430; y += 26) r += `<line class="rock" x1="${8 + (y % 3) * 6}" y1="${y}" x2="${40 + (y % 5) * 5}" y2="${y + 10}"/>`;
+  $('rocks').innerHTML = r;
+  const set = (id, a) => { const el = $(id); for (const k in a) el.setAttribute(k, a[k]); };
+
+  function draw(th) {
+    const t = th * Math.PI / 180, c = Math.cos(t), s = Math.sin(t);
+    // rope runs from the hand point P up and back toward the cliff; clip to cliff face or top edge
+    const kCliff = c > 1e-6 ? (PX - 70) / c : Infinity, kTop = (Y0 - 8) / s, k = Math.min(kCliff, kTop);
+    set('rope', { x1: PX, y1: Y0, x2: PX - k * c, y2: Y0 - k * s });
+    const hk = Math.min(125, k - 10);
+    set('handle', { cx: PX - hk * c, cy: Y0 - hk * s });
+    const nx = s * 13, ny = -c * 13; // offset the tension arrow to the upper-right of the rope
+    set('ropeArrow', { x1: PX + nx - 24 * c, y1: Y0 + ny - 24 * s, x2: PX + nx - 84 * c, y2: Y0 + ny - 84 * s });
+    set('tLabel', { x: PX + 1.9 * nx - 60 * c, y: Y0 + 1.9 * ny - 60 * s + 4 });
+    // angle arc between the horizontal (toward the cliff) and the rope
+    const R = 36;
+    $('arc').setAttribute('d', `M${PX - R},${Y0} A${R},${R} 0 0 1 ${PX - R * c},${Y0 - R * s}`);
+    const mid = t / 2;
+    set('thLabel', { x: PX - (R + 22) * Math.cos(mid) - 8, y: Math.min(Y0 - 16, Y0 - (R + 14) * Math.sin(mid) + 8) });
+    $('thLabel').textContent = th + '°';
+    // foot of the perpendicular from the feet to the rope line
+    const Qx = PX - 1.2 * S * c * c, Qy = Y0 - 1.2 * S * c * s;
+    set('perp', { x1: FX, y1: Y0, x2: Qx, y2: Qy });
+    const m = 9, ux = (FX - Qx), uy = (Y0 - Qy), ul = Math.hypot(ux, uy) || 1;
+    const ax = ux / ul * m, ay = uy / ul * m, bx = -c * m, by = -s * m; // along perp (to feet) and along rope (up)
+    $('rt').setAttribute('d', th >= 89.5 ? '' : `M${Qx + ax},${Qy + ay} L${Qx + ax + bx},${Qy + ay + by} L${Qx + bx},${Qy + by}`);
+    const d = 1.2 * s;
+    // label sits below-right of the perpendicular's midpoint, on a pill so the rope and grid never cut through it
+    const lx = (FX + Qx) / 2 + 8, ly = (Y0 + Qy) / 2 + 16;
+    const txt = 'd⊥';
+    set('perpLabel', { x: lx, y: ly, 'text-anchor': 'start' });
+    $('perpLabel').textContent = txt;
+    set('perpPill', { x: lx - 4, y: ly - 13, width: 26 });
+
+    const T = 558 / d;
+    $('thOut').textContent = th + '°';
+    $('dLab').textContent = `Perpendicular distance, 1.2 × sin ${th}°`;
+    $('dOut').textContent = d.toFixed(3) + ' m';
+    $('tOut').textContent = Math.round(T) + ' N';
+    $('formula').innerHTML =
+      `Moments about her feet balance:<br>` +
+      `T × <span class="hl">1.2 × sin ${th}°</span> = 620 × 0.90<br>` +
+      `T × ${d.toFixed(3)} = 558<br>` +
+      `T = 558 ÷ ${d.toFixed(3)} = <b>${Math.round(T)} N</b>` +
+      (th === 60 ? ` ≈ <b>540 N</b><span class="ms">Mark scheme 3(c)(ii): 540 N (A3)</span>` : '');
+    const chip = $('chip');
+    if (th === 60) setChip(chip, 'ok', 'Exam setting: T ≈ 540 N, the mark-scheme answer');
+    else if (th === 90) setChip(chip, 'info', 'At 90° the rope is ⟂ to her body, so d⊥ = 1.2 m and T = 465 N');
+    else setChip(chip, 'warn', `At ${th}°, d⊥ is only ${d.toFixed(2)} m, so the rope needs ${Math.round(T)} N`);
+  }
+  const go = v => { inp.value = v; draw(+v); };
+  inp.addEventListener('input', () => draw(+inp.value));
+  draggable(svg, $('handle'), p => {
+    const th = Math.round(Math.atan2(Y0 - p.y, PX - p.x) * 180 / Math.PI);
+    go(Math.max(15, Math.min(90, th)));
+  });
+  $('handle').addEventListener('keydown', e => {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowRight') { go(Math.min(90, +inp.value + 1)); e.preventDefault(); }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') { go(Math.max(15, +inp.value - 1)); e.preventDefault(); }
+  });
+  $('exam').addEventListener('click', () => go(60));
+  $('perpBtn').addEventListener('click', () => go(90));
+  draw(60);
+})();
+</script>

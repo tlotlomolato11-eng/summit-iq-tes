@@ -1,0 +1,367 @@
+<title>Climber's Rope Tension</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+:root {
+  --bg: #f3f5f9;
+  --panel: #ffffff;
+  --panel-2: #f7f9fc;
+  --ink: #15203a;
+  --muted: #5b6680;
+  --faint: #8f99ae;
+  --line: #d8dee9;
+  --grid: #e8ecf3;
+  --accent: #1f5fbf;
+  --accent-ink: #ffffff;
+  --accent-soft: #e4ecfa;
+  --good: #1b7f55;
+  --good-soft: #e1f3ea;
+  --warn: #a8660f;
+  --warn-soft: #fbefdc;
+  --bad: #c0392b;
+  --bad-soft: #fbe5e2;
+  --p: #d0453a;
+  --n: #8a93a6;
+  --field: #7b5cc4;
+  --metal: #6a7385;
+  --copper: #b8672e;
+  --shadow: 0 1px 2px rgba(21, 32, 58, .06), 0 4px 16px rgba(21, 32, 58, .05);
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1320; --panel: #161d2d; --panel-2: #1b2336; --ink: #e6eaf3; --muted: #9ba6bd; --faint: #6f7a92;
+    --line: #2a3450; --grid: #20293d; --accent: #7fa9f2; --accent-ink: #0e1320; --accent-soft: #1c2a47;
+    --good: #52c793; --good-soft: #15342a; --warn: #e6b155; --warn-soft: #3a2e17; --bad: #f2786b; --bad-soft: #3d1f1d;
+    --p: #f07a6e; --n: #9aa3b8; --field: #a88ef0; --metal: #aab3c6; --copper: #e0935a;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1320; --panel: #161d2d; --panel-2: #1b2336; --ink: #e6eaf3; --muted: #9ba6bd; --faint: #6f7a92;
+  --line: #2a3450; --grid: #20293d; --accent: #7fa9f2; --accent-ink: #0e1320; --accent-soft: #1c2a47;
+  --good: #52c793; --good-soft: #15342a; --warn: #e6b155; --warn-soft: #3a2e17; --bad: #f2786b; --bad-soft: #3d1f1d;
+  --p: #f07a6e; --n: #9aa3b8; --field: #a88ef0; --metal: #aab3c6; --copper: #e0935a;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 var(--sans); }
+.page { max-width: 1100px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 22px; }
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.eyebrow { font: 500 11.5px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 { font: 600 clamp(1.7rem, 4.2vw, 2.45rem)/1.12 var(--serif); letter-spacing: -.01em; margin: 6px 0 0; text-wrap: balance; }
+h2 { font: 600 1.25rem/1.25 var(--serif); margin: 0; text-wrap: balance; }
+h3 { font: 600 11.5px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.lede { color: var(--muted); max-width: 66ch; margin: 8px 0 0; }
+.theme-btn { font: 500 12px var(--mono); color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; white-space: nowrap; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); min-width: 0; }
+.question { display: grid; gap: 10px; }
+.question p { margin: 0; max-width: 72ch; }
+.qhead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.part { display: grid; grid-template-columns: 5.2em minmax(0, 1fr) auto; gap: 4px 10px; align-items: baseline; padding-top: 8px; border-top: 1px dashed var(--line); }
+.part .pn { font: 600 13px var(--mono); color: var(--accent); white-space: nowrap; }
+.part .mk { font: 500 12.5px var(--mono); color: var(--muted); white-space: nowrap; }
+.part.focus .pn::after { content: " ●"; color: var(--warn); font-size: 9px; vertical-align: middle; }
+.data { font-family: var(--mono); font-size: .93em; }
+.board { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 760px) { .board { grid-template-columns: minmax(0, 1fr); } }
+.stack { display: grid; gap: 14px; }
+.page > *, .stack > *, .board > *, .slips > * { min-width: 0; }
+.figure svg { display: block; width: 100%; height: auto; touch-action: none; user-select: none; -webkit-user-select: none; }
+.cap { font-size: 12.5px; color: var(--muted); margin: 0; }
+.chip { display: inline-flex; align-items: center; gap: 8px; font: 600 12.5px/1.35 var(--sans); padding: 7px 12px; border-radius: 999px; border: 1px solid currentColor; }
+.chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+.chip[data-state="ok"] { color: var(--good); background: var(--good-soft); }
+.chip[data-state="warn"] { color: var(--warn); background: var(--warn-soft); }
+.chip[data-state="bad"] { color: var(--bad); background: var(--bad-soft); }
+.chip[data-state="info"] { color: var(--accent); background: var(--accent-soft); }
+.rows { display: grid; gap: 0; margin: 0; }
+.rows > div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--grid); align-items: baseline; }
+.rows > div:last-child { border-bottom: 0; }
+.rows dt { color: var(--muted); font-size: 13.5px; }
+.rows dd { white-space: nowrap; margin: 0; font: 600 14.5px var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.rows dd.big { font-size: 20px; color: var(--accent); }
+.rows dd.wrong { color: var(--bad); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.formula { font: 13.5px/1.75 var(--mono); background: var(--accent-soft); border-radius: 10px; padding: 12px 14px; overflow-x: auto; font-variant-numeric: tabular-nums; }
+.formula b { color: var(--accent); }
+.formula .hl { background: var(--warn-soft); color: var(--warn); border-radius: 4px; padding: 0 3px; font-weight: 600; }
+.formula .ms { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+.ctrl { display: grid; gap: 4px; }
+.ctrl label { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; font-weight: 600; }
+.ctrl label output { font: 600 13.5px var(--mono); color: var(--accent); white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: var(--accent); margin: 4px 0; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { font: 600 13.5px var(--sans); padding: 8px 14px; border-radius: 9px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.btn:disabled { opacity: .45; cursor: default; }
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.slips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 760px) { .slips { grid-template-columns: minmax(0, 1fr); } }
+.slip { display: grid; gap: 10px; align-content: start; }
+.slip .tag { display: flex; justify-content: space-between; gap: 10px; font: 600 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--bad); }
+.slip .tag span:last-child { color: var(--muted); }
+.slip .was, .slip .fix { border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+.slip .was { background: var(--bad-soft); }
+.slip .fix { background: var(--good-soft); }
+.slip .was > b:first-child, .slip .fix > b:first-child { display: block; font: 600 11px var(--mono); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 2px; }
+.slip .was > b:first-child { color: var(--bad); } .slip .fix > b:first-child { color: var(--good); }
+.slip .m { font-family: var(--mono); font-size: 13px; }
+.also { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; display: grid; gap: 4px; max-width: 80ch; }
+.also b { color: var(--ink); }
+footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; display: grid; gap: 6px; }
+footer table { border-collapse: collapse; font: 12px/1.5 var(--mono); }
+footer td { padding: 2px 12px 2px 0; vertical-align: top; }
+.tbl-wrap { overflow-x: auto; }
+svg text { font-family: var(--sans); }
+svg .t { font: 12px var(--sans); fill: var(--ink); }
+svg .tm { font: 500 12px var(--mono); fill: var(--ink); }
+svg .ts { font: 11px var(--mono); fill: var(--muted); }
+svg .handle { cursor: grab; }
+svg .handle:active { cursor: grabbing; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media (max-width: 520px) {
+  .part { grid-template-columns: minmax(0, 1fr) auto; }
+  .part > span:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+  .top { flex-direction: column-reverse; }
+  .theme-btn { align-self: flex-end; }
+  svg .ts { font-size: 13px; }
+  svg .tm { font-size: 14px; }
+}
+svg .pill { fill: var(--panel); opacity: .9; }
+
+.cliff { fill: var(--panel-2); stroke: var(--line); }
+.rock { stroke: var(--faint); stroke-width: 1.4; }
+.body-bar { fill: var(--metal); }
+.rope { stroke: var(--copper); stroke-width: 3.5; stroke-linecap: round; }
+.perp { stroke: var(--accent); stroke-width: 2.5; stroke-dasharray: 7 5; }
+.ghost { stroke: var(--bad); stroke-width: 2; opacity: .8; }
+.wt { stroke: var(--ink); stroke-width: 2.5; }
+</style>
+
+<main class="page">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Summit IQ · Physics 0625/41 · Oct/Nov 2022 · Question 3</p>
+      <h1>The rope isn't pulling straight down</h1>
+      <p class="lede">The rope pulls at 60° to her body, so its moment arm is not the 1.2 m you can see. Drag the rope and watch the real moment arm, 1.2 × sin θ, change.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <section class="card question" aria-label="Question 3 text">
+    <div class="qhead"><h2>Question 3</h2><span class="data">[Total: 8]</span></div>
+    <p>A rock climber, of total mass 62 kg, holds herself in horizontal equilibrium against a vertical cliff. She pulls on a rope that is fixed at the top of the cliff and presses her feet against the cliff.</p>
+    <div class="part focus"><span class="pn">(a)</span><span>Calculate the total weight of the climber.</span><span class="mk">[1]</span></div>
+    <div class="part"><span class="pn">(b)</span><span>State the two conditions needed for equilibrium.</span><span class="mk">[2]</span></div>
+    <div class="part focus"><span class="pn">(c)(i)</span><span>The climber's centre of mass is 0.90 m from the cliff. Calculate the moment about her feet due to her weight.</span><span class="mk">[2]</span></div>
+    <div class="part focus"><span class="pn">(c)(ii)</span><span>The line of the rope meets the horizontal line through her centre of mass at a distance of 1.2 m from the cliff, as shown in Fig. 3.1. The rope is at an angle of 60° to the horizontal. Determine the tension in the rope.</span><span class="mk">[3]</span></div>
+    <p class="cap">Front page: “Take the weight of 1.0 kg to be 10 N (acceleration of free fall = 10 m / s²).”</p>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <h3>Fig. 3.1, redrawn · drag the orange handle</h3>
+      <svg id="fig" viewBox="0 0 420 430" role="img" aria-label="Climber held horizontal against a cliff by a rope at angle theta">
+        <rect class="cliff" x="0" y="0" width="70" height="430"/>
+        <g id="rocks"></g>
+        <line x1="70" y1="0" x2="70" y2="430" stroke="var(--ink)" stroke-width="2.5"/>
+        <text class="ts" x="8" y="420">cliff</text>
+        <!-- horizontal reference line through centre of mass -->
+        <line x1="70" y1="330" x2="415" y2="330" stroke="var(--line)" stroke-dasharray="3 4"/>
+        <!-- climber -->
+        <rect class="body-bar" x="72" y="318" width="238" height="24" rx="12"/>
+        <circle cx="324" cy="330" r="15" fill="var(--metal)"/>
+        <text class="ts" x="300" y="372" text-anchor="middle">climber</text>
+        <!-- rope -->
+        <line id="rope" class="rope"/>
+        <line id="ropeArrow" class="rope" marker-end="url(#arrT)"/>
+        <text id="tLabel" class="tm" fill="var(--copper)" style="fill: var(--copper)">T</text>
+        <!-- angle arc -->
+        <path id="arc" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+        <text id="thLabel" class="tm"></text>
+        <!-- centre of mass + weight -->
+        <circle cx="205" cy="330" r="6" fill="var(--panel)" stroke="var(--ink)" stroke-width="2"/>
+        <path d="M205,330 L205,324 A6,6 0 0 1 211,330 Z M205,330 L205,336 A6,6 0 0 1 199,330 Z" fill="var(--ink)"/>
+        <line class="wt" x1="205" y1="338" x2="205" y2="398" marker-end="url(#arrW)"/>
+        <text class="tm" x="213" y="396">W = 620 N</text>
+        <!-- feet pivot -->
+        <path d="M70,330 l-0,0" />
+        <circle cx="72" cy="330" r="5" fill="var(--accent)"/>
+        <text class="ts" x="80" y="392">feet = pivot</text>
+        <!-- distances -->
+        <g>
+          <line x1="72" y1="410" x2="205" y2="410" stroke="var(--ink)" stroke-width="1.2" marker-start="url(#tk)" marker-end="url(#tk)"/>
+          <text class="ts" x="138" y="424" text-anchor="middle" style="fill: var(--ink)">0.90 m</text>
+        </g>
+        <g id="ghost12">
+          <line class="ghost" x1="72" y1="352" x2="250" y2="352" marker-start="url(#tkr)" marker-end="url(#tkr)"/>
+          <text class="ts" x="236" y="366" text-anchor="end" style="fill: var(--bad)">1.2 m (not ⟂ to rope)</text>
+        </g>
+        <!-- perpendicular distance -->
+        <line id="perp" class="perp"/>
+        <rect id="perpPill" class="pill" rx="4" height="18"/>
+        <path id="rt" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+        <text id="perpLabel" class="tm" style="fill: var(--accent)"></text>
+        <circle id="hand" cx="250" cy="330" r="5" fill="var(--copper)"/>
+        <circle id="handle" class="handle" r="13" fill="var(--copper)" fill-opacity=".25" stroke="var(--copper)" stroke-width="2.5" tabindex="0" aria-label="Rope angle handle"/>
+        <defs>
+          <marker id="arrW" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink)"/></marker>
+          <marker id="arrT" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--copper)"/></marker>
+          <marker id="tk" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M5,0 L5,10" stroke="var(--ink)" stroke-width="1.5"/></marker>
+          <marker id="tkr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M5,0 L5,10" stroke="var(--bad)" stroke-width="1.5"/></marker>
+        </defs>
+      </svg>
+      <div class="ctrl">
+        <label for="theta">Rope angle to the horizontal, θ <output id="thOut"></output></label>
+        <input id="theta" type="range" min="15" max="90" step="1" value="60">
+      </div>
+      <div class="btns">
+        <button class="btn" id="exam" type="button">Exam angle: 60°</button>
+        <button class="btn ghost" id="perpBtn" type="button">Try 90° (rope ⟂ body)</button>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <span class="chip" id="chip" data-state="ok">…</span>
+      <dl class="rows">
+        <div><dt>(a) Weight, W = mg</dt><dd>62 × 10 = 620 N</dd></div>
+        <div><dt>(c)(i) Moment of W about feet</dt><dd>620 × 0.90 = 558 N m</dd></div>
+        <div><dt id="dLab">d⊥ = 1.2 × sin θ</dt><dd id="dOut"></dd></div>
+        <div><dt>Tension needed, T</dt><dd class="big" id="tOut"></dd></div>
+        <div><dt>If you divide by 1.2 m</dt><dd class="wrong" id="wrongOut">558 ÷ 1.2 = 465 N</dd></div>
+      </dl>
+      <div class="formula" id="formula"></div>
+      <p class="cap">The rope's pull only turns her about her feet through the perpendicular distance from the feet to the rope's line. Only at θ = 90° does that equal the full 1.2 m. At any other angle it is shorter, so the tension has to be bigger to balance the same 558 N m.</p>
+    </div>
+  </section>
+
+  <section class="slips" aria-label="Maatla's slips on this question">
+    <article class="card slip">
+      <div class="tag"><span>Slip #1</span><span>3(a) · [1]</span></div>
+      <div class="was"><b>What you did</b>Used g = 9.8 and wrote the weight in kg.</div>
+      <div class="fix"><b>What earns the mark</b>This paper says to take 1.0 kg as weighing 10 N. <span class="m">W = mg = 62 × 10 = 620 N</span>. Weight is a force, so its unit is N. Mass is in kg.</div>
+    </article>
+    <article class="card slip">
+      <div class="tag"><span>Slip #2</span><span>3(c)(ii) · [3]</span></div>
+      <div class="was"><b>The gap</b>Treating 1.2 m as the rope's moment arm. The rope is at 60°, not 90°, so the 1.2 m is not perpendicular to it. Dividing by 1.2 gives 465 N, which is too small.</div>
+      <div class="fix"><b>What earns the marks</b><span class="m">T × 1.2 sin 60° = 560</span>, so <span class="m">T = 560 ÷ (1.2 × sin 60°) = 540 N</span>. C1 for using any moment, C1 for T × 1.2 sin 60°, A1 for 540 N.</div>
+    </article>
+  </section>
+  <ul class="also">
+    <li><b>Also, 3(c)(i):</b> your method (weight × perpendicular distance) was right and earns credit even with your weight from (a) carried forward. The multiplication slipped: <span class="data">620 × 0.90 = 558 ≈ 560 N m</span>.</li>
+  </ul>
+
+  <footer>
+    <div class="tbl-wrap"><table>
+      <tr><td>3(a)</td><td>620 N</td><td>B1</td></tr>
+      <tr><td>3(c)(i)</td><td>560 N m · (=) F x⊥ or 620 × 0.90</td><td>A2 · C1</td></tr>
+      <tr><td>3(c)(ii)</td><td>540 N · use of any moment · T × 1.2 sin 60° (= 560) or (T =) 560 / (1.2 × sin 60°)</td><td>A3 · C1 · C1</td></tr>
+    </table></div>
+    <span>Question and marks: Cambridge IGCSE Physics 0625/41, Oct/Nov 2022 question paper and published mark scheme (© UCLES 2022). Fig. 3.1 is redrawn here and not to scale.</span>
+  </footer>
+</main>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  const label = () => { if (btn) btn.textContent = isDark() ? '☀ Light' : '☾ Dark'; };
+  if (btn) btn.addEventListener('click', () => { root.dataset.theme = isDark() ? 'light' : 'dark'; label(); });
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', label); } catch (e) {}
+  label();
+})();
+// Convert a pointer event into the SVG's own coordinate system.
+function svgPoint(svg, e) {
+  const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+  return p.matrixTransform(svg.getScreenCTM().inverse());
+}
+// Make an SVG element draggable; onMove receives {x, y} in SVG units.
+function draggable(svg, el, onMove) {
+  let on = false;
+  el.addEventListener('pointerdown', e => { on = true; el.setPointerCapture(e.pointerId); onMove(svgPoint(svg, e)); e.preventDefault(); });
+  el.addEventListener('pointermove', e => { if (on) onMove(svgPoint(svg, e)); });
+  el.addEventListener('pointerup', () => { on = false; });
+  el.addEventListener('pointercancel', () => { on = false; });
+}
+const $ = id => document.getElementById(id);
+function setChip(el, state, text) { el.dataset.state = state; el.textContent = text; }
+function sig(x, n) { return Number(x.toPrecision(n)); }
+
+(() => {
+  const svg = $('fig'), S = 150, FX = 72, Y0 = 330, PX = FX + 1.2 * S; // 150 px per metre
+  const inp = $('theta');
+  // rock texture on the cliff face
+  let r = ''; for (let y = 14; y < 430; y += 26) r += `<line class="rock" x1="${8 + (y % 3) * 6}" y1="${y}" x2="${40 + (y % 5) * 5}" y2="${y + 10}"/>`;
+  $('rocks').innerHTML = r;
+  const set = (id, a) => { const el = $(id); for (const k in a) el.setAttribute(k, a[k]); };
+
+  function draw(th) {
+    const t = th * Math.PI / 180, c = Math.cos(t), s = Math.sin(t);
+    // rope runs from the hand point P up and back toward the cliff; clip to cliff face or top edge
+    const kCliff = c > 1e-6 ? (PX - 70) / c : Infinity, kTop = (Y0 - 8) / s, k = Math.min(kCliff, kTop);
+    set('rope', { x1: PX, y1: Y0, x2: PX - k * c, y2: Y0 - k * s });
+    const hk = Math.min(125, k - 10);
+    set('handle', { cx: PX - hk * c, cy: Y0 - hk * s });
+    const nx = s * 13, ny = -c * 13; // offset the tension arrow to the upper-right of the rope
+    set('ropeArrow', { x1: PX + nx - 24 * c, y1: Y0 + ny - 24 * s, x2: PX + nx - 84 * c, y2: Y0 + ny - 84 * s });
+    set('tLabel', { x: PX + 1.9 * nx - 60 * c, y: Y0 + 1.9 * ny - 60 * s + 4 });
+    // angle arc between the horizontal (toward the cliff) and the rope
+    const R = 36;
+    $('arc').setAttribute('d', `M${PX - R},${Y0} A${R},${R} 0 0 1 ${PX - R * c},${Y0 - R * s}`);
+    const mid = t / 2;
+    set('thLabel', { x: PX - (R + 22) * Math.cos(mid) - 8, y: Math.min(Y0 - 16, Y0 - (R + 14) * Math.sin(mid) + 8) });
+    $('thLabel').textContent = th + '°';
+    // foot of the perpendicular from the feet to the rope line
+    const Qx = PX - 1.2 * S * c * c, Qy = Y0 - 1.2 * S * c * s;
+    set('perp', { x1: FX, y1: Y0, x2: Qx, y2: Qy });
+    const m = 9, ux = (FX - Qx), uy = (Y0 - Qy), ul = Math.hypot(ux, uy) || 1;
+    const ax = ux / ul * m, ay = uy / ul * m, bx = -c * m, by = -s * m; // along perp (to feet) and along rope (up)
+    $('rt').setAttribute('d', th >= 89.5 ? '' : `M${Qx + ax},${Qy + ay} L${Qx + ax + bx},${Qy + ay + by} L${Qx + bx},${Qy + by}`);
+    const d = 1.2 * s;
+    // label sits below-right of the perpendicular's midpoint, on a pill so the rope and grid never cut through it
+    const lx = (FX + Qx) / 2 + 8, ly = (Y0 + Qy) / 2 + 16;
+    const txt = 'd⊥';
+    set('perpLabel', { x: lx, y: ly, 'text-anchor': 'start' });
+    $('perpLabel').textContent = txt;
+    set('perpPill', { x: lx - 4, y: ly - 13, width: 26 });
+
+    const T = 558 / d;
+    $('thOut').textContent = th + '°';
+    $('dLab').textContent = `Perpendicular distance, 1.2 × sin ${th}°`;
+    $('dOut').textContent = d.toFixed(3) + ' m';
+    $('tOut').textContent = Math.round(T) + ' N';
+    $('formula').innerHTML =
+      `Moments about her feet balance:<br>` +
+      `T × <span class="hl">1.2 × sin ${th}°</span> = 620 × 0.90<br>` +
+      `T × ${d.toFixed(3)} = 558<br>` +
+      `T = 558 ÷ ${d.toFixed(3)} = <b>${Math.round(T)} N</b>` +
+      (th === 60 ? ` ≈ <b>540 N</b><span class="ms">Mark scheme 3(c)(ii): 540 N (A3)</span>` : '');
+    const chip = $('chip');
+    if (th === 60) setChip(chip, 'ok', 'Exam setting: T ≈ 540 N, the mark-scheme answer');
+    else if (th === 90) setChip(chip, 'info', 'At 90° the rope is ⟂ to her body, so d⊥ = 1.2 m and T = 465 N');
+    else setChip(chip, 'warn', `At ${th}°, d⊥ is only ${d.toFixed(2)} m, so the rope needs ${Math.round(T)} N`);
+  }
+  const go = v => { inp.value = v; draw(+v); };
+  inp.addEventListener('input', () => draw(+inp.value));
+  draggable(svg, $('handle'), p => {
+    const th = Math.round(Math.atan2(Y0 - p.y, PX - p.x) * 180 / Math.PI);
+    go(Math.max(15, Math.min(90, th)));
+  });
+  $('handle').addEventListener('keydown', e => {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowRight') { go(Math.min(90, +inp.value + 1)); e.preventDefault(); }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') { go(Math.max(15, +inp.value - 1)); e.preventDefault(); }
+  });
+  $('exam').addEventListener('click', () => go(60));
+  $('perpBtn').addEventListener('click', () => go(90));
+  draw(60);
+})();
+</script>

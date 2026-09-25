@@ -1,0 +1,408 @@
+<title>Gold-198 Decay</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+:root {
+  --bg: #f3f5f9;
+  --panel: #ffffff;
+  --panel-2: #f7f9fc;
+  --ink: #15203a;
+  --muted: #5b6680;
+  --faint: #8f99ae;
+  --line: #d8dee9;
+  --grid: #e8ecf3;
+  --accent: #1f5fbf;
+  --accent-ink: #ffffff;
+  --accent-soft: #e4ecfa;
+  --good: #1b7f55;
+  --good-soft: #e1f3ea;
+  --warn: #a8660f;
+  --warn-soft: #fbefdc;
+  --bad: #c0392b;
+  --bad-soft: #fbe5e2;
+  --p: #d0453a;
+  --n: #8a93a6;
+  --field: #7b5cc4;
+  --metal: #6a7385;
+  --copper: #b8672e;
+  --shadow: 0 1px 2px rgba(21, 32, 58, .06), 0 4px 16px rgba(21, 32, 58, .05);
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1320; --panel: #161d2d; --panel-2: #1b2336; --ink: #e6eaf3; --muted: #9ba6bd; --faint: #6f7a92;
+    --line: #2a3450; --grid: #20293d; --accent: #7fa9f2; --accent-ink: #0e1320; --accent-soft: #1c2a47;
+    --good: #52c793; --good-soft: #15342a; --warn: #e6b155; --warn-soft: #3a2e17; --bad: #f2786b; --bad-soft: #3d1f1d;
+    --p: #f07a6e; --n: #9aa3b8; --field: #a88ef0; --metal: #aab3c6; --copper: #e0935a;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1320; --panel: #161d2d; --panel-2: #1b2336; --ink: #e6eaf3; --muted: #9ba6bd; --faint: #6f7a92;
+  --line: #2a3450; --grid: #20293d; --accent: #7fa9f2; --accent-ink: #0e1320; --accent-soft: #1c2a47;
+  --good: #52c793; --good-soft: #15342a; --warn: #e6b155; --warn-soft: #3a2e17; --bad: #f2786b; --bad-soft: #3d1f1d;
+  --p: #f07a6e; --n: #9aa3b8; --field: #a88ef0; --metal: #aab3c6; --copper: #e0935a;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 var(--sans); }
+.page { max-width: 1100px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 22px; }
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.eyebrow { font: 500 11.5px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 { font: 600 clamp(1.7rem, 4.2vw, 2.45rem)/1.12 var(--serif); letter-spacing: -.01em; margin: 6px 0 0; text-wrap: balance; }
+h2 { font: 600 1.25rem/1.25 var(--serif); margin: 0; text-wrap: balance; }
+h3 { font: 600 11.5px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.lede { color: var(--muted); max-width: 66ch; margin: 8px 0 0; }
+.theme-btn { font: 500 12px var(--mono); color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; white-space: nowrap; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); min-width: 0; }
+.question { display: grid; gap: 10px; }
+.question p { margin: 0; max-width: 72ch; }
+.qhead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.part { display: grid; grid-template-columns: 5.2em minmax(0, 1fr) auto; gap: 4px 10px; align-items: baseline; padding-top: 8px; border-top: 1px dashed var(--line); }
+.part .pn { font: 600 13px var(--mono); color: var(--accent); white-space: nowrap; }
+.part .mk { font: 500 12.5px var(--mono); color: var(--muted); white-space: nowrap; }
+.part.focus .pn::after { content: " ●"; color: var(--warn); font-size: 9px; vertical-align: middle; }
+.data { font-family: var(--mono); font-size: .93em; }
+.board { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 760px) { .board { grid-template-columns: minmax(0, 1fr); } }
+.stack { display: grid; gap: 14px; }
+.page > *, .stack > *, .board > *, .slips > * { min-width: 0; }
+.figure svg { display: block; width: 100%; height: auto; touch-action: none; user-select: none; -webkit-user-select: none; }
+.cap { font-size: 12.5px; color: var(--muted); margin: 0; }
+.chip { display: inline-flex; align-items: center; gap: 8px; font: 600 12.5px/1.35 var(--sans); padding: 7px 12px; border-radius: 999px; border: 1px solid currentColor; }
+.chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+.chip[data-state="ok"] { color: var(--good); background: var(--good-soft); }
+.chip[data-state="warn"] { color: var(--warn); background: var(--warn-soft); }
+.chip[data-state="bad"] { color: var(--bad); background: var(--bad-soft); }
+.chip[data-state="info"] { color: var(--accent); background: var(--accent-soft); }
+.rows { display: grid; gap: 0; margin: 0; }
+.rows > div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--grid); align-items: baseline; }
+.rows > div:last-child { border-bottom: 0; }
+.rows dt { color: var(--muted); font-size: 13.5px; }
+.rows dd { white-space: nowrap; margin: 0; font: 600 14.5px var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.rows dd.big { font-size: 20px; color: var(--accent); }
+.rows dd.wrong { color: var(--bad); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.formula { font: 13.5px/1.75 var(--mono); background: var(--accent-soft); border-radius: 10px; padding: 12px 14px; overflow-x: auto; font-variant-numeric: tabular-nums; }
+.formula b { color: var(--accent); }
+.formula .hl { background: var(--warn-soft); color: var(--warn); border-radius: 4px; padding: 0 3px; font-weight: 600; }
+.formula .ms { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+.ctrl { display: grid; gap: 4px; }
+.ctrl label { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; font-weight: 600; }
+.ctrl label output { font: 600 13.5px var(--mono); color: var(--accent); white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: var(--accent); margin: 4px 0; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { font: 600 13.5px var(--sans); padding: 8px 14px; border-radius: 9px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.btn:disabled { opacity: .45; cursor: default; }
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.slips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 760px) { .slips { grid-template-columns: minmax(0, 1fr); } }
+.slip { display: grid; gap: 10px; align-content: start; }
+.slip .tag { display: flex; justify-content: space-between; gap: 10px; font: 600 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--bad); }
+.slip .tag span:last-child { color: var(--muted); }
+.slip .was, .slip .fix { border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+.slip .was { background: var(--bad-soft); }
+.slip .fix { background: var(--good-soft); }
+.slip .was > b:first-child, .slip .fix > b:first-child { display: block; font: 600 11px var(--mono); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 2px; }
+.slip .was > b:first-child { color: var(--bad); } .slip .fix > b:first-child { color: var(--good); }
+.slip .m { font-family: var(--mono); font-size: 13px; }
+.also { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; display: grid; gap: 4px; max-width: 80ch; }
+.also b { color: var(--ink); }
+footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; display: grid; gap: 6px; }
+footer table { border-collapse: collapse; font: 12px/1.5 var(--mono); }
+footer td { padding: 2px 12px 2px 0; vertical-align: top; }
+.tbl-wrap { overflow-x: auto; }
+svg text { font-family: var(--sans); }
+svg .t { font: 12px var(--sans); fill: var(--ink); }
+svg .tm { font: 500 12px var(--mono); fill: var(--ink); }
+svg .ts { font: 11px var(--mono); fill: var(--muted); }
+svg .handle { cursor: grab; }
+svg .handle:active { cursor: grabbing; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media (max-width: 520px) {
+  .part { grid-template-columns: minmax(0, 1fr) auto; }
+  .part > span:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+  .top { flex-direction: column-reverse; }
+  .theme-btn { align-self: flex-end; }
+  svg .ts { font-size: 13px; }
+  svg .tm { font-size: 14px; }
+}
+svg .pill { fill: var(--panel); opacity: .9; }
+
+.nuc-p { fill: var(--p); }
+.nuc-n { fill: var(--n); }
+.flip { transition: fill .6s ease; }
+.ring { fill: none; stroke: var(--warn); stroke-width: 2.5; opacity: 0; }
+.ring.go { animation: ring .9s ease-out; }
+@keyframes ring { 0% { opacity: 1; r: 6; } 100% { opacity: 0; r: 26; } }
+.beta { fill: var(--accent); opacity: 0; }
+.big-sym { font: 600 46px var(--serif); fill: var(--ink); }
+.sup { font: 600 17px var(--mono); fill: var(--ink); }
+.changed { fill: var(--warn) !important; }
+.axis { stroke: var(--ink); stroke-width: 1.4; }
+.gl { stroke: var(--grid); }
+.raw { fill: none; stroke: var(--accent); stroke-width: 2.6; }
+.cor { fill: none; stroke: var(--good); stroke-width: 2; stroke-dasharray: 6 5; }
+.bg { stroke: var(--muted); stroke-width: 1.6; stroke-dasharray: 3 4; }
+.lvl { stroke: var(--warn); stroke-width: 2; }
+.drop { stroke-width: 1.4; stroke-dasharray: 4 3; }
+.iso { width: 100%; border-collapse: collapse; font: 13px var(--mono); }
+.iso th, .iso td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--grid); }
+.iso th { font: 600 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.iso .diff { color: var(--bad); font-weight: 600; }
+.chk { display: flex; gap: 8px; align-items: center; font-size: 13.5px; }
+</style>
+
+<main class="page">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Summit IQ · Physics 0625/41 · Oct/Nov 2022 · Question 9</p>
+      <h1>One neutron flips, and gold becomes mercury</h1>
+      <p class="lede">Beta decay turns a neutron into a proton and throws out an electron. Then, on the decay graph, the background is still inside the raw curve, so it has to go back in before you read the half-life.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <section class="card question" aria-label="Question 9 text">
+    <div class="qhead"><h2>Question 9</h2><span class="data">[Total: 8]</span></div>
+    <p>Only one isotope of gold occurs naturally on Earth.</p>
+    <div class="part focus"><span class="pn">(a)</span><span>State what this indicates about the nuclear structure of all the naturally occurring atoms of gold on Earth.</span><span class="mk">[1]</span></div>
+    <p>(b) There are several artificially produced isotopes of gold. Gold-198 (<span class="data">¹⁹⁸₇₉Au</span>) is an artificial isotope which is used in medicine and in scientific research. Gold-198 decays by β (beta)-emission to a stable isotope of mercury.</p>
+    <div class="part focus"><span class="pn">(b)(i)</span><span>Determine the number of protons and the number of neutrons in a nucleus of this isotope of mercury.</span><span class="mk">[2]</span></div>
+    <div class="part"><span class="pn">(b)(ii)</span><span>A sample of gold-198 is placed near to a radiation detector in a research laboratory. The count rate is recorded at the same time every day for 32 days. The results are used to plot the graph shown in Fig. 9.1. Using Fig. 9.1, determine the background count rate in the research laboratory.</span><span class="mk">[1]</span></div>
+    <div class="part focus"><span class="pn">(b)(iii)</span><span>Using Fig. 9.1, determine the half-life of gold-198.</span><span class="mk">[4]</span></div>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <h3>(b)(i) · the gold-198 nucleus, all 198 nucleons</h3>
+      <svg id="nuc" viewBox="0 0 420 260" role="img" aria-label="Nucleus of 79 protons and 119 neutrons; beta decay turns one neutron into a proton">
+        <g id="nucleons"></g>
+        <circle id="ring" class="ring" r="6"/>
+        <circle id="beta" class="beta" r="5"/>
+        <text id="betaTxt" class="ts" style="fill: var(--accent); opacity: 0">β⁻ (electron)</text>
+        <text id="symA" class="sup" x="300" y="112" text-anchor="end">198</text>
+        <text id="symZ" class="sup" x="300" y="152" text-anchor="end">79</text>
+        <text id="sym" class="big-sym" x="306" y="150">Au</text>
+        <text id="symName" class="ts" x="306" y="176">gold</text>
+        <circle cx="262" cy="222" r="6" class="nuc-p"/><text class="ts" x="274" y="226">proton</text>
+        <circle cx="336" cy="222" r="6" class="nuc-n"/><text class="ts" x="348" y="226">neutron</text>
+      </svg>
+      <div class="btns">
+        <button class="btn" id="decay" type="button">Beta decay</button>
+        <button class="btn ghost" id="reset" type="button">Reset to gold-198</button>
+      </div>
+    </div>
+    <div class="card stack">
+      <span class="chip" id="chipN" data-state="info">…</span>
+      <dl class="rows">
+        <div><dt>Protons, Z</dt><dd class="big" id="zOut"></dd></div>
+        <div><dt>Neutrons, A − Z</dt><dd class="big" id="nOut"></dd></div>
+        <div><dt>Nucleon number, A</dt><dd id="aOut"></dd></div>
+        <div><dt>Element</dt><dd id="elOut"></dd></div>
+      </dl>
+      <div class="formula" id="formN"></div>
+    </div>
+  </section>
+
+  <section class="card stack" aria-label="What one natural isotope means">
+    <h3>(a) · what “only one isotope” means</h3>
+    <p class="cap" style="font-size:14px;color:var(--ink)">Isotopes are atoms of the <b>same element</b> with <b>different numbers of neutrons</b>. So “only one isotope” is a statement about all gold atoms together, not about protons versus neutrons inside one atom. It means every natural gold atom has the same number of neutrons.</p>
+    <div class="tbl-wrap"><table class="iso">
+      <tr><th></th><th>Gold on Earth (one isotope)</th><th>An element with two isotopes</th></tr>
+      <tr><td>atom 1</td><td>79 p · 118 n</td><td>Z p · N n</td></tr>
+      <tr><td>atom 2</td><td>79 p · 118 n</td><td>Z p · <span class="diff">N + 2 n</span></td></tr>
+      <tr><td>atom 3</td><td>79 p · 118 n</td><td>Z p · N n</td></tr>
+    </table></div>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <h3>(b)(iii) · Fig. 9.1 redrawn · drag the amber line</h3>
+      <svg id="graph" viewBox="0 0 460 300" role="img" aria-label="Count rate against time for gold-198 with background, and a draggable reading line"></svg>
+      <div class="btns">
+        <button class="btn ghost" id="at185" type="button">Read at 185</button>
+        <button class="btn" id="at205" type="button">Read at 205</button>
+      </div>
+      <label class="chk"><input type="checkbox" id="showCor" checked> Show the corrected curve (raw − background)</label>
+      <p class="cap">Curve drawn from the mark scheme's values: 390 counts/min at the start, a background of 20 counts/min, and a half-life of about 2.7 days, inside the accepted 2.4–2.9 days.</p>
+    </div>
+    <div class="card stack">
+      <span class="chip" id="chipG" data-state="info">…</span>
+      <dl class="rows">
+        <div><dt>(b)(ii) Background (where the curve levels off)</dt><dd>20 counts/min</dd></div>
+        <div><dt>Reading line at</dt><dd id="lvOut"></dd></div>
+        <div><dt>Raw curve crosses at</dt><dd class="big" id="tRaw"></dd></div>
+        <div><dt>Corrected curve crosses at</dt><dd id="tCor"></dd></div>
+      </dl>
+      <div class="formula">1. Remove background: 390 − 20 = 370<br>2. Halve it: 370 ÷ 2 = 185<br>3. <span class="hl">Put background back: 185 + 20 = 205</span><br>4. Read the time where the <b>raw</b> curve is at 205: <b>≈ 2.7 days</b><span class="ms">That time is the half-life itself, not a number of half-lives. Mark scheme 9(b)(iii): 2.4 to 2.9 days (A4).</span></div>
+    </div>
+  </section>
+
+  <section class="slips" aria-label="Maatla's slips on this question">
+    <article class="card slip">
+      <div class="tag"><span>Slip #1</span><span>9(b)(i) · [2]</span></div>
+      <div class="was"><b>What you wrote</b>78 protons and 119 neutrons. Neither count moved the right way.</div>
+      <div class="fix"><b>What earns the marks</b>In β-decay one <b style="display:inline;font:inherit;color:inherit;text-transform:none;letter-spacing:0">neutron becomes a proton</b> and an electron leaves. Protons: 79 + 1 = <span class="m">80</span> (B1). Neutrons: 119 − 1 = <span class="m">118</span> (B1). A stays 198.</div>
+    </article>
+    <article class="card slip">
+      <div class="tag"><span>Slip #2</span><span>9(b)(iii) · [4]</span></div>
+      <div class="was"><b>What you did</b>Both steps were right: 390 − 20 = 370, then 370 ÷ 2 = 185. Then you read the time at 185 on the graph. The graph shows the raw count rate with the background included, so 185 lands at about 3.1 days, which is too late.</div>
+      <div class="fix"><b>What earns the marks</b>Add the background back: <span class="m">185 + 20 = 205</span>. Read the time where the curve is at 205, <span class="m">≈ 2.7 days</span>. That time is the half-life. C1 + C1 + C1 + A1.</div>
+    </article>
+  </section>
+  <ul class="also">
+    <li><b>Also, 9(a):</b> you compared protons with neutrons inside one atom. The mark needs “all natural gold atoms have the same number of neutrons (or nucleons)”, or “they are all identical”.</li>
+  </ul>
+
+  <footer>
+    <div class="tbl-wrap"><table>
+      <tr><td>9(a)</td><td>they all have the same number of neutrons / nucleons or they are all identical</td><td>B1</td></tr>
+      <tr><td>9(b)(i)</td><td>(number of protons =) 80 · (number of neutrons =) 118</td><td>B1 · B1</td></tr>
+      <tr><td>9(b)(ii)</td><td>19 counts / minute ⩽ count rate ⩽ 21 counts / minute</td><td>B1</td></tr>
+      <tr><td>9(b)(iii)</td><td>2.4 days ⩽ t ⩽ 2.9 days · count rate from line − background e.g. 390 − 20 · ÷ 2 e.g. 185 · background + answer e.g. 20 + 185 or 205</td><td>A4 · C1 · C1 · C1</td></tr>
+    </table></div>
+    <span>Question and marks: Cambridge IGCSE Physics 0625/41, Oct/Nov 2022 question paper and published mark scheme (© UCLES 2022).</span>
+  </footer>
+</main>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  const label = () => { if (btn) btn.textContent = isDark() ? '☀ Light' : '☾ Dark'; };
+  if (btn) btn.addEventListener('click', () => { root.dataset.theme = isDark() ? 'light' : 'dark'; label(); });
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', label); } catch (e) {}
+  label();
+})();
+// Convert a pointer event into the SVG's own coordinate system.
+function svgPoint(svg, e) {
+  const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+  return p.matrixTransform(svg.getScreenCTM().inverse());
+}
+// Make an SVG element draggable; onMove receives {x, y} in SVG units.
+function draggable(svg, el, onMove) {
+  let on = false;
+  el.addEventListener('pointerdown', e => { on = true; el.setPointerCapture(e.pointerId); onMove(svgPoint(svg, e)); e.preventDefault(); });
+  el.addEventListener('pointermove', e => { if (on) onMove(svgPoint(svg, e)); });
+  el.addEventListener('pointerup', () => { on = false; });
+  el.addEventListener('pointercancel', () => { on = false; });
+}
+const $ = id => document.getElementById(id);
+function setChip(el, state, text) { el.dataset.state = state; el.textContent = text; }
+function sig(x, n) { return Number(x.toPrecision(n)); }
+
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  // ---- nucleus: 198 nucleons on a sunflower spiral, 79 protons chosen by a fixed shuffle
+  const g = $('nucleons'), cx = 130, cy = 128, pts = [];
+  for (let i = 0; i < 198; i++) { const r = 8.2 * Math.sqrt(i + .5), a = i * 2.39996; pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); }
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const idx = [...Array(198).keys()]; for (let i = 197; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
+  const isP = new Array(198).fill(false); idx.slice(0, 79).forEach(i => isP[i] = true);
+  // the neutron furthest toward the upper right, so the electron's exit path stays clear of the labels
+  const flipIdx = (() => { let best = -1, sc = -1e9; pts.forEach((p, i) => { const v = p[0] - p[1]; if (!isP[i] && v > sc) { sc = v; best = i; } }); return best; })();
+  const dots = pts.map((p, i) => { const c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', p[0]); c.setAttribute('cy', p[1]); c.setAttribute('r', 4.6); c.setAttribute('class', 'flip ' + (isP[i] ? 'nuc-p' : 'nuc-n')); g.appendChild(c); return c; });
+  let decayed = false;
+  function renderN() {
+    const Z = decayed ? 80 : 79, N = decayed ? 118 : 119;
+    $('zOut').textContent = decayed ? '79 → 80' : '79'; $('nOut').textContent = decayed ? '119 → 118' : '119';
+    $('aOut').textContent = '198' + (decayed ? ' (unchanged)' : '');
+    $('elOut').textContent = decayed ? 'gold → mercury' : 'gold';
+    $('symZ').textContent = Z; $('sym').textContent = decayed ? 'Hg' : 'Au'; $('symName').textContent = decayed ? 'mercury' : 'gold';
+    $('symZ').classList.toggle('changed', decayed);
+    $('decay').disabled = decayed;
+    $('formN').innerHTML = decayed
+      ? `neutron → proton + electron (β⁻)<br>protons: 79 <span class="hl">+ 1</span> = <b>80</b><br>neutrons: 119 <span class="hl">− 1</span> = <b>118</b><br>nucleons: 198 (unchanged)<span class="ms">Mark scheme 9(b)(i): 80 (B1), 118 (B1)</span>`
+      : `Gold-198: A = 198, Z = 79<br>neutrons = A − Z = 198 − 79 = <b>119</b><br>Press “Beta decay” to see which count changes.`;
+    if (decayed) setChip($('chipN'), 'ok', 'Mercury-198: 80 protons, 118 neutrons');
+    else setChip($('chipN'), 'info', 'Gold-198: 79 protons, 119 neutrons');
+  }
+  $('decay').addEventListener('click', () => {
+    decayed = true;
+    const [x, y] = pts[flipIdx], d = dots[flipIdx];
+    d.setAttribute('class', 'flip nuc-p');
+    const ring = $('ring'); ring.setAttribute('cx', x); ring.setAttribute('cy', y); ring.classList.remove('go'); void ring.getBBox(); ring.classList.add('go');
+    const b = $('beta'), bt = $('betaTxt');
+    const tx = 330, ty = 28, t0 = performance.now();
+    b.style.opacity = 1; bt.setAttribute('x', tx); bt.setAttribute('y', ty + 22); bt.setAttribute('text-anchor', 'middle');
+    const step = now => {
+      const k = Math.min(1, (now - t0) / 900), e = 1 - (1 - k) ** 3;
+      b.setAttribute('cx', x + (tx - x) * e); b.setAttribute('cy', y + (ty - y) * e);
+      if (k < 1) requestAnimationFrame(step); else bt.style.opacity = 1;
+    };
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) step(t0 + 900); else requestAnimationFrame(step);
+    renderN();
+  });
+  $('reset').addEventListener('click', () => {
+    decayed = false; dots[flipIdx].setAttribute('class', 'flip nuc-n');
+    $('beta').style.opacity = 0; $('betaTxt').style.opacity = 0;
+    renderN();
+  });
+  renderN();
+
+  // ---- decay graph
+  const svg = $('graph'), L = 52, R = 444, T = 16, B = 256;
+  const X = t => L + t / 32 * (R - L), Y = c => B - c / 400 * (B - T);
+  const raw = t => 20 + 370 * Math.pow(2, -t / 2.7), cor = t => 370 * Math.pow(2, -t / 2.7);
+  const tAt = (f0, lvl) => lvl > 0 && lvl <= f0 ? 2.7 * Math.log2(f0 / lvl) : NaN;
+  let s = '';
+  for (let c = 0; c <= 400; c += 100) s += `<line class="gl" x1="${L}" x2="${R}" y1="${Y(c)}" y2="${Y(c)}"/><text class="ts" x="${L - 8}" y="${Y(c) + 4}" text-anchor="end">${c}</text>`;
+  for (let t = 0; t <= 32; t += 4) s += `<line class="gl" x1="${X(t)}" x2="${X(t)}" y1="${T}" y2="${B}"/><text class="ts" x="${X(t)}" y="${B + 16}" text-anchor="middle">${t}</text>`;
+  s += `<line class="axis" x1="${L}" y1="${B}" x2="${R}" y2="${B}"/><line class="axis" x1="${L}" y1="${T}" x2="${L}" y2="${B}"/>`;
+  s += `<text class="ts" x="${(L + R) / 2}" y="${B + 36}" text-anchor="middle">time / days</text>`;
+  s += `<text class="ts" x="14" y="${(T + B) / 2}" text-anchor="middle" transform="rotate(-90 14 ${(T + B) / 2})">count rate / counts per min</text>`;
+  const path = f => { let d = ''; for (let t = 0; t <= 32.001; t += .25) d += (d ? 'L' : 'M') + X(t).toFixed(1) + ',' + Y(f(t)).toFixed(1); return d; };
+  s += `<line class="bg" x1="${L}" x2="${R}" y1="${Y(20)}" y2="${Y(20)}"/><text class="ts" x="${R}" y="${Y(20) - 6}" text-anchor="end">background 20</text>`;
+  s += `<path id="corP" class="cor" d="${path(cor)}"/><path class="raw" d="${path(raw)}"/>`;
+  s += `<line class="raw" x1="${X(12)}" x2="${X(14.5)}" y1="${Y(370)}" y2="${Y(370)}"/><text class="ts" x="${X(15)}" y="${Y(370) + 4}" style="fill: var(--accent)">raw count rate, as plotted</text>`;
+  s += `<g id="corLbl"><line class="cor" x1="${X(12)}" x2="${X(14.5)}" y1="${Y(335)}" y2="${Y(335)}"/><text class="ts" x="${X(15)}" y="${Y(335) + 4}" style="fill: var(--good)">corrected (raw − background)</text></g>`;
+  s += `<line id="dropRaw" class="drop" stroke="var(--accent)"/><line id="dropCor" class="drop" stroke="var(--good)"/>`;
+  s += `<circle id="ptRaw" r="5" fill="var(--accent)"/><circle id="ptCor" r="4.5" fill="var(--good)"/>`;
+  s += `<line id="lvl" class="lvl" x1="${L}" x2="${R}"/><text id="lvlTxt" class="tm" style="fill: var(--warn)"></text>`;
+  s += `<rect id="lvlHit" class="handle" x="${L}" width="${R - L}" height="22" fill="transparent"/>`;
+  s += `<circle id="lvlKnob" class="handle" cx="${R - 12}" r="9" fill="var(--warn)" fill-opacity=".25" stroke="var(--warn)" stroke-width="2.5" tabindex="0" aria-label="Reading line; use arrow keys"/>`;
+  svg.innerHTML = s;
+  const set = (id, a) => { const el = $(id); for (const k in a) el.setAttribute(k, a[k]); };
+  let lv = 205;
+  function renderG() {
+    const y = Y(lv), tr = tAt(370, lv - 20), tc = tAt(370, lv), showC = $('showCor').checked;
+    set('lvl', { y1: y, y2: y }); set('lvlHit', { y: y - 11 }); set('lvlKnob', { cy: y });
+    set('lvlTxt', { x: R - 26, y: y - 8, 'text-anchor': 'end' }); $('lvlTxt').textContent = Math.round(lv);
+    const vis = (id, on) => $(id).style.display = on ? '' : 'none';
+    vis('corP', showC); vis('corLbl', showC);
+    if (isFinite(tr)) { set('dropRaw', { x1: X(tr), x2: X(tr), y1: y, y2: B }); set('ptRaw', { cx: X(tr), cy: y }); }
+    vis('dropRaw', isFinite(tr)); vis('ptRaw', isFinite(tr));
+    const cOk = isFinite(tc) && showC;
+    if (cOk) { set('dropCor', { x1: X(tc), x2: X(tc), y1: y, y2: B }); set('ptCor', { cx: X(tc), cy: y }); }
+    vis('dropCor', cOk); vis('ptCor', cOk);
+    $('lvOut').textContent = Math.round(lv) + ' counts/min';
+    $('tRaw').textContent = isFinite(tr) ? tr.toFixed(1) + ' days' : 'n/a';
+    $('tCor').textContent = isFinite(tc) ? tc.toFixed(1) + ' days' : 'n/a';
+    const c = $('chipG');
+    if (Math.abs(lv - 205) <= 2) setChip(c, 'ok', `205 on the raw curve: ${tr.toFixed(1)} days, which is the half-life`);
+    else if (Math.abs(lv - 185) <= 2) setChip(c, 'bad', `185 on the raw curve: ${tr.toFixed(1)} days, too late because the background is still in`);
+    else setChip(c, 'info', 'Drag the line. Remember the raw curve includes the 20 counts/min background.');
+  }
+  const setLv = v => { lv = Math.max(24, Math.min(395, v)); renderG(); };
+  const toLv = p => setLv(Math.round((B - p.y) / (B - T) * 400));
+  draggable(svg, $('lvlHit'), toLv); draggable(svg, $('lvlKnob'), toLv);
+  $('lvlKnob').addEventListener('keydown', e => {
+    if (e.key === 'ArrowUp') { setLv(lv + 1); e.preventDefault(); }
+    if (e.key === 'ArrowDown') { setLv(lv - 1); e.preventDefault(); }
+  });
+  $('at185').addEventListener('click', () => setLv(185));
+  $('at205').addEventListener('click', () => setLv(205));
+  $('showCor').addEventListener('change', renderG);
+  renderG();
+})();
+</script>

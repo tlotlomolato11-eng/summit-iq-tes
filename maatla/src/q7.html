@@ -1,0 +1,242 @@
+<title>Starter Motor Relay</title>
+<!--HEAD-->
+<style>
+/*SHARED_CSS*/
+.wire { fill: none; stroke: var(--ink); stroke-width: 2; }
+.flow { fill: none; stroke: var(--warn); stroke-width: 2.4; stroke-dasharray: 5 9; opacity: 0; transition: opacity .25s; }
+.on .flow.coilc, .touch .flow.motorc { opacity: 1; animation: flow .6s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -14; } }
+.case { fill: none; stroke: var(--faint); stroke-width: 2; stroke-dasharray: 2 0; }
+.strip { fill: var(--metal); transition: transform .35s ease; }
+.strip { fill: var(--ink); }
+.on .strip.x, .on .strip.y { transform: rotate(1.3deg); }
+.coil { fill: none; stroke: var(--copper); stroke-width: 2; opacity: .75; }
+.coil-back { fill: none; stroke: var(--copper); stroke-width: 1.4; opacity: .35; }
+.pole { font: 700 12px var(--mono); opacity: 0; transition: opacity .3s .15s; }
+.on .pole { opacity: 1; }
+.pole .pn { fill: var(--bad); } .pole .ps { fill: var(--accent); }
+.fieldl { stroke: var(--field); stroke-width: 1.6; stroke-dasharray: 6 5; opacity: 0; transition: opacity .3s; }
+.on .fieldl { opacity: .9; }
+.pull { stroke: var(--good); stroke-width: 2; opacity: 0; transition: opacity .3s .2s; }
+.on .pull { opacity: 1; }
+.term { fill: var(--panel); stroke: var(--ink); stroke-width: 2; }
+.rotor { stroke: var(--copper); stroke-width: 2; transform-origin: 262px 40px; opacity: 0; }
+.touch .rotor { opacity: 1; }
+.touch .rotor { animation: spin .5s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.swarm { stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; transform-origin: 250px 330px; transition: transform .2s; transform: rotate(-24deg); }
+.on .swarm { transform: rotate(0deg); }
+.wireX { fill: var(--copper); }
+</style>
+
+<main class="page">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Summit IQ · Physics 0625/41 · Oct/Nov 2022 · Question 7</p>
+      <h1>The strips become magnets</h1>
+      <p class="lede">Close switch S. The coil's current magnetises the two soft-iron strips. Their facing ends become opposite poles, opposite poles attract, and the strips snap together to complete the motor circuit. There is no induced current anywhere in this process.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <section class="card question" aria-label="Question 7 text">
+    <div class="qhead"><h2>Question 7</h2><span class="data">[Total: 9]</span></div>
+    <p>The electric starter motor in a car is switched on and off using a relay. The relay consists of a plastic case and two flexible springy strips, X and Y, which are made of soft iron. These iron strips act as the switch when a circuit is connected between the terminals W and Z.</p>
+    <p>Fig. 7.2 shows the equipment from Fig. 7.1 inside a magnetising coil. The magnetising coil is in series with the 12 V car battery and switch S, which is open.</p>
+    <div class="part focus"><span class="pn">(a)</span><span>Switch S is now closed. Explain what happens to the springy iron strips X and Y.</span><span class="mk">[3]</span></div>
+    <p>(b) The power of the starter motor is 1.8 kW and it is also operated by the car battery.</p>
+    <div class="part focus"><span class="pn">(b)(i)</span><span>Calculate the current in the starter motor when it is used.</span><span class="mk">[2]</span></div>
+    <div class="part focus"><span class="pn">(b)(ii)</span><span>The starter motor circuit is connected between terminals W and Z. Explain why copper wires with a large cross-sectional area are used for this circuit.</span><span class="mk">[2]</span></div>
+    <div class="part focus"><span class="pn">(c)</span><span>Fig. 7.3 shows the relay and the symbols for the car battery and the starter motor. The springy iron strips X and Y act as the switch for the starter motor circuit. Complete the circuit diagram for the motor circuit.</span><span class="mk">[2]</span></div>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <h3>Relay and circuits, after Fig. 7.2 and the 7(c) answer</h3>
+      <svg id="fig" viewBox="0 0 460 380" role="img" aria-label="Relay with iron strips X and Y inside a magnetising coil, with the coil circuit and the motor circuit">
+        <!-- motor circuit (top) -->
+        <path class="wire" d="M100,168 L100,40 L156,40 M184,40 L246,40 M278,40 L360,40 L360,181"/>
+        <path class="flow motorc" d="M100,168 L100,40 L156,40 M184,40 L246,40 M278,40 L360,40 L360,181"/>
+        <line x1="166" y1="26" x2="166" y2="54" stroke="var(--ink)" stroke-width="2.5"/>
+        <line x1="174" y1="32" x2="174" y2="48" stroke="var(--ink)" stroke-width="5"/>
+        <text class="ts" x="170" y="18" text-anchor="middle">12 V car battery</text>
+        <circle cx="262" cy="40" r="16" fill="var(--panel)" stroke="var(--ink)" stroke-width="2"/>
+        <circle class="rotor" cx="262" cy="40" r="11" fill="none" stroke-dasharray="5 4"/>
+        <text class="tm" x="262" y="45" text-anchor="middle">M</text>
+        <text class="ts" x="262" y="74" text-anchor="middle">starter motor</text>
+        <!-- relay -->
+        <text class="ts pull" x="230" y="100" text-anchor="middle" style="fill: var(--good); stroke: none">centre ends: N faces S, so they attract</text>
+        <rect class="case" x="118" y="150" width="224" height="50" rx="10"/>
+        <g id="coilBack"></g>
+        <line class="fieldl" x1="124" y1="157" x2="334" y2="157" marker-end="url(#fa)"/>
+        <line class="fieldl" x1="124" y1="194" x2="334" y2="194" marker-end="url(#fa)"/>
+        <rect class="strip x" x="100" y="165" width="150" height="6" rx="2" style="transform-origin: 100px 168px"/>
+        <rect class="strip y" x="210" y="178" width="150" height="6" rx="2" style="transform-origin: 360px 181px"/>
+        <g id="coilFront"></g>
+        <circle class="term" cx="100" cy="168" r="6"/>
+        <circle class="term" cx="360" cy="181" r="6"/>
+        <text class="tm" x="86" y="172" text-anchor="end">W</text>
+        <text class="tm" x="372" y="185">Z</text>
+        <text class="tm" x="176" y="137">X</text>
+        <text class="tm" x="282" y="226">Y</text>
+        <text class="ts" x="230" y="262" text-anchor="middle">plastic case</text>
+        <!-- pole badges with leaders to each strip end -->
+        <g class="pole">
+          <line x1="112" y1="166" x2="128" y2="132" stroke="var(--accent)" stroke-width="1.2"/><circle cx="130" cy="126" r="10" class="ps"/><text x="130" y="131" text-anchor="middle" fill="#fff">S</text>
+          <line x1="246" y1="166" x2="248" y2="138" stroke="var(--bad)" stroke-width="1.2"/><circle cx="248" cy="126" r="10" class="pn"/><text x="248" y="131" text-anchor="middle" fill="#fff">N</text>
+          <line x1="214" y1="183" x2="212" y2="212" stroke="var(--accent)" stroke-width="1.2"/><circle cx="212" cy="224" r="10" class="ps"/><text x="212" y="229" text-anchor="middle" fill="#fff">S</text>
+          <line x1="350" y1="183" x2="334" y2="214" stroke="var(--bad)" stroke-width="1.2"/><circle cx="330" cy="224" r="10" class="pn"/><text x="330" y="229" text-anchor="middle" fill="#fff">N</text>
+        </g>
+        <!-- coil circuit (bottom) -->
+        <path class="wire" d="M132,206 L132,320 L196,320 M206,320 L240,320 M280,320 L328,320 L328,206"/>
+        <path class="flow coilc" d="M132,206 L132,320 L196,320 M206,320 L240,320 M280,320 L328,320 L328,206"/>
+        <line x1="196" y1="306" x2="196" y2="334" stroke="var(--ink)" stroke-width="2.5"/>
+        <line x1="204" y1="312" x2="204" y2="328" stroke="var(--ink)" stroke-width="5"/>
+        <text class="ts" x="200" y="352" text-anchor="middle">12 V car battery</text>
+        <circle cx="240" cy="320" r="3.5" fill="var(--ink)"/><circle cx="280" cy="320" r="3.5" fill="var(--ink)"/>
+        <line class="swarm" x1="244" y1="320" x2="279" y2="320" style="transform-origin: 240px 320px"/>
+        <text class="tm" x="262" y="302" text-anchor="middle">S</text>
+        <text class="ts" x="336" y="272">magnetising</text>
+        <text class="ts" x="336" y="286">coil</text>
+        <defs>
+          <marker id="fa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--field)"/></marker>
+        </defs>
+      </svg>
+      <div class="btns">
+        <button class="btn" id="sw" type="button" aria-pressed="false">Close switch S</button>
+      </div>
+      <p class="cap">Purple dashes show the coil's magnetic field. Both circuits run from the same 12 V car battery. It is drawn twice so each loop is easy to follow. Mark scheme 7(c): the flexible strips are in series with the motor, and the battery is in series with the motor.</p>
+    </div>
+
+    <div class="card stack">
+      <span class="chip" id="chip" data-state="info">…</span>
+      <dl class="rows">
+        <div><dt>Switch S</dt><dd id="r1"></dd></div>
+        <div><dt>Current in coil</dt><dd id="r2"></dd></div>
+        <div><dt>Iron strips X and Y</dt><dd id="r3"></dd></div>
+        <div><dt>Ends in the centre</dt><dd id="r4"></dd></div>
+        <div><dt>Motor circuit W–Z</dt><dd id="r5"></dd></div>
+        <div><dt>Current in motor</dt><dd class="big" id="r6"></dd></div>
+      </dl>
+      <div class="formula">(b)(i) I = P ÷ V<br>P = <span class="hl">1.8 kW = 1800 W</span><br>I = 1800 W ÷ 12 V = <b>150 A</b><span class="ms">Mark scheme 7(b)(i): 150 A (A2). 18 000 W would give 1500 A, ten times too big.</span></div>
+    </div>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <h3>(b)(ii) · why thick copper wire for 150 A</h3>
+      <svg id="wireFig" viewBox="0 0 420 200" role="img" aria-label="Cross-section of a copper wire and the heat it produces at 150 amps">
+        <text class="ts" x="80" y="18" text-anchor="middle">cross-section</text>
+        <circle id="wireC" class="wireX" cx="80" cy="104"/>
+        <text id="wireA" class="tm" x="80" y="192" text-anchor="middle"></text>
+        <text class="ts" x="180" y="40">resistance of 1 m</text>
+        <rect x="180" y="48" width="220" height="16" rx="4" fill="var(--grid)"/>
+        <rect id="rBar" x="180" y="48" height="16" rx="4" fill="var(--accent)"/>
+        <text id="rTxt" class="tm" x="180" y="84"></text>
+        <text class="ts" x="180" y="118">heat produced, P = I²R</text>
+        <rect x="180" y="126" width="220" height="16" rx="4" fill="var(--grid)"/>
+        <rect id="hBar" x="180" y="126" height="16" rx="4" fill="var(--bad)"/>
+        <text id="hTxt" class="tm" x="180" y="162"></text>
+      </svg>
+      <div class="ctrl">
+        <label for="csa">Cross-sectional area of the copper wire <output id="csaOut"></output></label>
+        <input id="csa" type="range" min="1" max="50" step="1" value="4">
+      </div>
+      <p class="cap">Teaching example, not from the paper: 1 m of copper (resistivity 1.7 × 10⁻⁸ Ω m) carrying the starter current of 150 A.</p>
+    </div>
+    <div class="card stack">
+      <span class="chip" id="chipW" data-state="info">…</span>
+      <dl class="rows">
+        <div><dt>Current</dt><dd>150 A</dd></div>
+        <div><dt>Resistance of 1 m</dt><dd id="wR"></dd></div>
+        <div><dt>Heating, I²R</dt><dd class="big" id="wP"></dd></div>
+      </dl>
+      <div class="formula">Bigger cross-section → <b>smaller</b> resistance<br>Smaller resistance → less heating: P = I²R<br><span class="ms">Mark scheme 7(b)(ii): small(er) resistance (B1); less thermal energy produced, or wires do not melt, or large current (B1)</span></div>
+    </div>
+  </section>
+
+  <section class="slips" aria-label="Maatla's slips on this question">
+    <article class="card slip">
+      <div class="tag"><span>Slip #1</span><span>7(a) · [3]</span></div>
+      <div class="was"><b>What you wrote</b>The strips attract because of an “induced current”. Nothing is being induced here. The coil's current is steady, and the strips are just iron.</div>
+      <div class="fix"><b>What earns the marks</b>X and Y become <b>magnetised</b> (B1). Their ends in the centre are <b>opposite poles</b>, so X and Y attract (B1). They touch and close the switch, completing the motor circuit (B1).</div>
+    </article>
+    <article class="card slip">
+      <div class="tag"><span>Slip #2</span><span>7(b)(ii) · [2]</span></div>
+      <div class="was"><b>What you wrote</b>Thick wires are used to increase resistance. That is backwards.</div>
+      <div class="fix"><b>What earns the marks</b>A large cross-section gives a <b>smaller resistance</b> (B1). With a current as large as 150 A, that means less thermal energy is produced, so the wires don't overheat or melt (B1).</div>
+    </article>
+  </section>
+  <ul class="also">
+    <li><b>Also, 7(b)(i):</b> I = P ÷ V was right, but the power was ten times too big, giving 1500 A. 1.8 kW is 1800 W, so I = 1800 ÷ 12 = 150 A.</li>
+    <li><b>Also, 7(c):</b> your answer was about high-voltage power transmission, which is a different topic. The question wants the motor circuit drawn: the strips (W to Z), the motor and the battery all in series, as in the diagram above.</li>
+  </ul>
+
+  <footer>
+    <div class="tbl-wrap"><table>
+      <tr><td>7(a)</td><td>X and Y become magnetised or strips have poles · strips in the centre have opposite (magnetic) poles or X and Y attract · X and Y touch / close switch / complete circuit</td><td>B1 · B1 · B1</td></tr>
+      <tr><td>7(b)(i)</td><td>150 A · I = P / V in any form or 1800 / 12</td><td>A2 · C1</td></tr>
+      <tr><td>7(b)(ii)</td><td>small(er) resistance mentioned · less thermal energy produced or wires do not melt or large current mentioned</td><td>B1 · B1</td></tr>
+      <tr><td>7(c)</td><td>flexible strips in series with motor · power supply in series with motor</td><td>B1 · B1</td></tr>
+    </table></div>
+    <span>Question and marks: Cambridge IGCSE Physics 0625/41, Oct/Nov 2022 question paper and published mark scheme (© UCLES 2022). The relay is redrawn here and not to scale. The N and S labels assume the coil's field points from W towards Z. If the current is reversed, every pole swaps, but the centre ends are still opposite and still attract.</span>
+  </footer>
+</main>
+
+<script>
+/*SHARED_JS*/
+(() => {
+  const svg = $('fig');
+  // coil: loops around the plastic case, back halves faint so the strips read as inside it
+  let back = '', front = '';
+  for (let x = 132; x <= 328; x += 28) {
+    back += `<path class="coil-back" d="M${x},142 C${x + 9},152 ${x + 9},198 ${x},208"/>`;
+    front += `<path class="coil" d="M${x},142 C${x - 9},152 ${x - 9},198 ${x},208"/>`;
+  }
+  $('coilBack').innerHTML = back; $('coilFront').innerHTML = front;
+  let on = false, timer = null;
+  function render() {
+    const touch = svg.classList.contains('touch');
+    $('sw').textContent = on ? 'Open switch S' : 'Close switch S';
+    $('sw').setAttribute('aria-pressed', on);
+    $('r1').textContent = on ? 'closed' : 'open';
+    $('r2').textContent = on ? 'yes' : 'none';
+    $('r3').textContent = on ? 'magnetised' : 'not magnetised';
+    $('r4').textContent = on ? 'N faces S: attract' : 'no poles';
+    $('r5').textContent = touch ? 'complete' : 'broken (gap)';
+    $('r6').textContent = touch ? '150 A' : '0 A';
+    if (!on) setChip($('chip'), 'info', 'S open: no current in the coil, so the strips are not magnets and the gap stays open');
+    else if (!touch) setChip($('chip'), 'warn', 'Coil current magnetises X and Y, and their centre ends become N and S');
+    else setChip($('chip'), 'ok', 'Opposite poles attract, X touches Y, and the motor circuit is complete');
+  }
+  $('sw').addEventListener('click', () => {
+    on = !on; clearTimeout(timer);
+    svg.classList.toggle('on', on);
+    if (on) timer = setTimeout(() => { svg.classList.add('touch'); render(); }, 450);
+    else svg.classList.remove('touch');
+    render();
+  });
+  render();
+
+  // (b)(ii) resistance and heating at 150 A for 1 m of copper
+  const rho = 1.7e-8, I = 150, csa = $('csa');
+  function wire(mm2) {
+    const A = mm2 * 1e-6, R = rho * 1 / A, P = I * I * R;
+    $('wireC').setAttribute('r', 8 + Math.sqrt(mm2) * 9);
+    $('wireA').textContent = mm2 + ' mm²';
+    const Rmax = rho / 1e-6, Pmax = I * I * Rmax;
+    $('rBar').setAttribute('width', Math.max(2, 220 * R / Rmax));
+    $('hBar').setAttribute('width', Math.max(2, 220 * P / Pmax));
+    $('rTxt').textContent = (R * 1000).toFixed(2) + ' mΩ';
+    $('hTxt').textContent = P.toFixed(P < 10 ? 1 : 0) + ' W of heating';
+    $('csaOut').textContent = mm2 + ' mm²';
+    $('wR').textContent = (R * 1000).toFixed(2) + ' mΩ';
+    $('wP').textContent = P.toFixed(P < 10 ? 1 : 0) + ' W';
+    if (P > 100) setChip($('chipW'), 'bad', 'Thin wire: large resistance, so it heats up and could melt');
+    else if (P > 30) setChip($('chipW'), 'warn', 'Getting warm. More cross-section lowers the resistance further');
+    else setChip($('chipW'), 'ok', 'Thick wire: small resistance, so little thermal energy is wasted');
+  }
+  csa.addEventListener('input', () => wire(+csa.value));
+  wire(4);
+})();
+</script>
