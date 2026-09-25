@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hooke's Law Lab</title>
+<style>
+  :root {
+    --bg: #f6f7fb;
+    --panel: #ffffff;
+    --ink: #1c2230;
+    --muted: #5d6679;
+    --line: #d9dde7;
+    --accent: #2f6fde;
+    --accent-soft: #dce8fd;
+    --spring: #4a5568;
+    --mass: #e0662f;
+    --force: #c2334d;
+    --ok: #1f8a5b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12151c;
+      --panel: #1b1f29;
+      --ink: #e8ebf2;
+      --muted: #9aa3b5;
+      --line: #2d3342;
+      --accent: #6d9cf0;
+      --accent-soft: #23304a;
+      --spring: #aeb7c8;
+      --mass: #f08a55;
+      --force: #ef6b82;
+      --ok: #4cc28c;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12151c; --panel: #1b1f29; --ink: #e8ebf2; --muted: #9aa3b5;
+    --line: #2d3342; --accent: #6d9cf0; --accent-soft: #23304a;
+    --spring: #aeb7c8; --mass: #f08a55; --force: #ef6b82; --ok: #4cc28c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  main { max-width: 1040px; margin: 0 auto; padding: 32px 16px 48px; }
+  h1 { font-size: 1.9rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .lede { color: var(--muted); margin: 0 0 24px; max-width: 62ch; }
+  .formula {
+    display: inline-block;
+    font: 600 1.5rem/1 "Cambria Math", Georgia, serif;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 10px 18px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+  }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 20px; }
+  @media (max-width: 760px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px;
+  }
+  .card h2 { font-size: 1rem; margin: 0 0 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+  svg { display: block; width: 100%; height: auto; }
+  .control { margin: 14px 0; }
+  .control label { display: flex; justify-content: space-between; font-weight: 600; font-size: 0.95rem; }
+  .control label span { color: var(--accent); font-variant-numeric: tabular-nums; }
+  input[type=range] { width: 100%; accent-color: var(--accent); margin-top: 6px; }
+  .readouts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+  .readout { border: 1px solid var(--line); border-radius: 10px; padding: 10px; text-align: center; }
+  .readout b { display: block; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+  .readout small { color: var(--muted); }
+  .buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  button {
+    font: inherit; font-weight: 600;
+    border: 1px solid var(--accent);
+    background: var(--accent); color: #fff;
+    padding: 8px 14px; border-radius: 8px; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--accent); }
+  .calc {
+    margin-top: 16px; padding: 12px 14px; border-radius: 10px;
+    background: var(--accent-soft); font-variant-numeric: tabular-nums; font-size: 0.95rem;
+  }
+  .notes { margin-top: 20px; }
+  .notes dl { display: grid; grid-template-columns: max-content 1fr; gap: 8px 16px; margin: 0; }
+  .notes dt { font-weight: 700; color: var(--accent); }
+  .notes dd { margin: 0; color: var(--ink); }
+  .warn { color: var(--force); font-weight: 600; min-height: 1.4em; margin-top: 8px; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Hooke's Law: the spring constant</h1>
+  <p class="lede">Hang a mass on a spring and it stretches. Hooke's law says the stretch grows in direct proportion to the force, as long as you stay inside the spring's elastic limit. The spring constant <em>k</em> tells you how stiff the spring is.</p>
+  <div class="formula">F = k · x</div>
+
+  <div class="grid">
+    <section class="card">
+      <h2>The spring</h2>
+      <svg id="rig" viewBox="0 0 320 420" role="img" aria-label="A spring hanging from a ceiling with a mass attached">
+        <defs>
+          <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="8" stroke="var(--muted)" stroke-width="2"/>
+          </pattern>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--force)"/>
+          </marker>
+          <marker id="arrowW" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--mass)"/>
+          </marker>
+          <marker id="tick" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--ok)"/>
+          </marker>
+        </defs>
+        <!-- ceiling -->
+        <rect x="60" y="10" width="200" height="14" fill="url(#hatch)"/>
+        <line x1="60" y1="24" x2="260" y2="24" stroke="var(--ink)" stroke-width="3"/>
+        <!-- ruler -->
+        <g id="ruler"></g>
+        <!-- natural length marker -->
+        <line id="restLine" x1="100" x2="240" stroke="var(--muted)" stroke-dasharray="5 4"/>
+        <text id="restLabel" x="244" font-size="11" fill="var(--muted)">rest</text>
+        <!-- spring -->
+        <path id="spring" fill="none" stroke="var(--spring)" stroke-width="3" stroke-linejoin="round"/>
+        <!-- mass -->
+        <g id="mass">
+          <rect id="massBox" x="130" width="60" height="44" rx="6" fill="var(--mass)"/>
+          <text id="massText" x="160" text-anchor="middle" font-size="13" font-weight="700" fill="#fff"></text>
+        </g>
+        <!-- extension bracket -->
+        <line id="extLine" x1="118" x2="118" stroke="var(--ok)" stroke-width="2" marker-start="url(#tick)" marker-end="url(#tick)"/>
+        <text id="extText" x="110" text-anchor="end" font-size="14" font-style="italic" font-weight="700" fill="var(--ok)"></text>
+        <!-- force arrows -->
+        <line id="upArrow" x1="208" x2="208" stroke="var(--force)" stroke-width="3" marker-end="url(#arrow)"/>
+        <text id="upText" x="220" font-size="12" fill="var(--force)" font-weight="600">spring pull</text>
+        <line id="downArrow" x1="208" x2="208" stroke="var(--mass)" stroke-width="3" marker-end="url(#arrowW)"/>
+        <text id="downText" x="220" font-size="12" fill="var(--mass)" font-weight="600">weight</text>
+      </svg>
+      <div class="buttons">
+        <button id="bounce">Pull down &amp; release</button>
+        <button id="stop" class="ghost">Stop</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Controls</h2>
+      <div class="control">
+        <label for="k">Spring constant k <span id="kVal"></span></label>
+        <input id="k" type="range" min="5" max="100" step="1" value="40">
+      </div>
+      <div class="control">
+        <label for="m">Hanging mass m <span id="mVal"></span></label>
+        <input id="m" type="range" min="0" max="2" step="0.05" value="0.8">
+      </div>
+
+      <div class="readouts">
+        <div class="readout"><small>Force F = mg</small><b id="fOut"></b></div>
+        <div class="readout"><small>Extension x</small><b id="xOut"></b></div>
+        <div class="readout"><small>Stored energy</small><b id="eOut"></b></div>
+      </div>
+      <div class="calc" id="calc"></div>
+      <div class="warn" id="warn"></div>
+
+      <h2 style="margin-top:18px">Force vs extension</h2>
+      <svg id="graph" viewBox="0 0 420 260" role="img" aria-label="Graph of force against extension; the slope is k"></svg>
+    </section>
+  </div>
+
+  <section class="card notes">
+    <h2>Key ideas</h2>
+    <dl>
+      <dt>F</dt><dd>The force stretching the spring, in newtons (N). Here it is the weight of the mass: F = m × g, with g = 9.81 m/s².</dd>
+      <dt>x</dt><dd>The <em>extension</em>: how far the spring stretches beyond its natural (resting) length, in metres.</dd>
+      <dt>k</dt><dd>The <em>spring constant</em> in N/m: the force needed to stretch the spring by one metre. Bigger k means a stiffer spring. On the graph, k is the slope of the line.</dd>
+      <dt>Elastic limit</dt><dd>The largest stretch a spring can take and still spring back to its original length. Past it, the spring deforms permanently and F = kx no longer holds, so the graph curves.</dd>
+      <dt>Energy</dt><dd>A stretched spring stores elastic potential energy E = ½ k x², the area under the F–x line.</dd>
+      <dt>Oscillation</dt><dd>Pull the mass down and let go: it bounces with period T = 2π√(m/k). Stiffer springs and lighter masses bounce faster.</dd>
+    </dl>
+  </section>
+</main>
+
+<script>
+(() => {
+  const g = 9.81;
+  const TOP = 24;          // ceiling y in SVG
+  const REST = 110;        // natural spring length in px
+  const PX_PER_M = 400;    // drawing scale: 1 m = 400 px (1 cm = 4 px)
+  const LIMIT_X = 0.55;    // elastic limit extension (m), for the warning
+  const MAX_DRAW = 250;    // max spring length drawn beyond rest (px)
+
+  const $ = id => document.getElementById(id);
+  const kIn = $('k'), mIn = $('m');
+  let anim = null;
+
+  // Ruler: cm marks from rest position downward
+  (function drawRuler() {
+    const r = $('ruler');
+    let s = `<line x1="40" y1="${TOP}" x2="40" y2="${TOP + REST + MAX_DRAW + 10}" stroke="var(--line)" stroke-width="2"/>`;
+    for (let cm = 0; cm <= 60; cm += 5) {
+      const y = TOP + REST + cm * PX_PER_M / 100;
+      if (y > TOP + REST + MAX_DRAW) break;
+      const major = cm % 10 === 0;
+      s += `<line x1="40" x2="${major ? 54 : 48}" y1="${y}" y2="${y}" stroke="var(--muted)"/>`;
+      if (major) s += `<text x="34" y="${y + 4}" text-anchor="end" font-size="10" fill="var(--muted)">${cm}</text>`;
+    }
+    s += `<text x="20" y="${TOP + REST - 8}" font-size="10" fill="var(--muted)">cm</text>`;
+    r.innerHTML = s;
+  })();
+
+  function springPath(len) {
+    const coils = 14, amp = 18, cx = 160, lead = 12;
+    const body = Math.max(len - 2 * lead, 10);
+    let d = `M${cx},${TOP} L${cx},${TOP + lead}`;
+    for (let i = 0; i < coils; i++) {
+      const y = TOP + lead + body * (i + 0.5) / coils;
+      d += ` L${cx + (i % 2 ? -amp : amp)},${y}`;
+    }
+    d += ` L${cx},${TOP + lead + body} L${cx},${TOP + len}`;
+    return d;
+  }
+
+  function drawRig(xMeters, F) {
+    const extPx = Math.min(xMeters * PX_PER_M, MAX_DRAW);
+    const len = REST + extPx;
+    const restY = TOP + REST;
+    const massY = TOP + len;
+
+    $('spring').setAttribute('d', springPath(len));
+    $('massBox').setAttribute('y', massY);
+    $('massText').setAttribute('y', massY + 27);
+    $('massText').textContent = (+mIn.value).toFixed(2) + ' kg';
+    $('restLine').setAttribute('y1', restY);
+    $('restLine').setAttribute('y2', restY);
+    $('restLabel').setAttribute('y', restY - 4);
+
+    const ext = $('extLine'), et = $('extText');
+    const show = extPx > 6;
+    ext.style.display = et.style.display = show ? '' : 'none';
+    ext.setAttribute('y1', restY); ext.setAttribute('y2', massY);
+    et.setAttribute('y', (restY + massY) / 2 + 4);
+    et.textContent = 'x';
+
+    // Force arrows, length ∝ force, anchored at mass centre
+    const cy = massY + 22, aLen = Math.min(10 + F * 3, 70);
+    const springF = (+kIn.value) * xMeters;               // spring pull (can differ from weight while bouncing)
+    const upLen = Math.min(10 + springF * 3, 70);
+    const up = $('upArrow'), dn = $('downArrow');
+    const showF = F > 0.01;
+    [up, dn, $('upText'), $('downText')].forEach(el => el.style.display = showF ? '' : 'none');
+    up.setAttribute('y1', cy - 4); up.setAttribute('y2', cy - 4 - upLen);
+    dn.setAttribute('y1', cy + 4); dn.setAttribute('y2', cy + 4 + aLen);
+    $('upText').setAttribute('y', cy - 4 - upLen / 2);
+    $('downText').setAttribute('y', cy + 4 + aLen / 2 + 8);
+  }
+
+  function drawGraph(k, xEq, F, xNow) {
+    const W = 420, H = 260, L = 48, R = 14, T = 14, B = 40;
+    const xMax = 0.8, fMax = 20;
+    const sx = x => L + (x / xMax) * (W - L - R);
+    const sy = f => H - B - (f / fMax) * (H - T - B);
+    let s = '';
+    // grid + axes
+    for (let f = 0; f <= fMax; f += 5) {
+      s += `<line x1="${L}" x2="${W - R}" y1="${sy(f)}" y2="${sy(f)}" stroke="var(--line)"/>`;
+      s += `<text x="${L - 6}" y="${sy(f) + 4}" text-anchor="end" font-size="11" fill="var(--muted)">${f}</text>`;
+    }
+    for (let x = 0; x <= xMax + 1e-9; x += 0.2) {
+      s += `<line x1="${sx(x)}" x2="${sx(x)}" y1="${T}" y2="${H - B}" stroke="var(--line)"/>`;
+      s += `<text x="${sx(x)}" y="${H - B + 16}" text-anchor="middle" font-size="11" fill="var(--muted)">${(x * 100).toFixed(0)}</text>`;
+    }
+    s += `<text x="${(L + W - R) / 2}" y="${H - 6}" text-anchor="middle" font-size="12" fill="var(--muted)">extension x (cm)</text>`;
+    s += `<text x="14" y="${(T + H - B) / 2}" text-anchor="middle" font-size="12" fill="var(--muted)" transform="rotate(-90 14 ${(T + H - B) / 2})">force F (N)</text>`;
+
+    // elastic limit band
+    s += `<rect x="${sx(LIMIT_X)}" y="${T}" width="${sx(xMax) - sx(LIMIT_X)}" height="${H - T - B}" fill="var(--force)" opacity="0.08"/>`;
+    s += `<text x="${sx(LIMIT_X) + 6}" y="${T + 14}" font-size="10" fill="var(--force)">beyond elastic limit</text>`;
+
+    // energy area (triangle) under line up to equilibrium point
+    if (xEq > 0) {
+      const xe = Math.min(xEq, xMax), fe = Math.min(k * xe, fMax);
+      s += `<polygon points="${sx(0)},${sy(0)} ${sx(xe)},${sy(0)} ${sx(xe)},${sy(fe)}" fill="var(--ok)" opacity="0.18"/>`;
+    }
+
+    // F = kx line, clipped to the plot
+    const xEnd = Math.min(xMax, fMax / k);
+    s += `<line x1="${sx(0)}" y1="${sy(0)}" x2="${sx(xEnd)}" y2="${sy(k * xEnd)}" stroke="var(--accent)" stroke-width="3"/>`;
+    const xl = xEnd * 0.6;
+    s += `<text x="${sx(xl) + 12}" y="${sy(k * xl) + 14}" font-size="12" font-weight="700" fill="var(--accent)">slope = k = ${k} N/m</text>`;
+
+    // current point
+    const xp = Math.min(xNow, xMax), fp = Math.min(k * xp, fMax);
+    s += `<line x1="${sx(xp)}" x2="${sx(xp)}" y1="${sy(0)}" y2="${sy(fp)}" stroke="var(--ok)" stroke-dasharray="4 3"/>`;
+    s += `<line x1="${sx(0)}" x2="${sx(xp)}" y1="${sy(fp)}" y2="${sy(fp)}" stroke="var(--force)" stroke-dasharray="4 3"/>`;
+    s += `<circle cx="${sx(xp)}" cy="${sy(fp)}" r="6" fill="var(--mass)" stroke="var(--panel)" stroke-width="2"/>`;
+    $('graph').innerHTML = s;
+  }
+
+  function update(xOverride) {
+    const k = +kIn.value, m = +mIn.value;
+    const F = m * g;
+    const xEq = F / k;
+    const xNow = xOverride ?? xEq;
+
+    $('kVal').textContent = k + ' N/m';
+    $('mVal').textContent = m.toFixed(2) + ' kg';
+    $('fOut').textContent = F.toFixed(2) + ' N';
+    $('xOut').textContent = (xEq * 100).toFixed(1) + ' cm';
+    $('eOut').textContent = (0.5 * k * xEq * xEq).toFixed(3) + ' J';
+    $('calc').innerHTML =
+      `x = F / k = ${F.toFixed(2)} N ÷ ${k} N/m = <b>${xEq.toFixed(3)} m</b>` +
+      `<br>Bounce period T = 2π√(m/k) = <b>${(2 * Math.PI * Math.sqrt(Math.max(m, 1e-6) / k)).toFixed(2)} s</b>`;
+    $('warn').textContent = xEq > LIMIT_X
+      ? 'Past the elastic limit: a real spring would stay stretched and F = kx would stop being accurate.'
+      : '';
+
+    drawRig(Math.max(xNow, 0), F);
+    drawGraph(k, xEq, F, Math.max(xNow, 0));
+  }
+
+  function stop() {
+    if (anim) cancelAnimationFrame(anim);
+    anim = null;
+    update();
+  }
+
+  function bounce() {
+    stop();
+    const k = +kIn.value, m = Math.max(+mIn.value, 0.05);
+    const xEq = m * g / k;
+    const A = Math.min(0.12, xEq + 0.1);            // pull-down amplitude (m)
+    const w = Math.sqrt(k / m);                       // angular frequency
+    const damp = 0.25;                                // gentle damping so it settles
+    const t0 = performance.now();
+    const step = now => {
+      const t = (now - t0) / 1000;
+      const x = xEq + A * Math.exp(-damp * t) * Math.cos(w * t);
+      update(x);
+      if (A * Math.exp(-damp * t) > 0.001) anim = requestAnimationFrame(step);
+      else stop();
+    };
+    anim = requestAnimationFrame(step);
+  }
+
+  kIn.addEventListener('input', stop);
+  mIn.addEventListener('input', stop);
+  $('bounce').addEventListener('click', bounce);
+  $('stop').addEventListener('click', stop);
+  update();
+})();
+</script>
+</body>
+</html>
