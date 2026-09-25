@@ -1,0 +1,151 @@
+<title>Food Test Bench</title>
+<!--HEAD-->
+<style>
+/*SHARED_CSS*/
+.samples { display: flex; flex-wrap: wrap; gap: 6px; }
+.tests { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+@media (max-width: 520px) { .tests { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.tests .btn { font-size: 12.5px; padding: 8px 6px; }
+.res-yes { color: var(--good); font-weight: 700; } .res-no { color: var(--muted); }
+</style>
+
+<main class="page">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Summit IQ · BGCSE Biology 0573 · Extension Set 2 · Q3.7</p>
+      <h1>Read the colours, name the nutrients</h1>
+      <p class="lede">Pick a food sample and run the four tests. Each colour change says whether one nutrient is there. Put the four results together to work out what the food contains.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <section class="card question" aria-label="Question 3.7 text">
+    <div class="qhead"><h2>Q3.7 · Food Tests</h2><span class="data">[Total: 10]</span></div>
+    <div class="part focus"><span class="pn">(a)</span><span>Describe the food test for fats, including the result for a positive test.</span><span class="mk">[3]</span></div>
+    <div class="part focus"><span class="pn">(b)</span><span>A student tests a food sample and gets a positive result with both the iodine test and the Biuret test, but a negative result with the emulsion test. State what this tells you about the composition of the sample.</span><span class="mk">[3]</span></div>
+    <div class="part"><span class="pn">(c)</span><span>Explain why a food sample should be ground up and dissolved in water before testing it with iodine or Biuret solution.</span><span class="mk">[2]</span></div>
+    <div class="part focus"><span class="pn">(d)</span><span>A sample turns Benedict's solution green rather than brick-red. What does this suggest, compared with a sample that turns brick-red?</span><span class="mk">[2]</span></div>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <h3>1 · Choose a food sample (ground up and dissolved in water)</h3>
+      <div class="seg samples" id="samples"></div>
+      <h3>2 · Run the tests</h3>
+      <svg id="fig" viewBox="0 0 440 250" role="img" aria-label="Four test tubes showing the result of each food test"></svg>
+      <div class="tests">
+        <button class="btn ghost" type="button" data-t="iodine">Add iodine</button>
+        <button class="btn ghost" type="button" data-t="biuret">Add Biuret</button>
+        <button class="btn ghost" type="button" data-t="benedict" id="bBtn">Add Benedict's</button>
+        <button class="btn ghost" type="button" data-t="emulsion" id="eBtn">Shake with ethanol</button>
+      </div>
+      <div class="btns"><button class="btn" id="all" type="button">Run all four</button><button class="btn ghost" id="clear" type="button">Clear tubes</button></div>
+    </div>
+
+    <div class="card stack">
+      <span class="chip" id="chip" data-state="info">…</span>
+      <table class="tbl" aria-label="Results">
+        <thead><tr><th>Test</th><th>Result</th><th>Means</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="formula" id="formula"></div>
+    </div>
+  </section>
+
+  <section class="slips" aria-label="Check yourself">
+    <article class="card slip check">
+      <div class="tag"><span>Check #1</span><span>Q3.7(a), (b) · [3] [3]</span></div>
+      <p class="q">Run all four tests on Sample X. What does it contain? Then describe the fat test step by step.</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>(b) The food contains starch (positive iodine test) and protein (positive Biuret test), but does not contain much fat (negative emulsion test).<br>(a) Shake the food sample with ethanol, then pour the mixture into water. Positive result: a cloudy white emulsion forms, showing fat is present.</div>
+    </article>
+    <article class="card slip check">
+      <div class="tag"><span>Check #2</span><span>Q3.7(c), (d) · [2] [2]</span></div>
+      <p class="q">Compare Benedict's on “a little glucose” and “a lot of glucose”. What does green mean? And why grind and dissolve the food first?</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>(d) Green suggests a smaller amount of reducing sugar than a sample that turns brick-red. The colour change (blue → green/yellow/orange → brick-red) roughly shows how much reducing sugar is present.<br>(c) Grinding and dissolving releases the substances being tested for and increases the surface area so the reagent can react properly. It also lets the mixture be handled and mixed as a liquid.</div>
+    </article>
+  </section>
+
+  <footer><span>Questions and mark points: Summit IQ BGCSE Biology Topic 3 Nutrition, Extension Practice Set 2. Sample X is the food described in Q3.7(b). Colours are drawn flat for clarity.</span></footer>
+</main>
+
+<script>
+/*SHARED_JS*/
+(() => {
+  const SAMPLES = {
+    x: { name: 'Sample X (Q3.7b)', starch: 1, protein: 1, fat: 0, sugar: 0 },
+    glo: { name: 'A little glucose', starch: 0, protein: 0, fat: 0, sugar: 1 },
+    ghi: { name: 'A lot of glucose', starch: 0, protein: 0, fat: 0, sugar: 3 },
+    oil: { name: 'Cooking oil', starch: 0, protein: 0, fat: 1, sugar: 0 },
+    milk: { name: 'Milk', starch: 0, protein: 1, fat: 1, sugar: 2 },
+    water: { name: 'Water (control)', starch: 0, protein: 0, fat: 0, sugar: 0 },
+  };
+  let cur = 'x';
+  const done = { iodine: false, biuret: false, benedict: 0, emulsion: 0 }; // benedict: 0 none, 1 added, 2 heated; emulsion: 0, 1 ethanol, 2 poured into water
+  $('samples').innerHTML = Object.entries(SAMPLES).map(([k, v]) => `<button type="button" data-v="${k}" aria-pressed="${k === cur}">${v.name}</button>`).join('');
+  seg($('samples'), v => { cur = v; clear(); });
+  function clear() { done.iodine = done.biuret = false; done.benedict = done.emulsion = 0; update(); }
+
+  const BLUE = '#4a7fd6', SAMPLE = '#efe6cf';
+  function result(t) {
+    const s = SAMPLES[cur];
+    if (t === 'iodine') return done.iodine ? (s.starch ? ['#1f2346', 'blue-black', 'starch present', 1] : ['#c8873a', 'orange-brown (no change)', 'no starch', 0]) : null;
+    if (t === 'biuret') return done.biuret ? (s.protein ? ['#9b6fd0', 'lilac / purple', 'protein present', 1] : [BLUE, 'blue (no change)', 'no protein', 0]) : null;
+    if (t === 'benedict') {
+      if (!done.benedict) return null;
+      if (done.benedict === 1) return [BLUE, 'blue: now heat it', 'not finished', -1];
+      return [['#4a7fd6', '#7fae4a', '#e0a23a', '#b0401f'][s.sugar], ['blue (no change)', 'green', 'orange', 'brick-red'][s.sugar], ['no reducing sugar', 'a little reducing sugar', 'more reducing sugar', 'a lot of reducing sugar'][s.sugar], s.sugar ? 1 : 0];
+    }
+    if (t === 'emulsion') {
+      if (!done.emulsion) return null;
+      if (done.emulsion === 1) return ['#f4f8fb', 'clear: now pour into water', 'not finished', -1];
+      return s.fat ? ['#f4f8fb', 'cloudy white emulsion', 'fat present', 1] : ['#e3f1fa', 'stays clear', 'no fat', 0];
+    }
+  }
+  // short colour word for the caption under each tube
+  const SHORT = t => t.split(':')[0].split(' (')[0].replace('lilac / purple', 'purple').replace('cloudy white emulsion', 'cloudy white');
+  const NAMES = { iodine: 'Iodine', biuret: 'Biuret', benedict: "Benedict's", emulsion: 'Emulsion' };
+  function drawTubes() {
+    let s = '';
+    ['iodine', 'biuret', 'benedict', 'emulsion'].forEach((t, i) => {
+      const cx = 60 + i * 107, top = 20, bot = 176, liq = 90, r = result(t);
+      const col = r ? r[0] : SAMPLE;
+      s += `<path d="M${cx - 18},${liq} L${cx - 18},${bot} A18,18 0 0 0 ${cx + 18},${bot} L${cx + 18},${liq} Z" fill="${col}"/>`;
+      if (t === 'benedict' && r && r[3] === 1 && SAMPLES[cur].sugar === 3) s += `<path d="M${cx - 18},${bot - 4} L${cx - 18},${bot} A18,18 0 0 0 ${cx + 18},${bot} L${cx + 18},${bot - 4} Z" fill="#7a2410"/>`;
+      if (t === 'emulsion' && r && r[3] === 1) { s += `<rect x="${cx - 18}" y="${liq}" width="36" height="26" fill="#fbfbfb"/>`; for (const [dx, dy] of [[-8, 6], [5, 10], [10, 18], [-4, 20], [-11, 14]]) s += `<circle cx="${cx + dx}" cy="${liq + dy}" r="2" fill="#bdbdbd"/>`; }
+      s += `<line x1="${cx - 18}" y1="${liq}" x2="${cx + 18}" y2="${liq}" stroke="var(--ink)" stroke-width="1"/>`;
+      s += `<path d="M${cx - 18},${top} L${cx - 18},${bot} A18,18 0 0 0 ${cx + 18},${bot} L${cx + 18},${top}" fill="none" class="edge"/>`;
+      if (t === 'benedict' && done.benedict === 2) s += `<path d="M${cx - 34},${bot + 22} q6,-8 0,-16 M${cx + 34},${bot + 22} q6,-8 0,-16" stroke="var(--warn)" stroke-width="2" fill="none"/>`;
+      s += `<text class="lab" x="${cx}" y="${bot + 44}" text-anchor="middle" font-weight="600">${NAMES[t]}</text>`;
+      s += `<text class="lab" x="${cx}" y="${bot + 60}" text-anchor="middle" style="fill: var(--muted)">${r ? SHORT(r[1]) : 'sample only'}</text>`;
+    });
+    $('fig').innerHTML = s;
+  }
+  function update() {
+    drawTubes();
+    $('bBtn').textContent = done.benedict === 1 ? 'Heat in water bath' : "Add Benedict's";
+    $('eBtn').textContent = done.emulsion === 1 ? 'Pour into water' : 'Shake with ethanol';
+    const rows = ['iodine', 'biuret', 'benedict', 'emulsion'].map(t => { const r = result(t); return `<tr><td>${NAMES[t]}</td><td>${r ? `<span class="swatch" style="background:${r[0]}"></span>${r[1]}` : '<span class="res-no">not done</span>'}</td><td class="${r && r[3] === 1 ? 'res-yes' : 'res-no'}">${r ? r[2] : '–'}</td></tr>`; });
+    $('tbody').innerHTML = rows.join('');
+    const all = ['iodine', 'biuret', 'benedict', 'emulsion'].map(result);
+    const complete = all.every(r => r && r[3] !== -1);
+    const s = SAMPLES[cur], has = [s.starch && 'starch', s.protein && 'protein', s.sugar && 'reducing sugar', s.fat && 'fat'].filter(Boolean);
+    const lacks = ['starch', 'protein', 'reducing sugar', 'fat'].filter(x => !has.includes(x));
+    if (!complete) setChip($('chip'), 'info', `${s.name}: run all four tests to finish the table`);
+    else setChip($('chip'), 'ok', `${s.name} contains ${has.length ? has.join(' and ') : 'none of the four'}`);
+    $('formula').innerHTML = done.emulsion === 1
+      ? `Emulsion test, step 2 of 2<br>Pour the ethanol mixture into <span class="hl">water</span> and look for a cloudy white layer.`
+      : `Emulsion test for fat:<br>1. Shake the food with <b>ethanol</b><br>2. Pour into <b>water</b><br>Cloudy white emulsion = <b>fat present</b>` +
+        (complete ? `<span class="ms">Contains: ${has.join(', ') || 'nothing tested for'}${lacks.length ? ' · no ' + lacks.join(', no ') : ''}</span>` : '');
+  }
+  document.querySelectorAll('.tests .btn').forEach(b => b.addEventListener('click', () => {
+    const t = b.dataset.t;
+    if (t === 'iodine' || t === 'biuret') done[t] = true; else done[t] = Math.min(2, done[t] + 1);
+    update();
+  }));
+  $('all').addEventListener('click', () => { done.iodine = done.biuret = true; done.benedict = done.emulsion = 2; update(); });
+  $('clear').addEventListener('click', clear);
+  update();
+})();
+</script>

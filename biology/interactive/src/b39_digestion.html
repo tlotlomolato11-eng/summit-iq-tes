@@ -1,0 +1,136 @@
+<title>Chew, Swallow, Digest</title>
+<!--HEAD-->
+<style>
+/*SHARED_CSS*/
+.piece { fill: var(--food); stroke: var(--ink); stroke-width: 1.2; }
+.glc { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.4; }
+.aa { stroke: var(--ink); stroke-width: 1.2; }
+.bac { fill: var(--good); stroke: var(--ink); stroke-width: 1; transition: opacity .4s; }
+</style>
+
+<main class="page">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Summit IQ · BGCSE Biology 0573 · Extension Set 2 · Q3.9</p>
+      <h1>Smaller pieces, faster enzymes</h1>
+      <p class="lede">Chewing changes the size of food, not what it is made of. That is mechanical digestion. Enzymes break big molecules into small ones, which is chemical digestion. Chew, and watch amylase work faster on the bigger surface. Then swallow and let protease and acid take over in the stomach.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <section class="card question" aria-label="Question 3.9 text">
+    <div class="qhead"><h2>Q3.9 · Digestion</h2><span class="data">[Total: 10]</span></div>
+    <div class="part focus"><span class="pn">(a)</span><span>Explain the role of protease in digestion, naming one place in the body where it acts.</span><span class="mk">[3]</span></div>
+    <div class="part focus"><span class="pn">(b)</span><span>Explain how chewing (mechanical digestion) helps chemical digestion happen faster.</span><span class="mk">[3]</span></div>
+    <div class="part"><span class="pn">(c)</span><span>The stomach produces hydrochloric acid. State one function of this acid, other than helping pepsin to work.</span><span class="mk">[1]</span></div>
+    <div class="part focus"><span class="pn">(d)</span><span>Using the terms “mechanical digestion” and “chemical digestion”, explain what happens to a piece of food as it is chewed and then swallowed.</span><span class="mk">[3]</span></div>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <div class="seg" id="stage"><button type="button" data-v="mouth" aria-pressed="true">1 · Mouth</button><button type="button" data-v="stomach" aria-pressed="false">2 · Stomach</button></div>
+      <svg id="fig" viewBox="0 0 440 320" role="img" aria-label="Food pieces and molecules being broken down"></svg>
+      <div class="btns">
+        <button class="btn" id="chew" type="button">Chew (mechanical)</button>
+        <button class="btn ghost" id="go" type="button">Let enzymes work for 1 minute</button>
+        <button class="btn ghost" id="reset" type="button">New mouthful</button>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <span class="chip" id="chip" data-state="info">…</span>
+      <dl class="rows" id="rows"></dl>
+      <div class="formula" id="formula"></div>
+    </div>
+  </section>
+
+  <section class="slips" aria-label="Check yourself">
+    <article class="card slip check">
+      <div class="tag"><span>Check #1</span><span>Q3.9(b), (d) · [3] [3]</span></div>
+      <p class="q">Run the enzymes for 1 minute without chewing, then try again after chewing twice. Why is the second run faster? Then describe the whole mouthful using both terms.</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>(b) Chewing breaks food into many smaller pieces, increasing its surface area. A larger surface area means enzymes can contact and act on more of the food at once, speeding up chemical digestion.<br>(d) Chewing is mechanical digestion: it physically breaks food into smaller pieces without changing it chemically, increasing surface area. Saliva (containing amylase) begins chemical digestion in the mouth, breaking down starch. After swallowing, mechanical churning and chemical digestion both continue further along the alimentary canal.</div>
+    </article>
+    <article class="card slip check">
+      <div class="tag"><span>Check #2</span><span>Q3.9(a), (c) · [3] [1]</span></div>
+      <p class="q">Switch to the stomach. What does protease do, and where does it act? What else does the acid do?</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>(a) Protease breaks down proteins into amino acids. It acts in the stomach (as pepsin) and in the small intestine (from the pancreas).<br>(c) The acid kills bacteria or pathogens that may be present in the food.</div>
+    </article>
+  </section>
+
+  <footer><span>Questions and mark points: Summit IQ BGCSE Biology Topic 3 Nutrition, Extension Practice Set 2. Pieces are modelled as cubes of food (8 cm³ in total). Digestion rates are illustrative.</span></footer>
+</main>
+
+<script>
+/*SHARED_JS*/
+(() => {
+  let stage = 'mouth', chews = 0, starch = 100, protein = 100, bact = 100, busy = false;
+  const side = () => 2 / Math.pow(2, chews), pieces = () => Math.pow(8, chews), sa = () => pieces() * 6 * side() ** 2;
+  function drawMouth() {
+    let s = `<text class="lab" x="110" y="18" text-anchor="middle" font-weight="600">Food pieces</text>`;
+    const n = pieces(), per = Math.round(Math.cbrt(n)), box = 150, cell = box / (per * 1.25);
+    // draw the pieces face-on: per × per squares, stacked in 'per' layers offset slightly
+    for (let z = per - 1; z >= 0; z--) for (let i = 0; i < per; i++) for (let j = 0; j < per; j++) {
+      const x = 32 + i * cell * 1.25 + z * cell * .35, y = 60 + j * cell * 1.25 - z * cell * .35;
+      s += `<rect class="piece" x="${x}" y="${y}" width="${cell}" height="${cell}" rx="1.5"/>`;
+    }
+    s += `<text class="lab" x="110" y="250" text-anchor="middle">${n} piece${n > 1 ? 's' : ''}, ${side()} cm across</text>`;
+    s += `<text class="tm" x="110" y="270" text-anchor="middle">surface area ${sa()} cm²</text>`;
+    s += molecules('Starch → maltose (amylase)', starch, 'glc');
+    return s;
+  }
+  function molecules(title, left, cls) {
+    let s = `<text class="lab" x="330" y="18" text-anchor="middle" font-weight="600">${title}</text>`;
+    const units = 12, broken = Math.round((1 - left / 100) * 6); // bonds cut, freeing pairs from the chain end
+    for (let r = 0; r < 3; r++) {
+      let x = 240, y = 70 + r * 70;
+      for (let i = 0; i < units; i++) {
+        const gap = (cls === 'glc' ? (i % 2 === 0 && i / 2 < broken * (r + 1) / 3 * 1.5) : (i < broken * 2 * (r + 1) / 3)) ? 8 : 0;
+        x += gap;
+        if (cls === 'glc') s += `<polygon class="glc" points="${[0, 60, 120, 180, 240, 300].map(a => `${(x + 6 * Math.cos(a * Math.PI / 180)).toFixed(1)},${(y + 6 * Math.sin(a * Math.PI / 180)).toFixed(1)}`).join(' ')}"/>`;
+        else s += `<circle class="aa" cx="${x}" cy="${y}" r="5.5" fill="${['#e0907a', '#8fb6e8', '#a8d08d', '#e7c46c'][i % 4]}"/>`;
+        x += 14;
+      }
+    }
+    return s;
+  }
+  function drawStomach() {
+    let s = `<path d="M40,60 C120,20 210,60 200,140 C194,210 120,240 60,220 C30,210 30,180 50,176 C100,178 130,160 130,130 C130,100 90,86 50,94 Z" fill="#ec9f9f" stroke="var(--ink)" stroke-width="2" opacity=".9"/>`;
+    s += `<text class="lab" x="110" y="262" text-anchor="middle">stomach: churning + gastric juice</text>`;
+    for (let i = 0; i < 10; i++) { const x = 70 + (i * 37) % 120, y = 70 + (i * 53) % 130; s += `<ellipse class="bac" cx="${x}" cy="${y}" rx="6" ry="3.5" opacity="${i < bact / 10 ? 1 : 0.1}"/>`; }
+    s += `<text class="lab" x="110" y="282" text-anchor="middle" style="fill: var(--good)">green rods = bacteria in the food</text>`;
+    s += molecules('Protein → amino acids (protease)', protein, 'aa');
+    return s;
+  }
+  function update() {
+    $('fig').innerHTML = stage === 'mouth' ? drawMouth() : drawStomach();
+    $('chew').textContent = stage === 'mouth' ? 'Chew (mechanical)' : 'Churn (mechanical)';
+    $('chew').disabled = stage === 'mouth' && chews >= 2;
+    const r = stage === 'mouth'
+      ? [['Pieces', pieces()], ['Surface area', sa() + ' cm²'], ['Total volume', '8 cm³ (unchanged)'], ['Starch digested by amylase', Math.round(100 - starch) + '%']]
+      : [['Protein digested by protease', Math.round(100 - protein) + '%'], ['Bacteria surviving the acid', Math.round(bact) + '%'], ['Starch digested so far', Math.round(100 - starch) + '%']];
+    $('rows').innerHTML = r.map(([a, b]) => `<div><dt>${a}</dt><dd>${b}</dd></div>`).join('');
+    $('formula').innerHTML = stage === 'mouth'
+      ? `Surface area = pieces × 6 × side²<br>= ${pieces()} × 6 × ${side()}² = <b>${sa()} cm²</b><br><span class="hl">Mechanical</span>: same food, more surface. <span class="hl">Chemical</span>: amylase turns starch into maltose.`
+      : `Protease (pepsin) breaks <b>proteins → amino acids</b><br>Hydrochloric acid <b>kills bacteria</b> and gives pepsin the acid it needs<br>Churning keeps the mechanical digestion going.`;
+    if (stage === 'mouth') setChip($('chip'), chews ? 'ok' : 'info', chews ? `Chewed: ${pieces()} pieces, ${sa()} cm² for amylase to work on` : 'One big piece: only 24 cm² of surface for amylase');
+    else setChip($('chip'), protein < 100 ? 'ok' : 'info', protein < 100 ? 'Protease is breaking the protein chains into amino acids' : 'Swallowed. Let the stomach enzymes work');
+  }
+  seg($('stage'), v => { stage = v; update(); });
+  $('chew').addEventListener('click', () => { if (stage === 'mouth') chews = Math.min(2, chews + 1); update(); });
+  $('go').addEventListener('click', () => {
+    if (busy) return; busy = true;
+    const t0 = performance.now(), s0 = starch, p0 = protein, b0 = bact;
+    const step = now => {
+      const f = Math.min(1, (now - t0) / 1200);
+      if (stage === 'mouth') starch = Math.max(0, s0 - f * sa() * 0.45); // % per simulated minute scales with surface area
+      else { protein = Math.max(0, p0 - f * 30); bact = Math.max(0, b0 - f * 40); starch = starch; }
+      update(); if (f < 1) requestAnimationFrame(step); else busy = false;
+    };
+    requestAnimationFrame(step);
+  });
+  $('reset').addEventListener('click', () => { chews = 0; starch = protein = bact = 100; update(); });
+  update();
+})();
+</script>

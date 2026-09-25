@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="440" viewBox="0 0 900 440">
+<rect width="900" height="440" fill="#fff"/>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111"/></marker></defs>
+<g font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" fill="#111">
+<rect x="40" y="200" width="220" height="180" fill="#d6ecf8"/>
+<path d="M40,160 L40,380 L260,380 L260,160" fill="none" stroke="#111" stroke-width="2.2"/>
+<line x1="40" y1="200" x2="260" y2="200" stroke="#111" stroke-width="1.2"/>
+<path d="M110,260 L110,330 A16,16 0 0 0 142,330 L142,260 Z" fill="#f3ead0"/>
+<path d="M110,100 L110,330 A16,16 0 0 0 142,330 L142,100" fill="none" stroke="#111" stroke-width="1.8"/>
+<line x1="110" y1="260" x2="142" y2="260" stroke="#111" stroke-width="1.2"/>
+<rect x="202" y="210" width="30" height="26" fill="#fff" stroke="#111" stroke-width="1.4" transform="rotate(12 217 223)"/>
+<rect x="214" y="266" width="30" height="26" fill="#fff" stroke="#111" stroke-width="1.4" transform="rotate(12 229 279)"/>
+<rect x="164" y="324" width="30" height="26" fill="#fff" stroke="#111" stroke-width="1.4" transform="rotate(12 179 337)"/>
+<rect x="52" y="334" width="30" height="26" fill="#fff" stroke="#111" stroke-width="1.4" transform="rotate(12 67 347)"/>
+<rect x="200" y="328" width="30" height="26" fill="#fff" stroke="#111" stroke-width="1.4" transform="rotate(12 215 341)"/>
+<text x="150" y="418" text-anchor="middle">Ice bath (5 °C)</text>
+<rect x="340" y="200" width="220" height="180" fill="#e6f2f9"/>
+<path d="M340,160 L340,380 L560,380 L560,160" fill="none" stroke="#111" stroke-width="2.2"/>
+<line x1="340" y1="200" x2="560" y2="200" stroke="#111" stroke-width="1.2"/>
+<path d="M410,260 L410,330 A16,16 0 0 0 442,330 L442,260 Z" fill="#f3ead0"/>
+<path d="M410,100 L410,330 A16,16 0 0 0 442,330 L442,100" fill="none" stroke="#111" stroke-width="1.8"/>
+<line x1="410" y1="260" x2="442" y2="260" stroke="#111" stroke-width="1.2"/>
+<rect x="493" y="90" width="10" height="250" rx="5" fill="#fff" stroke="#111" stroke-width="1.6"/><rect x="496" y="205" width="4" height="135" fill="#d9483b"/><circle cx="498" cy="344" r="8" fill="#d9483b" stroke="#111" stroke-width="1.6"/>
+<text x="450" y="418" text-anchor="middle">Water bath (35 °C)</text>
+<rect x="640" y="200" width="220" height="180" fill="#e6f2f9"/>
+<path d="M640,160 L640,380 L860,380 L860,160" fill="none" stroke="#111" stroke-width="2.2"/>
+<line x1="640" y1="200" x2="860" y2="200" stroke="#111" stroke-width="1.2"/>
+<path d="M710,260 L710,330 A16,16 0 0 0 742,330 L742,260 Z" fill="#f3ead0"/>
+<path d="M710,100 L710,330 A16,16 0 0 0 742,330 L742,100" fill="none" stroke="#111" stroke-width="1.8"/>
+<line x1="710" y1="260" x2="742" y2="260" stroke="#111" stroke-width="1.2"/>
+<rect x="793" y="90" width="10" height="250" rx="5" fill="#fff" stroke="#111" stroke-width="1.6"/><rect x="796" y="150" width="4" height="190" fill="#d9483b"/><circle cx="798" cy="344" r="8" fill="#d9483b" stroke="#111" stroke-width="1.6"/>
+<path d="M662,146 q-10,-16 0,-32 q10,-16 0,-32" fill="none" stroke="#9aa3ad" stroke-width="1.6"/>
+<path d="M762,146 q-10,-16 0,-32 q10,-16 0,-32" fill="none" stroke="#9aa3ad" stroke-width="1.6"/>
+<path d="M834,146 q-10,-16 0,-32 q10,-16 0,-32" fill="none" stroke="#9aa3ad" stroke-width="1.6"/>
+<text x="750" y="418" text-anchor="middle">Water bath (80 °C)</text>
+<line x1="110" y1="290" x2="16" y2="54.56" stroke="#111" stroke-width="1.2"/><circle cx="110" cy="290" r="2.2" fill="#111"/><text x="20" y="60">starch–amylase mixture</text>
+</g>
+</svg>

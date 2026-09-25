@@ -1,0 +1,392 @@
+<title>Piston Force and Freezer</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+:root {
+  --bg: #f3f5f9;
+  --panel: #ffffff;
+  --panel-2: #f7f9fc;
+  --ink: #15203a;
+  --muted: #5b6680;
+  --faint: #8f99ae;
+  --line: #d8dee9;
+  --grid: #e8ecf3;
+  --accent: #1f5fbf;
+  --accent-ink: #ffffff;
+  --accent-soft: #e4ecfa;
+  --good: #1b7f55;
+  --good-soft: #e1f3ea;
+  --warn: #a8660f;
+  --warn-soft: #fbefdc;
+  --bad: #c0392b;
+  --bad-soft: #fbe5e2;
+  --p: #d0453a;
+  --n: #8a93a6;
+  --field: #7b5cc4;
+  --metal: #6a7385;
+  --copper: #b8672e;
+  --shadow: 0 1px 2px rgba(21, 32, 58, .06), 0 4px 16px rgba(21, 32, 58, .05);
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1320; --panel: #161d2d; --panel-2: #1b2336; --ink: #e6eaf3; --muted: #9ba6bd; --faint: #6f7a92;
+    --line: #2a3450; --grid: #20293d; --accent: #7fa9f2; --accent-ink: #0e1320; --accent-soft: #1c2a47;
+    --good: #52c793; --good-soft: #15342a; --warn: #e6b155; --warn-soft: #3a2e17; --bad: #f2786b; --bad-soft: #3d1f1d;
+    --p: #f07a6e; --n: #9aa3b8; --field: #a88ef0; --metal: #aab3c6; --copper: #e0935a;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1320; --panel: #161d2d; --panel-2: #1b2336; --ink: #e6eaf3; --muted: #9ba6bd; --faint: #6f7a92;
+  --line: #2a3450; --grid: #20293d; --accent: #7fa9f2; --accent-ink: #0e1320; --accent-soft: #1c2a47;
+  --good: #52c793; --good-soft: #15342a; --warn: #e6b155; --warn-soft: #3a2e17; --bad: #f2786b; --bad-soft: #3d1f1d;
+  --p: #f07a6e; --n: #9aa3b8; --field: #a88ef0; --metal: #aab3c6; --copper: #e0935a;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 var(--sans); }
+.page { max-width: 1100px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 22px; }
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.eyebrow { font: 500 11.5px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 { font: 600 clamp(1.7rem, 4.2vw, 2.45rem)/1.12 var(--serif); letter-spacing: -.01em; margin: 6px 0 0; text-wrap: balance; }
+h2 { font: 600 1.25rem/1.25 var(--serif); margin: 0; text-wrap: balance; }
+h3 { font: 600 11.5px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.lede { color: var(--muted); max-width: 66ch; margin: 8px 0 0; }
+.theme-btn { font: 500 12px var(--mono); color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; white-space: nowrap; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); min-width: 0; }
+.question { display: grid; gap: 10px; }
+.question p { margin: 0; max-width: 72ch; }
+.qhead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.part { display: grid; grid-template-columns: 5.2em minmax(0, 1fr) auto; gap: 4px 10px; align-items: baseline; padding-top: 8px; border-top: 1px dashed var(--line); }
+.part .pn { font: 600 13px var(--mono); color: var(--accent); white-space: nowrap; }
+.part .mk { font: 500 12.5px var(--mono); color: var(--muted); white-space: nowrap; }
+.part.focus .pn::after { content: " ●"; color: var(--warn); font-size: 9px; vertical-align: middle; }
+.data { font-family: var(--mono); font-size: .93em; }
+.board { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 760px) { .board { grid-template-columns: minmax(0, 1fr); } }
+.stack { display: grid; gap: 14px; }
+.page > *, .stack > *, .board > *, .slips > * { min-width: 0; }
+.figure svg { display: block; width: 100%; height: auto; touch-action: none; user-select: none; -webkit-user-select: none; }
+.cap { font-size: 12.5px; color: var(--muted); margin: 0; }
+.chip { display: inline-flex; align-items: center; gap: 8px; font: 600 12.5px/1.35 var(--sans); padding: 7px 12px; border-radius: 999px; border: 1px solid currentColor; }
+.chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+.chip[data-state="ok"] { color: var(--good); background: var(--good-soft); }
+.chip[data-state="warn"] { color: var(--warn); background: var(--warn-soft); }
+.chip[data-state="bad"] { color: var(--bad); background: var(--bad-soft); }
+.chip[data-state="info"] { color: var(--accent); background: var(--accent-soft); }
+.rows { display: grid; gap: 0; margin: 0; }
+.rows > div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--grid); align-items: baseline; }
+.rows > div:last-child { border-bottom: 0; }
+.rows dt { color: var(--muted); font-size: 13.5px; }
+.rows dd { white-space: nowrap; margin: 0; font: 600 14.5px var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.rows dd.big { font-size: 20px; color: var(--accent); }
+.rows dd.wrong { color: var(--bad); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.formula { font: 13.5px/1.75 var(--mono); background: var(--accent-soft); border-radius: 10px; padding: 12px 14px; overflow-x: auto; font-variant-numeric: tabular-nums; }
+.formula b { color: var(--accent); }
+.formula .hl { background: var(--warn-soft); color: var(--warn); border-radius: 4px; padding: 0 3px; font-weight: 600; }
+.formula .ms { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+.ctrl { display: grid; gap: 4px; }
+.ctrl label { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; font-weight: 600; }
+.ctrl label output { font: 600 13.5px var(--mono); color: var(--accent); white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: var(--accent); margin: 4px 0; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { font: 600 13.5px var(--sans); padding: 8px 14px; border-radius: 9px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.btn:disabled { opacity: .45; cursor: default; }
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.slips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 760px) { .slips { grid-template-columns: minmax(0, 1fr); } }
+.slip { display: grid; gap: 10px; align-content: start; }
+.slip .tag { display: flex; justify-content: space-between; gap: 10px; font: 600 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--bad); }
+.slip .tag span:last-child { color: var(--muted); }
+.slip .was, .slip .fix { border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+.slip .was { background: var(--bad-soft); }
+.slip .fix { background: var(--good-soft); }
+.slip .was > b:first-child, .slip .fix > b:first-child { display: block; font: 600 11px var(--mono); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 2px; }
+.slip .was > b:first-child { color: var(--bad); } .slip .fix > b:first-child { color: var(--good); }
+.slip .m { font-family: var(--mono); font-size: 13px; }
+.also { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; display: grid; gap: 4px; max-width: 80ch; }
+.also b { color: var(--ink); }
+footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; display: grid; gap: 6px; }
+footer table { border-collapse: collapse; font: 12px/1.5 var(--mono); }
+footer td { padding: 2px 12px 2px 0; vertical-align: top; }
+.tbl-wrap { overflow-x: auto; }
+svg text { font-family: var(--sans); }
+svg .t { font: 12px var(--sans); fill: var(--ink); }
+svg .tm { font: 500 12px var(--mono); fill: var(--ink); }
+svg .ts { font: 11px var(--mono); fill: var(--muted); }
+svg .handle { cursor: grab; }
+svg .handle:active { cursor: grabbing; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media (max-width: 520px) {
+  .part { grid-template-columns: minmax(0, 1fr) auto; }
+  .part > span:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+  .top { flex-direction: column-reverse; }
+  .theme-btn { align-self: flex-end; }
+  svg .ts { font-size: 13px; }
+  svg .tm { font-size: 14px; }
+}
+svg .pill { fill: var(--panel); opacity: .9; }
+
+.wall { fill: none; stroke: var(--ink); stroke-width: 3; }
+.gas { fill: var(--accent-soft); }
+.piston { fill: var(--metal); }
+.tile { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.2; }
+.push { stroke: var(--accent); stroke-width: 1.6; fill: none; }
+.airArrow { stroke: var(--accent); stroke-width: 2; }
+.trend { display: grid; gap: 8px; }
+.trend > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 12px; border-radius: 10px; align-items: baseline; }
+.trend .ok { background: var(--good-soft); }
+.trend .no { background: var(--bad-soft); }
+.trend .v { font: 600 16px var(--mono); white-space: nowrap; }
+.trend .ok .v { color: var(--good); }
+.trend .no .v { color: var(--bad); }
+.trend small { grid-column: 1 / -1; color: var(--muted); font-size: 12.5px; }
+.tube { fill: var(--panel-2); stroke: var(--ink); stroke-width: 2; }
+.merc { fill: var(--bad); }
+</style>
+
+<main class="page">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Summit IQ · Physics 0625/41 · Oct/Nov 2022 · Question 4</p>
+      <h1>More area, more force: F = p × A</h1>
+      <p class="lede">Pressure is the force on each square metre. Every extra patch of piston gets pushed too, so a bigger area means a bigger total force. Drag the area and count the patches.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <section class="card question" aria-label="Question 4 text">
+    <div class="qhead"><h2>Question 4</h2><span class="data">[Total: 11]</span></div>
+    <p>A quantity of gas is trapped by a piston in a cylinder with thin metal walls. The piston is free to move without friction within the cylinder. The cylinder is placed inside a freezer.</p>
+    <p>(a) The air in the freezer is at atmospheric pressure, which is 1.0 × 10⁵ Pa. The area of the piston in contact with the air in the freezer is 2.4 × 10⁻³ m².</p>
+    <div class="part focus"><span class="pn">(a)(i)</span><span>Calculate the force exerted on the piston by the air in the freezer.</span><span class="mk">[2]</span></div>
+    <div class="part"><span class="pn">(a)(ii)</span><span>When the cylinder is first placed into the freezer, the temperature of the gas in the cylinder decreases and the air pushes the piston into the cylinder. Calculate the work done on the piston by the air in the freezer as the air pushes the piston a distance of 0.021 m into the cylinder.</span><span class="mk">[2]</span></div>
+    <div class="part focus"><span class="pn">(b)</span><span>The initial temperature of the cylinder and the gas is 21 °C and, in the freezer, the temperature of the cylinder decreases to –18 °C. The thermal capacity of the cylinder is 89 J / °C. Calculate the change in the internal energy of the cylinder.</span><span class="mk">[2]</span></div>
+    <div class="part"><span class="pn">(c), (d)</span><span>Particle explanations of the gas pressure and of the metal's smaller contraction.</span><span class="mk">[3] [2]</span></div>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <h3>The piston face, split into equal patches · drag the area</h3>
+      <svg id="fig" viewBox="0 0 420 330" role="img" aria-label="Cylinder with piston and a grid of patches on the piston face">
+        <!-- side view, after Fig. 4.1 -->
+        <text class="ts" x="16" y="18">side view (Fig. 4.1)</text>
+        <rect class="gas" x="22" y="34" width="150" height="72"/>
+        <path class="wall" d="M180,32 L20,32 L20,108 L180,108"/>
+        <rect class="piston" x="160" y="34" width="14" height="72"/>
+        <text class="ts" x="80" y="75" text-anchor="middle" style="fill: var(--accent)">gas</text>
+        <g id="sideArrows"></g>
+        <text class="ts" x="236" y="26">air at 1.0 × 10⁵ Pa</text>
+        <!-- face view -->
+        <text class="ts" x="16" y="140">piston face, looking in from the freezer</text>
+        <g id="tiles"></g>
+        <text id="tileNote" class="tm" x="16" y="318"></text>
+      </svg>
+      <div class="ctrl">
+        <label for="n">Piston area, A <output id="aOut"></output></label>
+        <input id="n" type="range" min="2" max="24" step="1" value="12">
+      </div>
+      <div class="btns">
+        <button class="btn" id="exam" type="button">Exam value: 2.4 × 10⁻³ m²</button>
+        <button class="btn ghost" id="dbl" type="button">Double the area</button>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <span class="chip" id="chip" data-state="ok">…</span>
+      <div class="trend">
+        <div class="ok"><span>F = p × A</span><span class="v" id="fOk"></span><small id="fOkNote">Area goes up, force goes up.</small></div>
+        <div class="no"><span>F = p ÷ A <span class="data">(the slip)</span></span><span class="v" id="fNo"></span><small id="fNoNote"></small></div>
+      </div>
+      <dl class="rows">
+        <div><dt>Pressure, p</dt><dd>1.0 × 10⁵ Pa</dd></div>
+        <div><dt>Force on one patch</dt><dd>20 N</dd></div>
+        <div><dt>(a)(ii) Work done, F × 0.021 m</dt><dd id="wOut"></dd></div>
+      </dl>
+      <div class="formula" id="formula"></div>
+    </div>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <h3>Part (b) · the question wants joules</h3>
+      <svg id="thermo" viewBox="0 0 420 250" role="img" aria-label="Thermometer showing the temperature drop and a bar for the energy change">
+        <g id="scale"></g>
+        <rect class="tube" x="52" y="20" width="18" height="200" rx="9"/>
+        <circle class="tube" cx="61" cy="228" r="14"/>
+        <circle class="merc" cx="61" cy="228" r="10"/>
+        <rect id="merc" class="merc" x="56" width="10" rx="5"/>
+        <line id="startMark" x1="74" x2="92" stroke="var(--ink)" stroke-dasharray="3 3"/>
+        <text id="startTxt" class="tm" x="98"></text>
+        <line id="dtLine" x1="86" x2="86" stroke="var(--warn)" stroke-width="2" marker-start="url(#tw)" marker-end="url(#tw)"/>
+        <text id="dtTxt" class="tm" x="98" style="fill: var(--warn)"></text>
+        <text class="ts" x="232" y="36">energy lost by the cylinder</text>
+        <rect x="232" y="46" width="170" height="22" rx="5" fill="var(--grid)"/>
+        <rect id="eBar" x="232" y="46" height="22" rx="5" fill="var(--good)"/>
+        <text id="eTxt" class="tm" x="232" y="90"></text>
+        <text class="ts" x="232" y="122">each °C of cooling</text>
+        <text class="ts" x="232" y="138">releases 89 J</text>
+        <defs><marker id="tw" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M5,0 L5,10" stroke="var(--warn)" stroke-width="2"/></marker></defs>
+      </svg>
+      <div class="ctrl">
+        <label for="tf">Freezer temperature <output id="tfOut"></output></label>
+        <input id="tf" type="range" min="-30" max="20" step="1" value="-18">
+      </div>
+    </div>
+    <div class="card stack">
+      <span class="chip" id="chipB" data-state="ok">…</span>
+      <dl class="rows">
+        <div><dt>Temperature change, ΔT</dt><dd id="dtOut"></dd></div>
+        <div><dt>Thermal capacity, C</dt><dd>89 J / °C</dd></div>
+        <div><dt>Change in internal energy, E</dt><dd class="big" id="eOut"></dd></div>
+      </dl>
+      <div class="formula" id="formulaB"></div>
+      <p class="cap">ΔT answers “how many degrees?”. The question asks for a change in internal energy, which is measured in joules. The thermal capacity converts one into the other: 89 joules for every degree.</p>
+    </div>
+  </section>
+
+  <section class="slips" aria-label="Maatla's slips on this question">
+    <article class="card slip">
+      <div class="tag"><span>Slip #1</span><span>4(a)(i) · [2]</span></div>
+      <div class="was"><b>What you did</b>Divided: F = p ÷ A. That gives about <span class="m">4.2 × 10⁷ N</span>, the weight of roughly 4000 tonnes, on a piston smaller than a phone screen.</div>
+      <div class="fix"><b>What earns the marks</b>p = F ÷ A rearranges to <span class="m">F = p × A = 1.0 × 10⁵ × 2.4 × 10⁻³ = 240 N</span>. C1 for F = pA, A1 for 240 N.</div>
+    </article>
+    <article class="card slip">
+      <div class="tag"><span>Slip #2</span><span>4(b) · [2]</span></div>
+      <div class="was"><b>What you did</b>Found the temperature change correctly, 21 − (−18) = 39 °C, and stopped there. That answers “how many degrees”, not “how many joules”.</div>
+      <div class="fix"><b>What earns the marks</b><span class="m">E = C × ΔT = 89 × 39 = 3.5 × 10³ J</span>, a decrease. C1 for E = CΔT or 89 × 39, A1 for 3.5 × 10³ J.</div>
+    </article>
+  </section>
+  <ul class="also">
+    <li><b>Also, 4(a)(ii):</b> work done = force × distance was the right method and earns credit carried forward from your force. With the correct force it is <span class="data">240 × 0.021 = 5.0 J</span>.</li>
+  </ul>
+
+  <footer>
+    <div class="tbl-wrap"><table>
+      <tr><td>4(a)(i)</td><td>240 N · F = pA in any form or 1.0 × 10⁵ × 2.4 × 10⁻³</td><td>A2 · C1</td></tr>
+      <tr><td>4(a)(ii)</td><td>5.0 J · WD = Fx or 240 × 0.021</td><td>A2 · C1</td></tr>
+      <tr><td>4(b)</td><td>(–)3.5 × 10³ J · E = CΔT in any form or 89 × (21 – (–18)) or 89 × 39</td><td>A2 · C1</td></tr>
+    </table></div>
+    <span>Question and marks: Cambridge IGCSE Physics 0625/41, Oct/Nov 2022 question paper and published mark scheme (© UCLES 2022). The side view follows Fig. 4.1. The patch grid is a teaching aid, not part of the paper.</span>
+  </footer>
+</main>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  const label = () => { if (btn) btn.textContent = isDark() ? '☀ Light' : '☾ Dark'; };
+  if (btn) btn.addEventListener('click', () => { root.dataset.theme = isDark() ? 'light' : 'dark'; label(); });
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', label); } catch (e) {}
+  label();
+})();
+// Convert a pointer event into the SVG's own coordinate system.
+function svgPoint(svg, e) {
+  const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+  return p.matrixTransform(svg.getScreenCTM().inverse());
+}
+// Make an SVG element draggable; onMove receives {x, y} in SVG units.
+function draggable(svg, el, onMove) {
+  let on = false;
+  el.addEventListener('pointerdown', e => { on = true; el.setPointerCapture(e.pointerId); onMove(svgPoint(svg, e)); e.preventDefault(); });
+  el.addEventListener('pointermove', e => { if (on) onMove(svgPoint(svg, e)); });
+  el.addEventListener('pointerup', () => { on = false; });
+  el.addEventListener('pointercancel', () => { on = false; });
+}
+const $ = id => document.getElementById(id);
+function setChip(el, state, text) { el.dataset.state = state; el.textContent = text; }
+function sig(x, n) { return Number(x.toPrecision(n)); }
+
+(() => {
+  const P = 1.0e5, PATCH = 2.0e-4;
+  const SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  const sci = (x, sf = 2) => {
+    const e = Math.floor(Math.log10(Math.abs(x))); const m = x / 10 ** e;
+    if (e >= -1 && e <= 3) return String(sig(x, sf + 1));
+    return m.toFixed(sf - 1) + ' × 10' + String(e).split('').map(ch => SUP[ch]).join('');
+  };
+  const sciE = x => { const e = Math.floor(Math.log10(x)); return (x / 10 ** e).toFixed(1) + ' × 10' + String(e).split('').map(ch => SUP[ch]).join(''); };
+  const nIn = $('n');
+
+  function draw(n) {
+    const A = n * PATCH, F = P * A, bad = P / A;
+    // side view: one air arrow per patch (capped by the height available)
+    let a = ''; const k = Math.min(n, 12);
+    for (let i = 0; i < k; i++) { const y = 40 + (i + .5) * 60 / k; a += `<line class="airArrow" x1="226" y1="${y}" x2="182" y2="${y}" marker-end="url(#pa)"/>`; }
+    $('sideArrows').innerHTML = a + `<defs><marker id="pa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker></defs>`;
+    // face view: a grid of equal patches, each pushed by 20 N
+    const cols = 8, sz = 44, gap = 5, x0 = 16, y0 = 152;
+    let t = '';
+    for (let i = 0; i < n; i++) {
+      const cx = x0 + (i % cols) * (sz + gap), cy = y0 + Math.floor(i / cols) * (sz + gap);
+      t += `<rect class="tile" x="${cx}" y="${cy}" width="${sz}" height="${sz}" rx="4"/>` +
+           `<circle class="push" cx="${cx + sz / 2}" cy="${cy + 17}" r="7"/><path class="push" d="M${cx + sz / 2 - 5},${cy + 12} l10,10 M${cx + sz / 2 + 5},${cy + 12} l-10,10"/>` +
+           `<text class="ts" x="${cx + sz / 2}" y="${cy + 38}" text-anchor="middle" style="fill: var(--accent)">20 N</text>`;
+    }
+    $('tiles').innerHTML = t;
+    $('tileNote').textContent = `${n} patches × 20 N = ${n * 20} N`;
+
+    $('aOut').textContent = sci(A) + ' m²';
+    $('fOk').textContent = sig(F, 3) + ' N';
+    $('fNo').textContent = sci(bad) + ' N';
+    $('fNoNote').textContent = `Area goes up, this goes down. That's the weight of ${sci(bad / 10)} kg resting on one small piston.`;
+    $('wOut').textContent = `${sig(F, 3)} × 0.021 = ${(F * 0.021).toPrecision(2)} J`;
+    $('formula').innerHTML =
+      `p = F ÷ A &nbsp;→&nbsp; <span class="hl">F = p × A</span><br>` +
+      `F = 1.0 × 10⁵ Pa × ${sci(A)} m²<br>` +
+      `F = <b>${sig(F, 3)} N</b>` + (n === 12 ? `<span class="ms">Mark scheme 4(a)(i): 240 N (A2)</span>` : '');
+    if (n === 12) setChip($('chip'), 'ok', 'Exam value: F = 240 N, the mark-scheme answer');
+    else setChip($('chip'), 'info', `${n} patches instead of 12: the force is ${sig(n / 12, 2)} × 240 N`);
+  }
+
+  // part (b): thermometer from 21 °C down to the freezer temperature
+  const T0 = 21, ty = T => 20 + (30 - T) * 200 / 60; // scale 30 °C (top) to -30 °C (bottom of tube)
+  let sc = '';
+  for (let T = -30; T <= 30; T += 10) sc += `<line x1="40" x2="50" y1="${ty(T)}" y2="${ty(T)}" stroke="var(--muted)"/><text class="ts" x="36" y="${ty(T) + 4}" text-anchor="end">${T}</text>`;
+  $('scale').innerHTML = sc + `<text class="ts" x="8" y="12">°C</text>`;
+  function drawB(Tf) {
+    const dT = T0 - Tf, E = 89 * dT;
+    const set = (id, a) => { const el = $(id); for (const k in a) el.setAttribute(k, a[k]); };
+    set('merc', { y: ty(Tf), height: 228 - ty(Tf) });
+    set('startMark', { y1: ty(T0), y2: ty(T0) }); set('startTxt', { y: ty(T0) + 4 }); $('startTxt').textContent = 'start 21 °C';
+    set('dtLine', { y1: ty(T0), y2: ty(Tf) });
+    set('dtTxt', { y: Math.max(ty(T0) + 24, (ty(T0) + ty(Tf)) / 2 + 4) }); $('dtTxt').textContent = `ΔT = ${dT} °C`;
+    set('eBar', { width: Math.max(2, 170 * E / (89 * 51)) });
+    $('eTxt').textContent = `E = ${E} J`;
+    $('tfOut').textContent = Tf + ' °C';
+    $('dtOut').textContent = `21 − (${Tf}) = ${dT} °C`;
+    $('eOut').textContent = (E >= 1000 ? sciE(E) : E) + ' J';
+    $('formulaB').innerHTML =
+      `E = C × ΔT<br>E = 89 J/°C × <span class="hl">${dT} °C</span><br>E = ${E} J${E >= 1000 ? ` ≈ <b>${sciE(E)} J</b>` : ''} (a decrease)` +
+      (Tf === -18 ? `<span class="ms">Mark scheme 4(b): (–)3.5 × 10³ J (A2)</span>` : '');
+    if (Tf === -18) setChip($('chipB'), 'ok', 'Exam value: 89 × 39 = 3.5 × 10³ J');
+    else setChip($('chipB'), 'info', `Stopping at ${dT} °C gives degrees. Multiply by 89 to get joules.`);
+  }
+
+  nIn.addEventListener('input', () => draw(+nIn.value));
+  $('exam').addEventListener('click', () => { nIn.value = 12; draw(12); });
+  $('dbl').addEventListener('click', () => { const v = Math.min(24, +nIn.value * 2); nIn.value = v; draw(v); });
+  // dragging across the tile area sets the patch count directly
+  const svg = $('fig');
+  const hit = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  Object.entries({ x: 10, y: 146, width: 400, height: 155, fill: 'transparent', class: 'handle' }).forEach(([k, v]) => hit.setAttribute(k, v));
+  svg.appendChild(hit);
+  draggable(svg, hit, p => {
+    const col = Math.max(0, Math.min(7, Math.floor((p.x - 16) / 49))), row = Math.max(0, Math.min(2, Math.floor((p.y - 152) / 49)));
+    const v = Math.max(2, Math.min(24, row * 8 + col + 1)); nIn.value = v; draw(v);
+  });
+  const tf = $('tf'); tf.addEventListener('input', () => drawB(+tf.value));
+  draw(12); drawB(-18);
+})();
+</script>

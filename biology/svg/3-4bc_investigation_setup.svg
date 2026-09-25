@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520">
+<rect width="800" height="520" fill="#fff"/>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111"/></marker></defs>
+<g font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" fill="#111">
+<path d="M130.0,230 L130.0,424 Q130.0,440 146.0,440 L274.0,440 Q290.0,440 290.0,424 L290.0,230 Z" fill="#e3f1fa"/>
+<path d="M130.0,190 L130.0,424 Q130.0,440 146.0,440 L274.0,440 Q290.0,440 290.0,424 L290.0,190" fill="none" stroke="#111" stroke-width="2"/>
+<line x1="130.0" y1="230" x2="290.0" y2="230" stroke="#111" stroke-width="1.2"/>
+<rect x="122.0" y="178" width="44.0" height="12" fill="#c9c9c9" stroke="#111" stroke-width="1.4"/>
+<rect x="178" y="178" width="24" height="12" fill="#c9c9c9" stroke="#111" stroke-width="1.4"/>
+<rect x="218" y="178" width="24" height="12" fill="#c9c9c9" stroke="#111" stroke-width="1.4"/>
+<rect x="254" y="178" width="44.0" height="12" fill="#c9c9c9" stroke="#111" stroke-width="1.4"/>
+<path d="M210,190 L210,340" fill="none" stroke="#8a6d3b" stroke-width="2" stroke-linecap="round"/>
+<path d="M210,230 Q190,260 176,310" fill="none" stroke="#8a6d3b" stroke-width="2" stroke-linecap="round"/>
+<path d="M210,240 Q232,270 246,320" fill="none" stroke="#8a6d3b" stroke-width="2" stroke-linecap="round"/>
+<path d="M210,280 Q196,310 192,355" fill="none" stroke="#8a6d3b" stroke-width="2" stroke-linecap="round"/>
+<path d="M210,290 Q226,320 230,360" fill="none" stroke="#8a6d3b" stroke-width="2" stroke-linecap="round"/>
+<path d="M190,268 l-18,18" fill="none" stroke="#8a6d3b" stroke-width="2" stroke-linecap="round"/>
+<path d="M232,280 l18,16" fill="none" stroke="#8a6d3b" stroke-width="2" stroke-linecap="round"/>
+<path d="M210,178 L210,68" stroke="#2f7a33" stroke-width="5" stroke-linecap="round"/>
+<g transform="translate(210,128) rotate(-58) translate(0,-35.0) scale(0.2692307692307692)"><path d="M0,-130.0 C70.5,-91.0 82.5,39.0 0,130.0 C-82.5,39.0 -70.5,-91.0 0,-130.0 Z" fill="#5aa84f" stroke="#111" stroke-width="5.942857142857143"/></g>
+<g transform="translate(210,128) rotate(58) translate(0,-35.0) scale(0.2692307692307692)"><path d="M0,-130.0 C70.5,-91.0 82.5,39.0 0,130.0 C-82.5,39.0 -70.5,-91.0 0,-130.0 Z" fill="#5aa84f" stroke="#111" stroke-width="5.942857142857143"/></g>
+<g transform="translate(210,78) rotate(-58) translate(0,-26.0) scale(0.2)"><path d="M0,-130.0 C70.5,-91.0 82.5,39.0 0,130.0 C-82.5,39.0 -70.5,-91.0 0,-130.0 Z" fill="#5aa84f" stroke="#111" stroke-width="8.0"/></g>
+<g transform="translate(210,78) rotate(58) translate(0,-26.0) scale(0.2)"><path d="M0,-130.0 C70.5,-91.0 82.5,39.0 0,130.0 C-82.5,39.0 -70.5,-91.0 0,-130.0 Z" fill="#5aa84f" stroke="#111" stroke-width="8.0"/></g>
+<text x="210" y="40" text-anchor="middle" font-size="20" font-weight="bold">A</text>
+<text x="210" y="470" text-anchor="middle">Complete</text>
+<text x="210" y="491" text-anchor="middle">nutrient solution</text>
+<path d="M510.0,230 L510.0,424 Q510.0,440 526.0,440 L654.0,440 Q670.0,440 670.0,424 L670.0,230 Z" fill="#e3f1fa"/>
+<path d="M510.0,190 L510.0,424 Q510.0,440 526.0,440 L654.0,440 Q670.0,440 670.0,424 L670.0,190" fill="none" stroke="#111" stroke-width="2"/>
+<line x1="510.0" y1="230" x2="670.0" y2="230" stroke="#111" stroke-width="1.2"/>
+<rect x="502.0" y="178" width="44.0" height="12" fill="#c9c9c9" stroke="#111" stroke-width="1.4"/>
+<rect x="558" y="178" width="24" height="12" fill="#c9c9c9" stroke="#111" stroke-width="1.4"/>
+<rect x="598" y="178" width="24" height="12" fill="#c9c9c9" stroke="#111" stroke-width="1.4"/>
+<rect x="634" y="178" width="44.0" height="12" fill="#c9c9c9" stroke="#111" stroke-width="1.4"/>
+<path d="M590,190 L590,340" fill="none" stroke="#8a6d3b" stroke-width="2" stroke-linecap="round"/>
+<path d="M590,230 Q570,260 556,310" fill="none" stroke="#8a6d3b" stroke-width="2" stroke-linecap="round"/>
+<path d="M590,240 Q612,270 626,320" fill="none" stroke="#8a6d3b" stroke-width="2" stroke-linecap="round"/>
+<path d="M590,280 Q576,310 572,355" fill="none" stroke="#8a6d3b" stroke-width="2" stroke-linecap="round"/>
+<path d="M590,290 Q606,320 610,360" fill="none" stroke="#8a6d3b" stroke-width="2" stroke-linecap="round"/>
+<path d="M570,268 l-18,18" fill="none" stroke="#8a6d3b" stroke-width="2" stroke-linecap="round"/>
+<path d="M612,280 l18,16" fill="none" stroke="#8a6d3b" stroke-width="2" stroke-linecap="round"/>
+<path d="M590,178 L590,68" stroke="#2f7a33" stroke-width="5" stroke-linecap="round"/>
+<g transform="translate(590,128) rotate(-58) translate(0,-35.0) scale(0.2692307692307692)"><path d="M0,-130.0 C70.5,-91.0 82.5,39.0 0,130.0 C-82.5,39.0 -70.5,-91.0 0,-130.0 Z" fill="#5aa84f" stroke="#111" stroke-width="5.942857142857143"/></g>
+<g transform="translate(590,128) rotate(58) translate(0,-35.0) scale(0.2692307692307692)"><path d="M0,-130.0 C70.5,-91.0 82.5,39.0 0,130.0 C-82.5,39.0 -70.5,-91.0 0,-130.0 Z" fill="#5aa84f" stroke="#111" stroke-width="5.942857142857143"/></g>
+<g transform="translate(590,78) rotate(-58) translate(0,-26.0) scale(0.2)"><path d="M0,-130.0 C70.5,-91.0 82.5,39.0 0,130.0 C-82.5,39.0 -70.5,-91.0 0,-130.0 Z" fill="#5aa84f" stroke="#111" stroke-width="8.0"/></g>
+<g transform="translate(590,78) rotate(58) translate(0,-26.0) scale(0.2)"><path d="M0,-130.0 C70.5,-91.0 82.5,39.0 0,130.0 C-82.5,39.0 -70.5,-91.0 0,-130.0 Z" fill="#5aa84f" stroke="#111" stroke-width="8.0"/></g>
+<text x="590" y="40" text-anchor="middle" font-size="20" font-weight="bold">B</text>
+<text x="590" y="470" text-anchor="middle">Nutrient solution —</text>
+<text x="590" y="491" text-anchor="middle">nitrate omitted</text>
+<line x1="254" y1="184" x2="346" y2="142.56" stroke="#111" stroke-width="1.2"/><circle cx="254" cy="184" r="2.2" fill="#111"/><text x="350" y="148">perforated lid</text>
+<line x1="240" y1="308" x2="346" y2="294.56" stroke="#111" stroke-width="1.2"/><circle cx="240" cy="308" r="2.2" fill="#111"/><text x="350" y="300">roots</text>
+<line x1="270" y1="360" x2="346" y2="384.56" stroke="#111" stroke-width="1.2"/><circle cx="270" cy="360" r="2.2" fill="#111"/><text x="350" y="390">nutrient solution</text>
+<line x1="130.0" y1="250" x2="72" y2="224" stroke="#111" stroke-width="1.2"/><circle cx="130.0" cy="250" r="2.2" fill="#111"/><text x="66" y="220" text-anchor="end">glass jar</text>
+</g>
+</svg>

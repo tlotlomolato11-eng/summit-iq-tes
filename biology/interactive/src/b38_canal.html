@@ -1,0 +1,159 @@
+<title>Alimentary Canal Explorer</title>
+<!--HEAD-->
+<style>
+/*SHARED_CSS*/
+[data-organ] { cursor: pointer; }
+[data-organ].sel .fillpart { stroke: var(--warn) !important; }
+[data-organ].sel > .shape { stroke: var(--warn); stroke-width: 4; }
+[data-organ].right > .shape, [data-organ].right .fillpart { stroke: var(--good) !important; }
+[data-organ].wrong > .shape, [data-organ].wrong .fillpart { stroke: var(--bad) !important; }
+.dot { fill: var(--accent); stroke: var(--panel); stroke-width: 2; }
+</style>
+
+<main class="page">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Summit IQ · BGCSE Biology 0573 · Extension Set 2 · Q3.8</p>
+      <h1>The tube, and the organs beside it</h1>
+      <p class="lede">Food only travels through the tube: mouth, oesophagus, stomach, small intestine, large intestine, rectum and anus. The salivary glands, liver, gall bladder and pancreas send secretions in but food never passes through them. Tap any organ, take the quiz, or follow a mouthful of food.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <section class="card question" aria-label="Question 3.8 text">
+    <div class="qhead"><h2>Q3.8 · The Human Alimentary Canal</h2><span class="data">[Total: 7]</span></div>
+    <div class="part focus"><span class="pn">(a)</span><span>State one secretion (or stored secretion) produced by each of: (i) salivary glands, (ii) liver, (iii) pancreas.</span><span class="mk">[3]</span></div>
+    <div class="part focus"><span class="pn">(b)</span><span>Explain why the gall bladder is not classed as part of the alimentary canal itself, even though it plays a role in digestion.</span><span class="mk">[2]</span></div>
+    <div class="part focus"><span class="pn">(c)</span><span>State the region of the alimentary canal in which each of the following mainly takes place: (i) absorption of digested food, (ii) reabsorption of water from undigested material.</span><span class="mk">[2]</span></div>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <div class="seg" id="mode"><button type="button" data-v="explore" aria-pressed="true">Explore</button><button type="button" data-v="quiz" aria-pressed="false">Quiz me</button></div>
+      <svg id="fig" viewBox="0 0 460 790" role="img" aria-label="Human torso showing the alimentary canal and associated organs; tap an organ">
+        <g id="body" transform="translate(-80,0)"></g>
+      </svg>
+      <div class="btns"><button class="btn" id="follow" type="button">Follow the food</button></div>
+    </div>
+
+    <div class="card stack">
+      <span class="chip" id="chip" data-state="info">…</span>
+      <dl class="rows">
+        <div><dt>Organ</dt><dd class="big" id="rO"></dd></div>
+        <div><dt>Food passes through it?</dt><dd id="rT"></dd></div>
+        <div><dt>Secretion</dt><dd id="rS" style="white-space: normal; max-width: 60%"></dd></div>
+      </dl>
+      <div class="formula" id="formula"></div>
+    </div>
+  </section>
+
+  <section class="slips" aria-label="Check yourself">
+    <article class="card slip check">
+      <div class="tag"><span>Check #1</span><span>Q3.8(a) · [3]</span></div>
+      <p class="q">Tap the salivary glands, the liver and the pancreas. Name one secretion from each.</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>(i) Saliva (containing amylase). (ii) Bile. (iii) Pancreatic juice (containing amylase, protease and lipase).</div>
+    </article>
+    <article class="card slip check">
+      <div class="tag"><span>Check #2</span><span>Q3.8(b), (c) · [2] [2]</span></div>
+      <p class="q">Follow the food. Does it ever enter the gall bladder? Where is digested food absorbed, and where is water taken back?</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>(b) The gall bladder only stores bile (made by the liver) and releases it into the duodenum. Food itself never passes through the gall bladder, so it is an associated (accessory) organ rather than part of the tube food travels along.<br>(c) (i) Small intestine (ileum). (ii) Large intestine (colon).</div>
+    </article>
+  </section>
+
+  <footer><span>Questions and mark points: Summit IQ BGCSE Biology Topic 3 Nutrition, Extension Practice Set 2. The drawing is simplified and not to scale.</span></footer>
+</main>
+
+<script>
+/*SHARED_JS*/
+(() => {
+  const ORG = {
+    mouth: { name: 'mouth', tube: true, sec: 'saliva, from the salivary glands', job: 'Chewing (mechanical digestion) and the start of starch digestion by amylase.' },
+    salivary: { name: 'salivary glands', tube: false, sec: 'saliva (contains amylase)', job: 'Make saliva and send it into the mouth through ducts.' },
+    oesophagus: { name: 'oesophagus', tube: true, sec: 'mucus', job: 'Carries food to the stomach by peristalsis.' },
+    stomach: { name: 'stomach', tube: true, sec: 'gastric juice: protease (pepsin) and hydrochloric acid', job: 'Churns food, starts protein digestion, and its acid kills bacteria.' },
+    liver: { name: 'liver', tube: false, sec: 'bile', job: 'Makes bile, which the gall bladder stores. Also deaminates spare amino acids.' },
+    gall: { name: 'gall bladder', tube: false, sec: 'bile (stored, made by the liver)', job: 'Stores bile and releases it into the duodenum.' },
+    pancreas: { name: 'pancreas', tube: false, sec: 'pancreatic juice: amylase, protease, lipase', job: 'Sends pancreatic juice into the duodenum.' },
+    small: { name: 'small intestine', tube: true, sec: 'digestive enzymes', job: 'Finishes digestion. Absorbs digested food, mainly in the ileum.' },
+    large: { name: 'large intestine', tube: true, sec: 'mucus', job: 'Reabsorbs water from undigested material, mainly in the colon.' },
+    rectum: { name: 'rectum', tube: true, sec: 'none', job: 'Stores faeces.' },
+    anus: { name: 'anus', tube: true, sec: 'none', job: 'Faeces leave the body (egestion).' },
+  };
+  const tube = (d, col, w) => `<path d="${d}" fill="none" stroke="var(--ink)" stroke-width="${w + 3.2}" stroke-linecap="round" stroke-linejoin="round" class="fillpart"/><path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const OES = 'M310,160 C312,210 316,280 330,320 C338,338 350,345 366,344';
+  const SI = 'M368,446 C340,462 316,480 300,500 L300,510 C330,512 370,512 380,528 C386,548 340,546 300,548 C262,552 262,572 300,574 C340,576 384,574 384,596 C384,618 330,614 296,616 C262,620 262,640 300,642 C330,644 360,646 360,660 C358,676 300,664 262,652';
+  const LI = 'M250,668 L236,660 L236,510 C236,496 246,492 260,492 L400,492 C414,492 420,500 420,512 L420,640 C420,672 380,680 342,684 L326,690';
+  const parts = {
+    salivary: `<path class="shape" d="M252,172 C244,160 262,150 274,158 C284,166 276,182 262,182 Z" fill="#c9a0dc" stroke="var(--ink)" stroke-width="1.6"/><path d="M274,164 L294,152" stroke="var(--ink)" stroke-width="1.4"/>`,
+    mouth: `<path class="shape" d="M292,150 Q310,166 328,150 Q310,156 292,150 Z" fill="#e89a9a" stroke="var(--ink)" stroke-width="1.8"/>`,
+    oesophagus: tube(OES, '#e6aaa4', 12),
+    liver: `<path class="shape" d="M180,330 C230,296 330,300 370,338 C352,382 300,398 206,402 C184,396 174,356 180,330 Z" fill="#b8664b" stroke="var(--ink)" stroke-width="2"/>`,
+    gall: `<ellipse class="shape" cx="274" cy="410" rx="16" ry="11" fill="#86b86b" stroke="var(--ink)" stroke-width="1.8"/>`,
+    pancreas: `<path class="shape" d="M330,470 C360,452 420,452 452,462 C456,474 420,482 380,482 C352,484 332,482 330,470 Z" fill="#ecc57b" stroke="var(--ink)" stroke-width="1.8"/>`,
+    stomach: `<path class="shape" d="M362,340 C410,318 468,338 466,400 C464,452 410,468 366,452 C350,446 350,428 364,426 C396,428 420,416 420,396 C420,372 394,360 368,366 Z" fill="#ec9f9f" stroke="var(--ink)" stroke-width="2"/>`,
+    small: tube(SI, '#f3bba3', 12),
+    large: tube(LI, '#d99077', 26),
+    rectum: tube('M326,690 L322,736', '#c77f67', 18),
+    anus: `<circle class="shape" cx="321" cy="746" r="7" fill="#8f4d3c" stroke="var(--ink)" stroke-width="1.6"/>`,
+  };
+  const order = ['liver', 'gall', 'pancreas', 'oesophagus', 'stomach', 'large', 'small', 'rectum', 'anus', 'salivary', 'mouth'];
+  let s = `<path d="M270,178 C220,160 222,48 310,42 C398,48 400,160 350,178 L352,215 C420,222 470,238 492,262 C505,380 500,560 470,770 L150,770 C120,560 115,380 128,262 C150,238 200,222 268,215 Z" fill="var(--panel)" stroke="var(--ink)" stroke-width="2.2"/>`;
+  s += order.map(k => `<g data-organ="${k}" tabindex="0" role="button" aria-label="${ORG[k].name}">${parts[k]}</g>`).join('');
+  // food route: a single centre line through every part of the tube
+  // the route is built in pieces so each stretch of it can be matched to its organ by length
+  const PIECES = [['oesophagus', OES], ['stomach', ' C420,340 448,380 440,410 C432,440 400,450 368,446 '], ['small', SI.replace('M368,446', 'L368,446')],
+    ['large', ' L250,668 ' + LI.replace('M250,668', '')], ['rectum', ' L322,736'], ['anus', ' L321,746']];
+  const ROUTE = PIECES.map(p => p[1]).join('');
+  s += `<path id="route" d="${ROUTE}" fill="none" stroke="none"/><circle id="dot" class="dot" r="8" cx="310" cy="160" style="display:none"/>`;
+  $('body').innerHTML = s;
+
+  let mode = 'explore', target = null, score = 0, tries = 0, sel = null;
+  const groups = [...document.querySelectorAll('[data-organ]')];
+  const clearMarks = () => groups.forEach(g => g.classList.remove('sel', 'right', 'wrong'));
+  function show(k) {
+    const o = ORG[k];
+    $('rO').textContent = o.name;
+    $('rT').textContent = o.tube ? 'yes: part of the canal' : 'no: associated organ';
+    $('rS').textContent = o.sec;
+    $('formula').innerHTML = `<b>${o.name}</b><br>${o.job}` + (o.tube ? '' : `<span class="ms">Food never passes through it, so it is an associated organ, not part of the canal.</span>`);
+  }
+  function ask() {
+    const keys = Object.keys(ORG).filter(k => k !== target);
+    target = keys[Math.floor(Math.random() * keys.length)];
+    setChip($('chip'), 'info', `Tap the ${ORG[target].name} · score ${score}/${tries}`);
+  }
+  function pick(k) {
+    clearMarks(); const g = groups.find(x => x.dataset.organ === k);
+    if (mode === 'explore') { g.classList.add('sel'); show(k); setChip($('chip'), ORG[k].tube ? 'ok' : 'warn', ORG[k].tube ? `${ORG[k].name}: food passes through` : `${ORG[k].name}: associated organ, food never enters it`); return; }
+    tries++;
+    if (k === target) { score++; g.classList.add('right'); show(k); setChip($('chip'), 'ok', `Yes, that's the ${ORG[k].name} · score ${score}/${tries}`); setTimeout(ask, 1100); }
+    else { g.classList.add('wrong'); setChip($('chip'), 'bad', `That's the ${ORG[k].name}. Find the ${ORG[target].name} · score ${score}/${tries}`); }
+  }
+  groups.forEach(g => { g.addEventListener('click', () => pick(g.dataset.organ)); g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { pick(g.dataset.organ); e.preventDefault(); } }); });
+  seg($('mode'), v => { mode = v; clearMarks(); score = tries = 0; if (v === 'quiz') ask(); else { setChip($('chip'), 'info', 'Tap any organ'); } });
+
+  // follow the food along the route; the organ it is in lights up
+  const route = $('route'), dot = $('dot');
+  const tmp = svgEl('path', {}); $('body').appendChild(tmp);
+  let acc = '';
+  const ends = PIECES.map(([k, d]) => { acc += d; tmp.setAttribute('d', acc); return [k, tmp.getTotalLength()]; });
+  tmp.remove();
+  const organAt = len => len < 8 ? 'mouth' : ends.find(([, e]) => len <= e + 0.01)[0];
+  $('follow').addEventListener('click', () => {
+    const L = route.getTotalLength(), t0 = performance.now(), dur = 9000; dot.style.display = '';
+    $('follow').disabled = true;
+    const step = now => {
+      const f = Math.min(1, (now - t0) / dur), p = route.getPointAtLength(L * f);
+      dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y);
+      const k = organAt(L * f); if (k) { clearMarks(); groups.find(x => x.dataset.organ === k).classList.add('sel'); show(k); setChip($('chip'), 'info', `Food is in the ${ORG[k].name}`); }
+      if (f < 1) requestAnimationFrame(step);
+      else { $('follow').disabled = false; clearMarks(); setChip($('chip'), 'ok', 'Done. The food never entered the salivary glands, liver, gall bladder or pancreas'); }
+    };
+    requestAnimationFrame(step);
+  });
+  show('gall'); groups.find(x => x.dataset.organ === 'gall').classList.add('sel');
+  setChip($('chip'), 'warn', 'gall bladder: associated organ, food never enters it');
+})();
+</script>

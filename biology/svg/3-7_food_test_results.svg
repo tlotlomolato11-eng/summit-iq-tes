@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="440" viewBox="0 0 940 440">
+<rect width="940" height="440" fill="#fff"/>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111"/></marker></defs>
+<g font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" fill="#111">
+<rect x="60" y="360" width="740" height="14" fill="#e2c9a0" stroke="#111" stroke-width="1.6"/>
+<rect x="60" y="150" width="14" height="210" fill="#e2c9a0" stroke="#111" stroke-width="1.6"/>
+<rect x="786" y="150" width="14" height="210" fill="#e2c9a0" stroke="#111" stroke-width="1.6"/>
+<path d="M130,190 L130,330 A20,20 0 0 0 170,330 L170,190 Z" fill="#1f2346"/>
+<line x1="130" y1="190" x2="170" y2="190" stroke="#111" stroke-width="1.2"/>
+<path d="M130,100 L130,330 A20,20 0 0 0 170,330 L170,100" fill="none" stroke="#111" stroke-width="1.8"/>
+<ellipse cx="150" cy="100" rx="23" ry="4" fill="#fff" stroke="#111" stroke-width="1.6"/>
+<text x="150" y="400" text-anchor="middle" font-weight="bold">1</text>
+<text x="150" y="424" text-anchor="middle">Iodine test</text>
+<path d="M320,190 L320,330 A20,20 0 0 0 360,330 L360,190 Z" fill="#b48ad8"/>
+<line x1="320" y1="190" x2="360" y2="190" stroke="#111" stroke-width="1.2"/>
+<path d="M320,100 L320,330 A20,20 0 0 0 360,330 L360,100" fill="none" stroke="#111" stroke-width="1.8"/>
+<ellipse cx="340" cy="100" rx="23" ry="4" fill="#fff" stroke="#111" stroke-width="1.6"/>
+<text x="340" y="400" text-anchor="middle" font-weight="bold">2</text>
+<text x="340" y="424" text-anchor="middle">Biuret test</text>
+<path d="M510,190 L510,330 A20,20 0 0 0 550,330 L550,190 Z" fill="#e2743d"/>
+<path d="M510,324 A20,20 0 0 0 550,324 L550,330 A20,20 0 0 1 510,330 Z" fill="#9b3316"/>
+<path d="M510,328 L510,330 A20,20 0 0 0 550,330 L550,328" fill="#9b3316"/>
+<line x1="510" y1="190" x2="550" y2="190" stroke="#111" stroke-width="1.2"/>
+<path d="M510,100 L510,330 A20,20 0 0 0 550,330 L550,100" fill="none" stroke="#111" stroke-width="1.8"/>
+<ellipse cx="530" cy="100" rx="23" ry="4" fill="#fff" stroke="#111" stroke-width="1.6"/>
+<text x="530" y="400" text-anchor="middle" font-weight="bold">3</text>
+<text x="530" y="424" text-anchor="middle">Benedict's test</text>
+<path d="M700,190 L700,330 A20,20 0 0 0 740,330 L740,190 Z" fill="#eaf4fa"/>
+<rect x="700" y="190" width="40" height="34" fill="#ececec"/>
+<circle cx="710" cy="198" r="2" fill="#bdbdbd"/>
+<circle cx="724" cy="204" r="2" fill="#bdbdbd"/>
+<circle cx="732" cy="196" r="2" fill="#bdbdbd"/>
+<circle cx="716" cy="214" r="2" fill="#bdbdbd"/>
+<circle cx="729" cy="216" r="2" fill="#bdbdbd"/>
+<circle cx="707" cy="210" r="2" fill="#bdbdbd"/>
+<line x1="700" y1="224" x2="740" y2="224" stroke="#111" stroke-width="1" stroke-dasharray="3 3"/>
+<line x1="700" y1="190" x2="740" y2="190" stroke="#111" stroke-width="1.2"/>
+<path d="M700,100 L700,330 A20,20 0 0 0 740,330 L740,100" fill="none" stroke="#111" stroke-width="1.8"/>
+<ellipse cx="720" cy="100" rx="23" ry="4" fill="#fff" stroke="#111" stroke-width="1.6"/>
+<text x="720" y="400" text-anchor="middle" font-weight="bold">4</text>
+<text x="720" y="424" text-anchor="middle">Emulsion test</text>
+<rect x="60" y="150" width="740" height="16" fill="#e2c9a0" stroke="#111" stroke-width="1.6"/>
+<rect x="130" y="150" width="40" height="16" fill="none" stroke="#111" stroke-width="1.8"/>
+<rect x="320" y="150" width="40" height="16" fill="none" stroke="#111" stroke-width="1.8"/>
+<rect x="510" y="150" width="40" height="16" fill="none" stroke="#111" stroke-width="1.8"/>
+<rect x="700" y="150" width="40" height="16" fill="none" stroke="#111" stroke-width="1.8"/>
+<line x1="736" y1="203" x2="816" y2="224.56" stroke="#111" stroke-width="1.2"/><circle cx="736" cy="203" r="2.2" fill="#111"/><text x="820" y="230">cloudy white</text>
+<text x="826" y="250">layer</text>
+<line x1="540" y1="342" x2="592" y2="286.56" stroke="#111" stroke-width="1.2"/><circle cx="540" cy="342" r="2.2" fill="#111"/><text x="596" y="292">precipitate</text>
+</g>
+</svg>

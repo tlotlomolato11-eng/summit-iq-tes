@@ -1,0 +1,342 @@
+<title>Food Test Bench</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+:root {
+  --bg: #f3f5f9;
+  --panel: #ffffff;
+  --panel-2: #f7f9fc;
+  --ink: #15203a;
+  --muted: #5b6680;
+  --faint: #8f99ae;
+  --line: #d8dee9;
+  --grid: #e8ecf3;
+  --accent: #1f5fbf;
+  --accent-ink: #ffffff;
+  --accent-soft: #e4ecfa;
+  --good: #1b7f55;
+  --good-soft: #e1f3ea;
+  --warn: #a8660f;
+  --warn-soft: #fbefdc;
+  --bad: #c0392b;
+  --bad-soft: #fbe5e2;
+  --p: #d0453a;
+  --n: #8a93a6;
+  --field: #7b5cc4;
+  --metal: #6a7385;
+  --copper: #b8672e;
+  --shadow: 0 1px 2px rgba(21, 32, 58, .06), 0 4px 16px rgba(21, 32, 58, .05);
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1320; --panel: #161d2d; --panel-2: #1b2336; --ink: #e6eaf3; --muted: #9ba6bd; --faint: #6f7a92;
+    --line: #2a3450; --grid: #20293d; --accent: #7fa9f2; --accent-ink: #0e1320; --accent-soft: #1c2a47;
+    --good: #52c793; --good-soft: #15342a; --warn: #e6b155; --warn-soft: #3a2e17; --bad: #f2786b; --bad-soft: #3d1f1d;
+    --p: #f07a6e; --n: #9aa3b8; --field: #a88ef0; --metal: #aab3c6; --copper: #e0935a;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1320; --panel: #161d2d; --panel-2: #1b2336; --ink: #e6eaf3; --muted: #9ba6bd; --faint: #6f7a92;
+  --line: #2a3450; --grid: #20293d; --accent: #7fa9f2; --accent-ink: #0e1320; --accent-soft: #1c2a47;
+  --good: #52c793; --good-soft: #15342a; --warn: #e6b155; --warn-soft: #3a2e17; --bad: #f2786b; --bad-soft: #3d1f1d;
+  --p: #f07a6e; --n: #9aa3b8; --field: #a88ef0; --metal: #aab3c6; --copper: #e0935a;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 var(--sans); }
+.page { max-width: 1100px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 22px; }
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.eyebrow { font: 500 11.5px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 { font: 600 clamp(1.7rem, 4.2vw, 2.45rem)/1.12 var(--serif); letter-spacing: -.01em; margin: 6px 0 0; text-wrap: balance; }
+h2 { font: 600 1.25rem/1.25 var(--serif); margin: 0; text-wrap: balance; }
+h3 { font: 600 11.5px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.lede { color: var(--muted); max-width: 66ch; margin: 8px 0 0; }
+.theme-btn { font: 500 12px var(--mono); color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; white-space: nowrap; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); min-width: 0; }
+.question { display: grid; gap: 10px; }
+.question p { margin: 0; max-width: 72ch; }
+.qhead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.part { display: grid; grid-template-columns: 5.2em minmax(0, 1fr) auto; gap: 4px 10px; align-items: baseline; padding-top: 8px; border-top: 1px dashed var(--line); }
+.part .pn { font: 600 13px var(--mono); color: var(--accent); white-space: nowrap; }
+.part .mk { font: 500 12.5px var(--mono); color: var(--muted); white-space: nowrap; }
+.part.focus .pn::after { content: " ●"; color: var(--warn); font-size: 9px; vertical-align: middle; }
+.data { font-family: var(--mono); font-size: .93em; }
+.board { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 760px) { .board { grid-template-columns: minmax(0, 1fr); } }
+.stack { display: grid; gap: 14px; }
+.page > *, .stack > *, .board > *, .slips > * { min-width: 0; }
+.figure svg { display: block; width: 100%; height: auto; touch-action: none; user-select: none; -webkit-user-select: none; }
+.cap { font-size: 12.5px; color: var(--muted); margin: 0; }
+.chip { display: inline-flex; align-items: center; gap: 8px; font: 600 12.5px/1.35 var(--sans); padding: 7px 12px; border-radius: 999px; border: 1px solid currentColor; }
+.chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+.chip[data-state="ok"] { color: var(--good); background: var(--good-soft); }
+.chip[data-state="warn"] { color: var(--warn); background: var(--warn-soft); }
+.chip[data-state="bad"] { color: var(--bad); background: var(--bad-soft); }
+.chip[data-state="info"] { color: var(--accent); background: var(--accent-soft); }
+.rows { display: grid; gap: 0; margin: 0; }
+.rows > div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--grid); align-items: baseline; }
+.rows > div:last-child { border-bottom: 0; }
+.rows dt { color: var(--muted); font-size: 13.5px; }
+.rows dd { white-space: nowrap; margin: 0; font: 600 14.5px var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.rows dd.big { font-size: 20px; color: var(--accent); }
+.rows dd.wrong { color: var(--bad); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.formula { font: 13.5px/1.75 var(--mono); background: var(--accent-soft); border-radius: 10px; padding: 12px 14px; overflow-x: auto; font-variant-numeric: tabular-nums; }
+.formula b { color: var(--accent); }
+.formula .hl { background: var(--warn-soft); color: var(--warn); border-radius: 4px; padding: 0 3px; font-weight: 600; }
+.formula .ms { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+.ctrl { display: grid; gap: 4px; }
+.ctrl label { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; font-weight: 600; }
+.ctrl label output { font: 600 13.5px var(--mono); color: var(--accent); white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: var(--accent); margin: 4px 0; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { font: 600 13.5px var(--sans); padding: 8px 14px; border-radius: 9px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.btn:disabled { opacity: .45; cursor: default; }
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.slips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 760px) { .slips { grid-template-columns: minmax(0, 1fr); } }
+.slip { display: grid; gap: 10px; align-content: start; }
+.slip .tag { display: flex; justify-content: space-between; gap: 10px; font: 600 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--bad); }
+.slip .tag span:last-child { color: var(--muted); }
+.slip .was, .slip .fix { border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+.slip .was { background: var(--bad-soft); }
+.slip .fix { background: var(--good-soft); }
+.slip .was > b:first-child, .slip .fix > b:first-child { display: block; font: 600 11px var(--mono); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 2px; }
+.slip .was > b:first-child { color: var(--bad); } .slip .fix > b:first-child { color: var(--good); }
+.slip .m { font-family: var(--mono); font-size: 13px; }
+.also { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; display: grid; gap: 4px; max-width: 80ch; }
+.also b { color: var(--ink); }
+footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; display: grid; gap: 6px; }
+footer table { border-collapse: collapse; font: 12px/1.5 var(--mono); }
+footer td { padding: 2px 12px 2px 0; vertical-align: top; }
+.tbl-wrap { overflow-x: auto; }
+svg text { font-family: var(--sans); }
+svg .t { font: 12px var(--sans); fill: var(--ink); }
+svg .tm { font: 500 12px var(--mono); fill: var(--ink); }
+svg .ts { font: 11px var(--mono); fill: var(--muted); }
+svg .handle { cursor: grab; }
+svg .handle:active { cursor: grabbing; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media (max-width: 520px) {
+  .part { grid-template-columns: minmax(0, 1fr) auto; }
+  .part > span:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+  .top { flex-direction: column-reverse; }
+  .theme-btn { align-self: flex-end; }
+  svg .ts { font-size: 13px; }
+  svg .tm { font-size: 14px; }
+}
+svg .pill { fill: var(--panel); opacity: .9; }
+/* biology additions */
+:root { --leaf: #4f9d45; --leaf-dark: #2f7a33; --chlorotic: #e3cf5a; --water: #dcecf7; --food: #e2b271; --blood: #d24a3f; --vein: #3f6fbf; --lymph: #f4e9b5; --epi: #f7d9cf; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --leaf: #6cbf5f; --leaf-dark: #4f9d45; --chlorotic: #d9c451; --water: #1f3346; --food: #d9a760; --blood: #ef6b5f; --vein: #6f9ae6; --lymph: #5a5230; --epi: #4a302c; } }
+:root[data-theme="dark"] { --leaf: #6cbf5f; --leaf-dark: #4f9d45; --chlorotic: #d9c451; --water: #1f3346; --food: #d9a760; --blood: #ef6b5f; --vein: #6f9ae6; --lymph: #5a5230; --epi: #4a302c; }
+.check .tag span:first-child { color: var(--accent); }
+.check .q { margin: 0; font-size: 15px; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.seg button { font: 600 13px var(--sans); padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.ctrl-row { display: grid; gap: 6px; }
+.ctrl-row > span { font-size: 13.5px; font-weight: 600; }
+svg .lab { font: 12.5px var(--sans); fill: var(--ink); }
+svg .edge { stroke: var(--ink); stroke-width: 1.8; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.tbl th, .tbl td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--grid); }
+.tbl th { font: 600 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.swatch { display: inline-block; width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--line); vertical-align: -2px; margin-right: 6px; }
+.rows dd { white-space: normal; max-width: 62%; }
+
+.samples { display: flex; flex-wrap: wrap; gap: 6px; }
+.tests { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+@media (max-width: 520px) { .tests { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.tests .btn { font-size: 12.5px; padding: 8px 6px; }
+.res-yes { color: var(--good); font-weight: 700; } .res-no { color: var(--muted); }
+</style>
+
+<main class="page">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Summit IQ · BGCSE Biology 0573 · Extension Set 2 · Q3.7</p>
+      <h1>Read the colours, name the nutrients</h1>
+      <p class="lede">Pick a food sample and run the four tests. Each colour change says whether one nutrient is there. Put the four results together to work out what the food contains.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <section class="card question" aria-label="Question 3.7 text">
+    <div class="qhead"><h2>Q3.7 · Food Tests</h2><span class="data">[Total: 10]</span></div>
+    <div class="part focus"><span class="pn">(a)</span><span>Describe the food test for fats, including the result for a positive test.</span><span class="mk">[3]</span></div>
+    <div class="part focus"><span class="pn">(b)</span><span>A student tests a food sample and gets a positive result with both the iodine test and the Biuret test, but a negative result with the emulsion test. State what this tells you about the composition of the sample.</span><span class="mk">[3]</span></div>
+    <div class="part"><span class="pn">(c)</span><span>Explain why a food sample should be ground up and dissolved in water before testing it with iodine or Biuret solution.</span><span class="mk">[2]</span></div>
+    <div class="part focus"><span class="pn">(d)</span><span>A sample turns Benedict's solution green rather than brick-red. What does this suggest, compared with a sample that turns brick-red?</span><span class="mk">[2]</span></div>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <h3>1 · Choose a food sample (ground up and dissolved in water)</h3>
+      <div class="seg samples" id="samples"></div>
+      <h3>2 · Run the tests</h3>
+      <svg id="fig" viewBox="0 0 440 250" role="img" aria-label="Four test tubes showing the result of each food test"></svg>
+      <div class="tests">
+        <button class="btn ghost" type="button" data-t="iodine">Add iodine</button>
+        <button class="btn ghost" type="button" data-t="biuret">Add Biuret</button>
+        <button class="btn ghost" type="button" data-t="benedict" id="bBtn">Add Benedict's</button>
+        <button class="btn ghost" type="button" data-t="emulsion" id="eBtn">Shake with ethanol</button>
+      </div>
+      <div class="btns"><button class="btn" id="all" type="button">Run all four</button><button class="btn ghost" id="clear" type="button">Clear tubes</button></div>
+    </div>
+
+    <div class="card stack">
+      <span class="chip" id="chip" data-state="info">…</span>
+      <table class="tbl" aria-label="Results">
+        <thead><tr><th>Test</th><th>Result</th><th>Means</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="formula" id="formula"></div>
+    </div>
+  </section>
+
+  <section class="slips" aria-label="Check yourself">
+    <article class="card slip check">
+      <div class="tag"><span>Check #1</span><span>Q3.7(a), (b) · [3] [3]</span></div>
+      <p class="q">Run all four tests on Sample X. What does it contain? Then describe the fat test step by step.</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>(b) The food contains starch (positive iodine test) and protein (positive Biuret test), but does not contain much fat (negative emulsion test).<br>(a) Shake the food sample with ethanol, then pour the mixture into water. Positive result: a cloudy white emulsion forms, showing fat is present.</div>
+    </article>
+    <article class="card slip check">
+      <div class="tag"><span>Check #2</span><span>Q3.7(c), (d) · [2] [2]</span></div>
+      <p class="q">Compare Benedict's on “a little glucose” and “a lot of glucose”. What does green mean? And why grind and dissolve the food first?</p>
+      <button class="btn ghost reveal" type="button">Show answer</button>
+      <div class="fix" hidden><b>Mark points</b>(d) Green suggests a smaller amount of reducing sugar than a sample that turns brick-red. The colour change (blue → green/yellow/orange → brick-red) roughly shows how much reducing sugar is present.<br>(c) Grinding and dissolving releases the substances being tested for and increases the surface area so the reagent can react properly. It also lets the mixture be handled and mixed as a liquid.</div>
+    </article>
+  </section>
+
+  <footer><span>Questions and mark points: Summit IQ BGCSE Biology Topic 3 Nutrition, Extension Practice Set 2. Sample X is the food described in Q3.7(b). Colours are drawn flat for clarity.</span></footer>
+</main>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  const label = () => { if (btn) btn.textContent = isDark() ? '☀ Light' : '☾ Dark'; };
+  if (btn) btn.addEventListener('click', () => { root.dataset.theme = isDark() ? 'light' : 'dark'; label(); });
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', label); } catch (e) {}
+  label();
+})();
+// Convert a pointer event into the SVG's own coordinate system.
+function svgPoint(svg, e) {
+  const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+  return p.matrixTransform(svg.getScreenCTM().inverse());
+}
+// Make an SVG element draggable; onMove receives {x, y} in SVG units.
+function draggable(svg, el, onMove) {
+  let on = false;
+  el.addEventListener('pointerdown', e => { on = true; el.setPointerCapture(e.pointerId); onMove(svgPoint(svg, e)); e.preventDefault(); });
+  el.addEventListener('pointermove', e => { if (on) onMove(svgPoint(svg, e)); });
+  el.addEventListener('pointerup', () => { on = false; });
+  el.addEventListener('pointercancel', () => { on = false; });
+}
+const $ = id => document.getElementById(id);
+function setChip(el, state, text) { el.dataset.state = state; el.textContent = text; }
+function sig(x, n) { return Number(x.toPrecision(n)); }
+// "Check yourself" cards: the button reveals the answer below it.
+document.querySelectorAll('.reveal').forEach(b => b.addEventListener('click', () => {
+  const a = b.nextElementSibling; a.hidden = !a.hidden; b.textContent = a.hidden ? 'Show answer' : 'Hide answer';
+}));
+// Segmented buttons: data-group on the container; calls onSeg(group, value).
+function seg(el, onChange) {
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    onChange(b.dataset.v);
+  });
+}
+const svgEl = (tag, attrs) => { const e = document.createElementNS('http://www.w3.org/2000/svg', tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+
+(() => {
+  const SAMPLES = {
+    x: { name: 'Sample X (Q3.7b)', starch: 1, protein: 1, fat: 0, sugar: 0 },
+    glo: { name: 'A little glucose', starch: 0, protein: 0, fat: 0, sugar: 1 },
+    ghi: { name: 'A lot of glucose', starch: 0, protein: 0, fat: 0, sugar: 3 },
+    oil: { name: 'Cooking oil', starch: 0, protein: 0, fat: 1, sugar: 0 },
+    milk: { name: 'Milk', starch: 0, protein: 1, fat: 1, sugar: 2 },
+    water: { name: 'Water (control)', starch: 0, protein: 0, fat: 0, sugar: 0 },
+  };
+  let cur = 'x';
+  const done = { iodine: false, biuret: false, benedict: 0, emulsion: 0 }; // benedict: 0 none, 1 added, 2 heated; emulsion: 0, 1 ethanol, 2 poured into water
+  $('samples').innerHTML = Object.entries(SAMPLES).map(([k, v]) => `<button type="button" data-v="${k}" aria-pressed="${k === cur}">${v.name}</button>`).join('');
+  seg($('samples'), v => { cur = v; clear(); });
+  function clear() { done.iodine = done.biuret = false; done.benedict = done.emulsion = 0; update(); }
+
+  const BLUE = '#4a7fd6', SAMPLE = '#efe6cf';
+  function result(t) {
+    const s = SAMPLES[cur];
+    if (t === 'iodine') return done.iodine ? (s.starch ? ['#1f2346', 'blue-black', 'starch present', 1] : ['#c8873a', 'orange-brown (no change)', 'no starch', 0]) : null;
+    if (t === 'biuret') return done.biuret ? (s.protein ? ['#9b6fd0', 'lilac / purple', 'protein present', 1] : [BLUE, 'blue (no change)', 'no protein', 0]) : null;
+    if (t === 'benedict') {
+      if (!done.benedict) return null;
+      if (done.benedict === 1) return [BLUE, 'blue: now heat it', 'not finished', -1];
+      return [['#4a7fd6', '#7fae4a', '#e0a23a', '#b0401f'][s.sugar], ['blue (no change)', 'green', 'orange', 'brick-red'][s.sugar], ['no reducing sugar', 'a little reducing sugar', 'more reducing sugar', 'a lot of reducing sugar'][s.sugar], s.sugar ? 1 : 0];
+    }
+    if (t === 'emulsion') {
+      if (!done.emulsion) return null;
+      if (done.emulsion === 1) return ['#f4f8fb', 'clear: now pour into water', 'not finished', -1];
+      return s.fat ? ['#f4f8fb', 'cloudy white emulsion', 'fat present', 1] : ['#e3f1fa', 'stays clear', 'no fat', 0];
+    }
+  }
+  // short colour word for the caption under each tube
+  const SHORT = t => t.split(':')[0].split(' (')[0].replace('lilac / purple', 'purple').replace('cloudy white emulsion', 'cloudy white');
+  const NAMES = { iodine: 'Iodine', biuret: 'Biuret', benedict: "Benedict's", emulsion: 'Emulsion' };
+  function drawTubes() {
+    let s = '';
+    ['iodine', 'biuret', 'benedict', 'emulsion'].forEach((t, i) => {
+      const cx = 60 + i * 107, top = 20, bot = 176, liq = 90, r = result(t);
+      const col = r ? r[0] : SAMPLE;
+      s += `<path d="M${cx - 18},${liq} L${cx - 18},${bot} A18,18 0 0 0 ${cx + 18},${bot} L${cx + 18},${liq} Z" fill="${col}"/>`;
+      if (t === 'benedict' && r && r[3] === 1 && SAMPLES[cur].sugar === 3) s += `<path d="M${cx - 18},${bot - 4} L${cx - 18},${bot} A18,18 0 0 0 ${cx + 18},${bot} L${cx + 18},${bot - 4} Z" fill="#7a2410"/>`;
+      if (t === 'emulsion' && r && r[3] === 1) { s += `<rect x="${cx - 18}" y="${liq}" width="36" height="26" fill="#fbfbfb"/>`; for (const [dx, dy] of [[-8, 6], [5, 10], [10, 18], [-4, 20], [-11, 14]]) s += `<circle cx="${cx + dx}" cy="${liq + dy}" r="2" fill="#bdbdbd"/>`; }
+      s += `<line x1="${cx - 18}" y1="${liq}" x2="${cx + 18}" y2="${liq}" stroke="var(--ink)" stroke-width="1"/>`;
+      s += `<path d="M${cx - 18},${top} L${cx - 18},${bot} A18,18 0 0 0 ${cx + 18},${bot} L${cx + 18},${top}" fill="none" class="edge"/>`;
+      if (t === 'benedict' && done.benedict === 2) s += `<path d="M${cx - 34},${bot + 22} q6,-8 0,-16 M${cx + 34},${bot + 22} q6,-8 0,-16" stroke="var(--warn)" stroke-width="2" fill="none"/>`;
+      s += `<text class="lab" x="${cx}" y="${bot + 44}" text-anchor="middle" font-weight="600">${NAMES[t]}</text>`;
+      s += `<text class="lab" x="${cx}" y="${bot + 60}" text-anchor="middle" style="fill: var(--muted)">${r ? SHORT(r[1]) : 'sample only'}</text>`;
+    });
+    $('fig').innerHTML = s;
+  }
+  function update() {
+    drawTubes();
+    $('bBtn').textContent = done.benedict === 1 ? 'Heat in water bath' : "Add Benedict's";
+    $('eBtn').textContent = done.emulsion === 1 ? 'Pour into water' : 'Shake with ethanol';
+    const rows = ['iodine', 'biuret', 'benedict', 'emulsion'].map(t => { const r = result(t); return `<tr><td>${NAMES[t]}</td><td>${r ? `<span class="swatch" style="background:${r[0]}"></span>${r[1]}` : '<span class="res-no">not done</span>'}</td><td class="${r && r[3] === 1 ? 'res-yes' : 'res-no'}">${r ? r[2] : '–'}</td></tr>`; });
+    $('tbody').innerHTML = rows.join('');
+    const all = ['iodine', 'biuret', 'benedict', 'emulsion'].map(result);
+    const complete = all.every(r => r && r[3] !== -1);
+    const s = SAMPLES[cur], has = [s.starch && 'starch', s.protein && 'protein', s.sugar && 'reducing sugar', s.fat && 'fat'].filter(Boolean);
+    const lacks = ['starch', 'protein', 'reducing sugar', 'fat'].filter(x => !has.includes(x));
+    if (!complete) setChip($('chip'), 'info', `${s.name}: run all four tests to finish the table`);
+    else setChip($('chip'), 'ok', `${s.name} contains ${has.length ? has.join(' and ') : 'none of the four'}`);
+    $('formula').innerHTML = done.emulsion === 1
+      ? `Emulsion test, step 2 of 2<br>Pour the ethanol mixture into <span class="hl">water</span> and look for a cloudy white layer.`
+      : `Emulsion test for fat:<br>1. Shake the food with <b>ethanol</b><br>2. Pour into <b>water</b><br>Cloudy white emulsion = <b>fat present</b>` +
+        (complete ? `<span class="ms">Contains: ${has.join(', ') || 'nothing tested for'}${lacks.length ? ' · no ' + lacks.join(', no ') : ''}</span>` : '');
+  }
+  document.querySelectorAll('.tests .btn').forEach(b => b.addEventListener('click', () => {
+    const t = b.dataset.t;
+    if (t === 'iodine' || t === 'biuret') done[t] = true; else done[t] = Math.min(2, done[t] + 1);
+    update();
+  }));
+  $('all').addEventListener('click', () => { done.iodine = done.biuret = true; done.benedict = done.emulsion = 2; update(); });
+  $('clear').addEventListener('click', clear);
+  update();
+})();
+</script>

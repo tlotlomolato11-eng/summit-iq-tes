@@ -1,0 +1,184 @@
+<title>Resistor Network Fractions</title>
+<!--HEAD-->
+<style>
+/*SHARED_CSS*/
+.wire { fill: none; stroke: var(--ink); stroke-width: 2; }
+.res { fill: var(--panel); stroke: var(--ink); stroke-width: 2; }
+.res.par1 { stroke: var(--accent); }
+.res.par2 { stroke: var(--good); }
+.cell1 { stroke: var(--ink); stroke-width: 2.5; }
+.cell2 { stroke: var(--ink); stroke-width: 5; }
+.frac { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 6px 10px; align-items: center; font: 15px var(--mono); font-variant-numeric: tabular-nums; }
+.frac .eq { color: var(--muted); }
+.frac .note { font: 12.5px var(--sans); color: var(--muted); }
+.f { display: inline-grid; text-align: center; line-height: 1.1; vertical-align: middle; margin: 0 2px; }
+.f > span:first-child { border-bottom: 1.5px solid currentColor; padding: 0 3px 1px; }
+.f > span:last-child { padding-top: 2px; }
+.c1 { color: var(--accent); font-weight: 600; } .c2 { color: var(--good); font-weight: 600; }
+.pick { display: flex; flex-wrap: wrap; gap: 6px; }
+.pick button { font: 600 13px var(--mono); padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; min-width: 44px; }
+.pick button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.pick.g button[aria-pressed="true"] { background: var(--good); border-color: var(--good); color: var(--panel); }
+</style>
+
+<main class="page">
+  <div class="top">
+    <div>
+      <p class="eyebrow">Summit IQ · Physics 0625/41 · Oct/Nov 2022 · Question 8</p>
+      <h1>Adding 1/24 and 1/12 without slipping</h1>
+      <p class="lede">For two resistors in parallel, write both fractions over the same bottom number, add the tops, simplify, then flip. Drag the branch values and watch every step update.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <section class="card question" aria-label="Question 8 text">
+    <div class="qhead"><h2>Question 8</h2><span class="data">[Total: 8]</span></div>
+    <p>The unit of the two electrical quantities electromotive force (e.m.f.) and potential difference (p.d.) is the volt (V).</p>
+    <div class="part focus"><span class="pn">(a)</span><span>State one other similarity between e.m.f. and p.d.</span><span class="mk">[1]</span></div>
+    <div class="part focus"><span class="pn">(b)</span><span>State one difference between e.m.f. and p.d.</span><span class="mk">[1]</span></div>
+    <p>(c) A battery consists of four cells, each of e.m.f. 1.2 V, in series.</p>
+    <div class="part"><span class="pn">(c)(i)</span><span>Calculate the e.m.f. of the battery.</span><span class="mk">[1]</span></div>
+    <div class="part focus"><span class="pn">(c)(ii)</span><span>The battery is connected in a circuit with four 12 Ω resistors. Fig. 8.1 is the circuit diagram. Calculate the total resistance of this arrangement of resistors.</span><span class="mk">[3]</span></div>
+    <div class="part focus"><span class="pn">(c)(iii)</span><span>Calculate the reading on the voltmeter in Fig. 8.1.</span><span class="mk">[2]</span></div>
+  </section>
+
+  <section class="board">
+    <div class="card figure stack">
+      <h3>The circuit · choose the two parallel branches</h3>
+      <svg id="fig" viewBox="0 0 515 300" role="img" aria-label="Four cells in series with a parallel pair of branches, a series resistor and a voltmeter across it">
+        <!-- main loop -->
+        <path class="wire" d="M90,100 L40,100 L40,262 L150,262 M290,262 L380,262 L380,212 M380,138 L380,100 L300,100"/>
+        <!-- parallel section -->
+        <path class="wire" d="M90,100 L90,44 L118,44 M168,44 L212,44 M262,44 L300,44 L300,100 M90,100 L90,158 L165,158 M215,158 L300,158 L300,100"/>
+        <circle cx="90" cy="100" r="3.5" fill="var(--ink)"/><circle cx="300" cy="100" r="3.5" fill="var(--ink)"/>
+        <rect class="res par1" x="118" y="35" width="50" height="18" rx="2"/>
+        <rect class="res par1" x="212" y="35" width="50" height="18" rx="2"/>
+        <rect class="res par2" x="165" y="149" width="50" height="18" rx="2"/>
+        <text id="ra" class="tm" x="143" y="26" text-anchor="middle" style="fill: var(--accent)"></text>
+        <text id="rb" class="tm" x="237" y="26" text-anchor="middle" style="fill: var(--accent)"></text>
+        <text id="rc" class="tm" x="190" y="186" text-anchor="middle" style="fill: var(--good)"></text>
+        <text id="br1" class="ts" x="190" y="74" text-anchor="middle" style="fill: var(--accent)"></text>
+        <text id="br2" class="ts" x="190" y="140" text-anchor="middle" style="fill: var(--good)"></text>
+        <!-- series resistor with voltmeter -->
+        <rect class="res" x="371" y="138" width="18" height="74" rx="2"/>
+        <text class="tm" x="362" y="179" text-anchor="end">12 Ω</text>
+        <path class="wire" d="M380,118 L440,118 L440,158 M440,192 L440,232 L380,232"/>
+        <circle cx="380" cy="118" r="3.5" fill="var(--ink)"/><circle cx="380" cy="232" r="3.5" fill="var(--ink)"/>
+        <circle cx="440" cy="175" r="17" fill="var(--panel)" stroke="var(--ink)" stroke-width="2"/>
+        <text class="tm" x="440" y="180" text-anchor="middle">V</text>
+        <text id="vRead" class="tm" x="463" y="180" text-anchor="start" style="fill: var(--warn)"></text>
+        <!-- battery: four 1.2 V cells -->
+        <g id="cells"></g>
+        <text class="ts" x="220" y="292" text-anchor="middle">4 × 1.2 V cells = 4.8 V</text>
+      </svg>
+      <div class="ctrl">
+        <label for="s1">Top branch, R₁ (two resistors in series) <output id="o1"></output></label>
+        <input id="s1" type="range" min="0" max="8" step="1" value="6" aria-describedby="o1">
+      </div>
+      <div class="ctrl">
+        <label for="s2">Bottom branch, R₂ <output id="o2" style="color: var(--good)"></output></label>
+        <input id="s2" type="range" min="0" max="8" step="1" value="3" aria-describedby="o2" style="accent-color: var(--good)">
+      </div>
+      <div class="btns"><button class="btn" id="exam" type="button">Exam values: 24 Ω and 12 Ω</button></div>
+      <p class="cap">The paper gives the circuit only as Fig. 8.1. This layout is rebuilt from the mark scheme's working: 12 Ω + 12 Ω in one branch, in parallel with 12 Ω, then 12 Ω in series with the voltmeter across it.</p>
+    </div>
+
+    <div class="card stack">
+      <span class="chip" id="chip" data-state="ok">…</span>
+      <div class="frac" id="frac" aria-live="polite"></div>
+      <svg id="strip" viewBox="0 0 360 58" role="img" aria-label="Fraction strip showing the two fractions added over a common denominator" style="width:100%;height:auto"></svg>
+      <dl class="rows">
+        <div><dt>Parallel pair</dt><dd id="rp"></dd></div>
+        <div><dt>(c)(ii) Total resistance, pair + 12 Ω</dt><dd class="big" id="rt"></dd></div>
+        <div><dt>Current, I = 4.8 V ÷ R</dt><dd id="ii"></dd></div>
+        <div><dt>(c)(iii) Voltmeter, I × 12 Ω</dt><dd id="vv"></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="card stack" aria-label="E.m.f. and p.d. as energy per charge">
+    <h3>(a) and (b) · volts measure energy per coulomb</h3>
+    <dl class="rows">
+      <div><dt>Energy the battery gives each coulomb, over the whole circuit (e.m.f.)</dt><dd>4.8 J/C = 4.8 V</dd></div>
+      <div><dt>Energy each coulomb transfers in the 12 Ω series resistor (p.d. on the voltmeter)</dt><dd id="pdJ"></dd></div>
+    </dl>
+    <p class="cap">Current is how many coulombs pass each second. Voltage is how many joules each coulomb carries or gives up. E.m.f. is energy converted <i>to</i> electrical, for the whole circuit. P.d. is energy converted <i>from</i> electrical, across a component.</p>
+  </section>
+
+  <section class="slips" aria-label="Maatla's slips on this question">
+    <article class="card slip">
+      <div class="tag"><span>Slip #1</span><span>8(a) · [1]</span></div>
+      <div class="was"><b>What you wrote</b>Described e.m.f. and p.d. in terms of <b style="display:inline;font:inherit;color:inherit;text-transform:none;letter-spacing:0">current</b>. Current is charge per second, which is a different quantity.</div>
+      <div class="fix"><b>What earns the mark</b>Both are <b style="display:inline;font:inherit;color:inherit;text-transform:none;letter-spacing:0">energy per unit charge</b> (B1). 1 V = 1 J/C.</div>
+    </article>
+    <article class="card slip">
+      <div class="tag"><span>Slip #2</span><span>8(c)(ii) · [3]</span></div>
+      <div class="was"><b>What you did</b>Set up <span class="m">1/24 + 1/12</span> correctly, then added it to <span class="m">5/24</span> and stopped.</div>
+      <div class="fix"><b>What earns the marks</b><span class="m">1/24 + 2/24 = 3/24 = 1/8</span>, so the pair is <span class="m">8 Ω</span> (C1, C1). Add the series 12 Ω to get <span class="m">20 Ω</span> (A1).</div>
+    </article>
+  </section>
+  <ul class="also">
+    <li><b>Also, 8(b):</b> the whole circuit versus one component was the right idea. Say it in energy terms: e.m.f. is energy per unit charge converted to electrical by the source for the whole circuit, and p.d. is energy per unit charge converted from electrical across one component.</li>
+    <li><b>Also, 8(c)(iii):</b> this follows from (c)(ii): <span class="data">V = 4.8 × 12 ÷ 20 = 2.9 V</span>, or I = 4.8 ÷ 20 = 0.24 A, then 0.24 × 12.</li>
+  </ul>
+
+  <footer>
+    <div class="tbl-wrap"><table>
+      <tr><td>8(a)</td><td>both relate to energy per unit charge</td><td>B1</td></tr>
+      <tr><td>8(b)</td><td>e.m.f. applies to the whole circuit / source or p.d. to one (or more) component, or energy conversion to electrical for e.m.f. or from electrical for p.d.</td><td>B1</td></tr>
+      <tr><td>8(c)(ii)</td><td>20 Ω · 1/RT = 1/R1 + 1/R2 or 1/RT = 1/24 + 1/12 or 1/RT = 3/24 · 8.0 (Ω)</td><td>A3 · C1 · C1</td></tr>
+      <tr><td>8(c)(iii)</td><td>2.9 V · V = ER/RT in any form or 4.8 × 12 / 20 or 0.24 seen</td><td>A2 · C1</td></tr>
+    </table></div>
+    <span>Question and marks: Cambridge IGCSE Physics 0625/41, Oct/Nov 2022 question paper and published mark scheme (© UCLES 2022).</span>
+  </footer>
+</main>
+
+<script>
+/*SHARED_JS*/
+(() => {
+  const VALS = [4, 6, 8, 12, 16, 18, 24, 36, 48];
+  let R1 = 24, R2 = 12;
+  const gcd = (a, b) => b ? gcd(b, a % b) : a, lcm = (a, b) => a / gcd(a, b) * b;
+  const F = (t, b, cls = '') => `<span class="f ${cls}"><span>${t}</span><span>${b}</span></span>`;
+  const fmt = x => Number.isInteger(x) ? String(x) : String(sig(x, 3));
+  // battery: four cells along the bottom wire
+  let c = '<path class="wire" d="M150,262 L165,262 M173,262 L195,262 M203,262 L225,262 M233,262 L255,262 M263,262 L290,262"/>';
+  for (let i = 0; i < 4; i++) { const x = 165 + i * 30; c += `<line class="cell1" x1="${x}" y1="248" x2="${x}" y2="276"/><line class="cell2" x1="${x + 8}" y1="254" x2="${x + 8}" y2="270"/>`; }
+  $('cells').innerHTML = c;
+
+  const s1 = $('s1'), s2 = $('s2');
+  s1.addEventListener('input', () => { R1 = VALS[+s1.value]; update(); });
+  s2.addEventListener('input', () => { R2 = VALS[+s2.value]; update(); });
+  function update() {
+    s1.value = VALS.indexOf(R1); s2.value = VALS.indexOf(R2);
+    const L = lcm(R1, R2), a = L / R1, b = L / R2, s = a + b, g = gcd(s, L);
+    const Rp = L / s, Rt = Rp + 12, I = 4.8 / Rt, V = I * 12;
+    $('ra').textContent = fmt(R1 / 2) + ' Ω'; $('rb').textContent = fmt(R1 / 2) + ' Ω'; $('rc').textContent = R2 + ' Ω';
+    $('br1').textContent = `R₁ = ${fmt(R1 / 2)} + ${fmt(R1 / 2)} = ${R1} Ω`; $('br2').textContent = `R₂ = ${R2} Ω`;
+    $('o1').textContent = R1 + ' Ω'; $('o2').textContent = R2 + ' Ω';
+    $('vRead').textContent = V.toFixed(2) + ' V';
+    let rows = `<span>${F(1, 'R')}</span><span class="eq">=</span><span>${F(1, R1, 'c1')} + ${F(1, R2, 'c2')}</span>`;
+    rows += `<span></span><span class="eq">=</span><span>${F(a, L, 'c1')} + ${F(b, L, 'c2')} <span class="note">same bottom number: ${L}</span></span>`;
+    rows += `<span></span><span class="eq">=</span><span>${F(s, L)} <span class="note">add the tops: ${a} + ${b} = ${s}</span></span>`;
+    if (g > 1) rows += `<span></span><span class="eq">=</span><span>${F(s / g, L / g)} <span class="note">divide top and bottom by ${g}</span></span>`;
+    rows += `<span>R</span><span class="eq">=</span><span><b style="color:var(--accent)">${fmt(Rp)} Ω</b> <span class="note">flip the fraction</span></span>`;
+    $('frac').innerHTML = rows;
+    // fraction strip: L equal cells; a for R1 and b for R2
+    const W = 356, cell = W / L; let st = '';
+    const drawCells = L <= 48;
+    for (let i = 0; i < L && drawCells; i++) st += `<rect x="${2 + i * cell}" y="6" width="${cell}" height="22" fill="${i < a ? 'var(--accent)' : i < s ? 'var(--good)' : 'var(--grid)'}" stroke="var(--panel)" stroke-width="1"/>`;
+    if (!drawCells) st = `<rect x="2" y="6" width="${W}" height="22" fill="var(--grid)"/><rect x="2" y="6" width="${a * cell}" height="22" fill="var(--accent)"/><rect x="${2 + a * cell}" y="6" width="${b * cell}" height="22" fill="var(--good)"/>`;
+    st += `<text class="ts" x="2" y="48">${s} of ${L} equal parts = ${s}/${L}${g > 1 ? ' = ' + (s / g) + '/' + (L / g) : ''}</text>`;
+    $('strip').innerHTML = st;
+    $('rp').textContent = fmt(Rp) + ' Ω';
+    $('rt').textContent = fmt(Rt) + ' Ω';
+    $('ii').textContent = I.toFixed(3) + ' A';
+    $('vv').textContent = V.toFixed(2) + ' V';
+    $('pdJ').textContent = V.toFixed(2) + ' J/C = ' + V.toFixed(2) + ' V';
+    if (R1 === 24 && R2 === 12) setChip($('chip'), 'ok', 'Exam values: pair = 8 Ω, total = 20 Ω, voltmeter = 2.9 V');
+    else setChip($('chip'), 'info', `Check: ${fmt(Rp)} Ω is less than the smaller branch (${Math.min(R1, R2)} Ω), as it must be`);
+  }
+  $('exam').addEventListener('click', () => { R1 = 24; R2 = 12; update(); });
+  update();
+})();
+</script>

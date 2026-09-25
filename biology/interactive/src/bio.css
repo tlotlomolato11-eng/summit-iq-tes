@@ -1,0 +1,18 @@
+/* biology additions */
+:root { --leaf: #4f9d45; --leaf-dark: #2f7a33; --chlorotic: #e3cf5a; --water: #dcecf7; --food: #e2b271; --blood: #d24a3f; --vein: #3f6fbf; --lymph: #f4e9b5; --epi: #f7d9cf; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --leaf: #6cbf5f; --leaf-dark: #4f9d45; --chlorotic: #d9c451; --water: #1f3346; --food: #d9a760; --blood: #ef6b5f; --vein: #6f9ae6; --lymph: #5a5230; --epi: #4a302c; } }
+:root[data-theme="dark"] { --leaf: #6cbf5f; --leaf-dark: #4f9d45; --chlorotic: #d9c451; --water: #1f3346; --food: #d9a760; --blood: #ef6b5f; --vein: #6f9ae6; --lymph: #5a5230; --epi: #4a302c; }
+.check .tag span:first-child { color: var(--accent); }
+.check .q { margin: 0; font-size: 15px; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.seg button { font: 600 13px var(--sans); padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.ctrl-row { display: grid; gap: 6px; }
+.ctrl-row > span { font-size: 13.5px; font-weight: 600; }
+svg .lab { font: 12.5px var(--sans); fill: var(--ink); }
+svg .edge { stroke: var(--ink); stroke-width: 1.8; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.tbl th, .tbl td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--grid); }
+.tbl th { font: 600 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.swatch { display: inline-block; width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--line); vertical-align: -2px; margin-right: 6px; }
+.rows dd { white-space: normal; max-width: 62%; }

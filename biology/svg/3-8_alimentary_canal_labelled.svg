@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="800" viewBox="0 0 940 800">
+<rect width="940" height="800" fill="#fff"/>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111"/></marker></defs>
+<g font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" fill="#111">
+<g transform="translate(160,0)"><path d="M270,178 C220,160 222,48 310,42 C398,48 400,160 350,178 L352,215 C420,222 470,238 492,262 C505,380 500,560 470,770 L150,770 C120,560 115,380 128,262 C150,238 200,222 268,215 Z" fill="#fff" stroke="#111" stroke-width="2.2"/>
+<path d="M292,150 Q310,162 328,150" fill="#e89a9a" stroke="#111" stroke-width="1.8"/>
+<path d="M310,160 C312,210 316,280 330,320 C338,338 350,345 366,344" fill="none" stroke="#111" stroke-width="15.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M310,160 C312,210 316,280 330,320 C338,338 350,345 366,344" fill="none" stroke="#e6aaa4" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M180,330 C230,296 330,300 370,338 C352,382 300,398 206,402 C184,396 174,356 180,330 Z" fill="#b8664b" stroke="#111" stroke-width="2"/>
+<ellipse cx="274" cy="410" rx="16" ry="11" fill="#86b86b" stroke="#111" stroke-width="1.8"/>
+<path d="M330,470 C360,452 420,452 452,462 C456,474 420,482 380,482 C352,484 332,482 330,470 Z" fill="#ecc57b" stroke="#111" stroke-width="1.8"/>
+<path d="M362,340 C410,318 468,338 466,400 C464,452 410,468 366,452 C350,446 350,428 364,426 C396,428 420,416 420,396 C420,372 394,360 368,366 Z" fill="#ec9f9f" stroke="#111" stroke-width="2"/>
+<path d="M368,446 C340,462 316,480 300,500 L300,510 C 330,512 370,512 380,528 C 386,548 340,546 300,548 C 262,552 262,572 300,574 C 340,576 384,574 384,596 C 384,618 330,614 296,616 C 262,620 262,640 300,642 C 330,644 360,646 360,660 C 358,676 300,664 262,652" fill="none" stroke="#111" stroke-width="15.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M368,446 C340,462 316,480 300,500 L300,510 C 330,512 370,512 380,528 C 386,548 340,546 300,548 C 262,552 262,572 300,574 C 340,576 384,574 384,596 C 384,618 330,614 296,616 C 262,620 262,640 300,642 C 330,644 360,646 360,660 C 358,676 300,664 262,652" fill="none" stroke="#f3bba3" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M250,668 L236,660 L236,510 C236,496 246,492 260,492 L400,492 C414,492 420,500 420,512 L420,640 C420,672 380,680 342,684 L326,690" fill="none" stroke="#111" stroke-width="29.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M250,668 L236,660 L236,510 C236,496 246,492 260,492 L400,492 C414,492 420,500 420,512 L420,640 C420,672 380,680 342,684 L326,690" fill="none" stroke="#d99077" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M326,690 L322,736" fill="none" stroke="#111" stroke-width="21.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M326,690 L322,736" fill="none" stroke="#d99077" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="321" cy="744" r="4" fill="#111"/></g>
+<line x1="470" y1="152" x2="196" y2="152" stroke="#111" stroke-width="1.2"/><circle cx="470" cy="152" r="2.4" fill="#111"/>
+<text x="188" y="158" text-anchor="end">mouth</text>
+<line x1="473" y1="250" x2="196" y2="250" stroke="#111" stroke-width="1.2"/><circle cx="473" cy="250" r="2.4" fill="#111"/>
+<text x="188" y="256" text-anchor="end">oesophagus</text>
+<line x1="590" y1="380" x2="730" y2="360" stroke="#111" stroke-width="1.2"/><circle cx="590" cy="380" r="2.4" fill="#111"/>
+<text x="738" y="366">stomach</text>
+<line x1="400" y1="350" x2="196" y2="345" stroke="#111" stroke-width="1.2"/><circle cx="400" cy="350" r="2.4" fill="#111"/>
+<text x="188" y="351" text-anchor="end">liver</text>
+<line x1="432" y1="410" x2="196" y2="420" stroke="#111" stroke-width="1.2"/><circle cx="432" cy="410" r="2.4" fill="#111"/>
+<text x="188" y="426" text-anchor="end">gall bladder</text>
+<line x1="580" y1="470" x2="730" y2="455" stroke="#111" stroke-width="1.2"/><circle cx="580" cy="470" r="2.4" fill="#111"/>
+<text x="738" y="461">pancreas</text>
+<line x1="510" y1="590" x2="730" y2="610" stroke="#111" stroke-width="1.2"/><circle cx="510" cy="590" r="2.4" fill="#111"/>
+<text x="738" y="616">small intestine</text>
+<line x1="572" y1="540" x2="730" y2="535" stroke="#111" stroke-width="1.2"/><circle cx="572" cy="540" r="2.4" fill="#111"/>
+<text x="738" y="541">large intestine</text>
+<line x1="482" y1="695" x2="196" y2="690" stroke="#111" stroke-width="1.2"/><circle cx="482" cy="695" r="2.4" fill="#111"/>
+<text x="188" y="696" text-anchor="end">rectum</text>
+<line x1="480" y1="744" x2="730" y2="750" stroke="#111" stroke-width="1.2"/><circle cx="480" cy="744" r="2.4" fill="#111"/>
+<text x="738" y="756">anus</text>
+</g>
+</svg>
